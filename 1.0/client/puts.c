@@ -1,0 +1,72 @@
+#include "client.h"
+
+//发送长度为len的文件
+int sendn(int sockfd, const void * buff, int len)
+{
+    int left = len;
+    const char * pbuf = (char *)buff;
+    int ret = 0;
+    while(left > 0) {
+        ret = send(sockfd, pbuf, left, 0);
+        if(ret == -1) {
+            perror("send");
+            return -1;
+        }
+        pbuf += ret;
+        left -= ret;
+    }
+    return len - left;
+}
+
+//将文件上传到服务器
+void putsCommand(task_t *task)
+{
+    //参数校验
+    assert(task);
+
+    //读取本地文件
+    char filename[128];
+    strcpy(filename,task->data);
+    int fd = open(filename, O_RDWR);
+
+    train_t t;
+    memset(&t, 0, sizeof(t));
+    int peerfd = task->peerfd;
+    //先发送文件名
+    t.len = strlen(filename);
+    strcpy(t.buff, filename);
+    send(peerfd, &t, 4 + t.len, 0);
+
+    //其次发送文件长度
+    struct stat st;
+    memset(&st, 0, sizeof(st));
+    fstat(fd, &st);
+    printf("filelength: %ld\n", st.st_size);//off_t
+
+    send(peerfd, &st.st_size, sizeof(st.st_size), 0);
+
+    //最后发送文件内容
+    while(1) {
+        memset(&t, 0, sizeof(t));
+        int ret = read(fd, t.buff, sizeof(t.buff));
+        if(ret != 1000) {
+            printf("read ret: %d\n", ret);
+        }
+        if(ret == 0) {
+            //文件已经读取完毕
+            break;
+        }
+        t.len = ret;
+        ret = sendn(peerfd, &t, 4 + t.len);
+        if(ret == -1) {
+            break;
+        }
+        if(ret != 1004) {
+            printf("send ret: %d\n", ret);
+        }
+    }
+
+    close(fd);//关闭文件
+
+}
+

@@ -24,7 +24,7 @@ void * threadFunc(void* arg)
 int threadpoolInit(threadpool_t * pthreadpool, int num)
 {
     pthreadpool->pthreadNum = num;
-    pthreadpool->pthreads = calloc(num, sizeof(pthread_t));
+    pthreadpool->pthreads = (pthread_t*)calloc(num, sizeof(pthread_t));
     queueInit(&pthreadpool->que);
 
     return 0;
