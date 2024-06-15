@@ -25,7 +25,7 @@ void get_setting(char *salt,char *passwd)
     strncpy(salt,passwd,i);
 }
 
-int main(int argc,char *argv[])
+int usrCheck(int argc,char *argv[])
 {
     struct spwd *sp;
     char *passwd;

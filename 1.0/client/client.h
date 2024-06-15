@@ -75,7 +75,6 @@ typedef struct task_s{
 }task_t;
 
 
-int tcpInit(const char * ip, const char * port);
 int addEpollReadfd(int epfd, int fd);
 int delEpollReadfd(int epfd, int fd);
 int transferFile(int sockfd);
