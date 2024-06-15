@@ -1,6 +1,6 @@
 
 /*
- *@author lwh created
+ *@author zzj created
  *
  *
  *
@@ -10,5 +10,14 @@
 
 void pwdCommand(task_t * task)
 {
-    printf("execute pwd command.\n");
+    
+    char* cwd;
+    if ((cwd = getcwd( NULL, 0)) == NULL) {
+        error( 1, errno, "getcwd failed");
+    }
+    
+    puts(cwd);
+    free(cwd);
+
 }
+
