@@ -10,7 +10,7 @@ void handleMessage(int sockfd, int epfd, task_queue_t * que)
     printf("recv length: %d\n", length);
 
     //1.2 获取消息类型
-    int cmdType = -1;
+    CmdType cmdType;
     ret = recvn(sockfd, &cmdType, sizeof(cmdType));
     printf("recv cmd type: %d\n", cmdType);
     task_t *ptask = (task_t*)calloc(1, sizeof(task_t));
@@ -55,6 +55,8 @@ void doTask(task_t * task)
         putsCommand(task);   break;
     case CMD_TYPE_GETS:
         getsCommand(task);   break;
+    case CMD_TYPE_TREE:
+        treeCommand(task);   break;
     }
 }
 

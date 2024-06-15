@@ -57,6 +57,7 @@ typedef enum {
     CMD_TYPE_RMDIR,
     CMD_TYPE_PUTS,
     CMD_TYPE_GETS,
+    CMD_TYPE_TREE,
     CMD_TYPE_NOTCMD  //不是命令
 }CmdType;
 
@@ -126,5 +127,6 @@ void rmdirCommand(task_t * task);
 void notCommand(task_t * task);
 void putsCommand(task_t * task);
 void getsCommand(task_t * task);
+void treeCommand(task_t * task);
 
 #endif
