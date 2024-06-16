@@ -29,7 +29,7 @@ void lsCommand(task_t * task)
         char* filename = pdirent->d_name;
 
         // 忽略.和..
-        if ((strcmp(filename, ".") == 0 | strcmp(filename, "..") == 0)) {
+        if ((strcmp(filename, ".") == 0 || strcmp(filename, "..") == 0)) {
             continue;
         }
         
