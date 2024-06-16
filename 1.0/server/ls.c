@@ -8,13 +8,20 @@
 
 void lsCommand(task_t * task)
 {
-    
-    char* cwd = getcwd(NULL, 0); // 获取当前工作目录的绝对路径
+    char* cwd;
 
-    if (cwd == NULL) {
-        // 获取当前目录失败
-        error(1, errno, "getcwd failed");
+    if (strcmp(task->data, "") == 0) {
+
+        cwd = getcwd(NULL, 0); // 获取当前工作目录的绝对路径
+
+        if (cwd == NULL) {
+            // 获取当前目录失败
+            error(1, errno, "getcwd failed");
+        }
+    }else {
+        cwd = task->data;
     }
+    
 
     DIR* stream = opendir(cwd); // 打开当前所在目录的目录流
     if (!stream) {
