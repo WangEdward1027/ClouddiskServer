@@ -57,6 +57,9 @@ typedef enum {
     CMD_TYPE_RMDIR,
     CMD_TYPE_PUTS,
     CMD_TYPE_GETS,
+    CMD_TYPE_USRNAME,
+    CMD_TYPE_USRENCODE,
+    CMD_TYPE_USRCHECK,
     CMD_TYPE_NOTCMD  //不是命令
 }CmdType;
 
@@ -85,5 +88,9 @@ int recvn(int sockfd, void * buff, int len);
 void putsCommand(task_t * task);
 //从服务器下载文件
 void getsCommand(task_t * task);
+//客户端登录校验
+int usrCheck(task_t * task);
+
+
 
 #endif

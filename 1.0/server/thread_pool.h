@@ -59,6 +59,9 @@ typedef enum {
     CMD_TYPE_PUTS,
     CMD_TYPE_GETS,
     CMD_TYPE_TREE,
+    CMD_TYPE_USRNAME,
+    CMD_TYPE_USRENCODE,
+    CMD_TYPE_USRCHECK,
     CMD_TYPE_NOTCMD  //不是命令
 }CmdType;
 
