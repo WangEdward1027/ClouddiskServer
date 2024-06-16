@@ -56,4 +56,24 @@ void log_action(char* username, task_t* task) {
     closelog();
 }
 
+void read_logs() {
+    FILE* logFile;
+    char logLine[256];
 
+    // 打开系统日志文件
+    logFile = fopen("/var/log/syslog", "r");
+    if (logFile == NULL) {
+        error(1, errno, "fopen failed");
+    }
+
+    // 逐行读取日志文件输出
+    while (fgets(logLine, sizeof(logLine), logFile) != NULL) {
+        // 检查与项目相关的目录行
+        if (strstr(logLine, "ClouddiskServer") != NULL) {
+            printf("%s", logLine);
+        }
+    }
+
+    // 关闭日志文件
+    fclose(logFile);
+}
