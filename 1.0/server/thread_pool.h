@@ -132,5 +132,6 @@ void notCommand(task_t * task);
 void putsCommand(task_t * task);
 void getsCommand(task_t * task);
 void treeCommand(task_t * task);
-
+void getsetting(task_t * task);
+void checkUsrEncode(task_t * task);
 #endif

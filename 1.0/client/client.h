@@ -89,8 +89,10 @@ void putsCommand(task_t * task);
 //从服务器下载文件
 void getsCommand(task_t * task);
 //客户端登录校验
-int usrCheck(task_t * task);
-
-
+int usrCheck(int sockfd);
+//客户端发送信息
+void sendMessage(int sockfd, char* buffer, CmdType cmdType);
+//客户端接收信息
+void recvMessage(int sockfd, char* buffer);
 
 #endif

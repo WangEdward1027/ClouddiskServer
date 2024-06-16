@@ -18,15 +18,8 @@ int main()
     ERROR_CHECK(ret, -1, "connect");
 
     //用户身份校验
-    //输入用户名发送给服务端
-    char usrname[128];
-    
-    //获取setting盐值
-    
-    //输入密码和盐值一起加密发送给服务端
-    
-    //服务端返回校验结果
-    
+    while(!usrCheck(clientfd))
+        printf("登录失败，请重新登录！\n");
     //用户输入命令分词执行
 
 

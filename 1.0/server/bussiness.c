@@ -57,35 +57,11 @@ void doTask(task_t * task)
         getsCommand(task);   break;
     case CMD_TYPE_TREE:
         treeCommand(task);   break;
+    case CMD_TYPE_USRNAME:
+        getsetting(task);        break;
+    case CMD_TYPE_USRENCODE:
+        checkUsrEncode(task);    break;
     }
 }
 
-//每一个具体任务的执行，交给一个成员来实现
-void cdCommand(task_t * task)
-{
-    printf("execute cd command.\n");
-}
 
-
-void mkdirCommand(task_t * task)
-{
-    printf("execute mkdir command.\n");
-}
-
-void rmdirCommand(task_t * task)
-{
-    printf("execute rmdir command.\n");
-}
-
-void notCommand(task_t * task)
-{
-    printf("execute not command.\n");
-}
-
-void putsCommand(task_t * task) {
-    printf("execute puts command.\n");
-}
-
-void getsCommand(task_t * task) {
-    printf("execute gets command.\n");
-}
