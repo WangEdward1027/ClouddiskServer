@@ -56,9 +56,12 @@ void log_action(char* username, task_t* task) {
     closelog();
 }
 
-void read_logs() {
+void read_logs(task_t* task) {
     FILE* logFile;
     char logLine[256];
+
+    char buff[4096];
+    bzero(buff, sizeof(buff));
 
     // 打开系统日志文件
     logFile = fopen("/var/log/syslog", "r");
@@ -71,8 +74,12 @@ void read_logs() {
         // 检查与项目相关的目录行
         if (strstr(logLine, "ClouddiskServer") != NULL) {
             printf("%s", logLine);
+            sprintf(buff, "%s\n", logLine);
         }
     }
+
+    // 发送日志到客户端
+    sendn(task->peerfd, buff, sizeof(buff));
 
     // 关闭日志文件
     fclose(logFile);
