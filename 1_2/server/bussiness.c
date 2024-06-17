@@ -34,6 +34,13 @@ void handleMessage(int sockfd, int epfd, task_queue_t * que)
     }
 }
 
+void notCommand(task_t *task){
+     //先随便写一个
+     printf("not this command");
+     //实际应该发回给客户端提示
+     //...
+}
+
 //注意：此函数可以根据实际的业务逻辑，进行相应的扩展
 void doTask(task_t * task)
 {
