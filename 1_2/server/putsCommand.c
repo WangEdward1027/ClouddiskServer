@@ -1,13 +1,33 @@
 #include "thread_pool.h"
 
+//接收确定个字节的数据
+int recvn(int sockfd, void * buff, int len)
+{
+    int left = len;
+    char * pbuf = (char*)buff;
+    int ret = 0;
+    while(left > 0) {
+        ret = recv(sockfd, pbuf, left, 0);
+        if(ret < 0) {
+            perror("recv");
+            break;
+        } else if (ret == 0) {
+            break;
+        }
+        pbuf += ret;
+        left -= ret;
+    }
+    return len - left;
+}
+
 void putsCommand(task_t* task)
 {
     int clientfd = task->peerfd;
     int ret;
 
-    char notice[64];
-    //向客户端发送文件可接收请求
-    sprintf(notice, "%d%s",CMD_TYPE_PUTS,"server can recive");
+    char notice[128];
+    //向客户端发送文件可接收请求包含包含消息类型、文件名、文件长度
+    sprintf(notice, "%d %s %ld",CMD_TYPE_PUTS, task->data, strlen(task->data));
     ret = send(clientfd, notice, strlen(notice),0);
 
     //先接收文件名
