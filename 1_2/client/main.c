@@ -1,5 +1,20 @@
 #include "client.h"
 
+void sendtrain(int peerfd, train_t* train, int len) {
+
+    // 1. 先发送len
+    int contLen = train->len;
+    send(peerfd, &contLen, sizeof(contLen), 0);
+
+    // 2. 发送cmdtype
+    CmdType type = train->type;
+    send(peerfd, &type, sizeof(type), 0);
+
+    // 3. 发送内容
+    sendn(peerfd, train->buff, train->len);
+
+}
+
 int main()
 {
     //tcp连接
