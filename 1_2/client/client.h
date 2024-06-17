@@ -97,4 +97,7 @@ int sendMessage(int sockfd, char* buffer, CmdType cmdType);
 //客户端接收信息
 void recvMessage(int sockfd, char* buffer);
 
+//建立tcp连接
+int tcpConnect(const char *ip,unsigned short port);
+
 #endif
