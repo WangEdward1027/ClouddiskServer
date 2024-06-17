@@ -83,7 +83,7 @@ int sendn(int sockfd, const void * buff, int len)
     return len - left;
 }
 
-//其作用：确定接收len字节的数据
+//其作用：接收确定个字节的数据
 int recvn(int sockfd, void * buff, int len)
 {
     int left = len;//还剩下多少个字节需要接收

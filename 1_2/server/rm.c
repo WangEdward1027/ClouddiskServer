@@ -43,7 +43,7 @@ void rmDirRec(const char *path)
     rmdir(path);
 }
 
-void rmdirComand(task_t *task){
+void rmdirCommand(task_t *task){
     //接收任务中的目录
     char dirPath[1000];
     strncpy(dirPath,task->data,sizeof(dirPath)-1);

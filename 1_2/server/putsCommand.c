@@ -1,25 +1,5 @@
 #include "thread_pool.h"
 
-//接收确定个字节的数据
-int recvn(int sockfd, void * buff, int len)
-{
-    int left = len;
-    char * pbuf = (char*)buff;
-    int ret = 0;
-    while(left > 0) {
-        ret = recv(sockfd, pbuf, left, 0);
-        if(ret < 0) {
-            perror("recv");
-            break;
-        } else if (ret == 0) {
-            break;
-        }
-        pbuf += ret;
-        left -= ret;
-    }
-    return len - left;
-}
-
 void putsCommand(task_t* task)
 {
     int clientfd = task->peerfd;
