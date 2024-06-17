@@ -24,11 +24,14 @@ void rmDirRec(const char *path)
         char subpath[1024];
         sprintf(subpath,"%s/%s",path,name);
         
-        递归删除
+        //递归删除
         if(pdir->d_type==DT_DIR){
             rmDirRec(subpath);
         }else if(pdir->d_type==DT_REG){
             unlink(subpath);
+            /*对于硬链接来说，unlink 用来删除目录项，并把 inode 引用计数减 1，这两步也是一个原子过程。
+             * 直到 inode 引用计数为 0，才会真正删除文件。
+             对于软链接来说，unlink 直接删除软链接，而不影响软链接指向的文件。*/
         }
     }//pdir==NULL
     closedir(dp);
@@ -37,7 +40,7 @@ void rmDirRec(const char *path)
         error(1,errno,"readdir");
     }
     //再删除目录
-    rdmir(path);
+    rmdir(path);
 }
 
 void rmdirComand(task_t *task){
