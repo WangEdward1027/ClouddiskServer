@@ -19,9 +19,9 @@ int recvn(int sockfd, void* buff, int len) {
     return len - left;
 }
 
-int recvFile(task_t* task) {
+int recvFile(int peerfd) {
 
-    int clientfd = task->peerfd;
+    int clientfd = peerfd;
     char filename[128];
     bzero(&filename, sizeof(filename));
     
@@ -61,21 +61,17 @@ int recvFile(task_t* task) {
     return 0;
 }
 
-void get_breakpoint(task_t* task) {
+void get_breakpoint(int peerfd, char* filename) {
 
-    int peerfd = task->peerfd;
     char response[128];
     bzero(&response, sizeof(response));
     long fileLength = 0;
-    char filename[128];
-    strcpy(filename, task->data);
-    
+        
     // 接受服务器端的对文件是否存在的返回
     int ret =recv(peerfd, &response, sizeof(response), 0);
     if (ret == -1) {
         error(1, errno, "Client: recv response failed");
     }
-    
     
     if (strcmp(response, "File exists") == 0) {
         // 如果文件存在
@@ -99,7 +95,7 @@ void get_breakpoint(task_t* task) {
     }
     
     // 接受文件
-    recvFile(task);
+    recvFile(peerfd);
 
     close(peerfd);
 

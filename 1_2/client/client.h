@@ -83,7 +83,10 @@ typedef struct task_s{
 int addEpollReadfd(int epfd, int fd);
 int delEpollReadfd(int epfd, int fd);
 int transferFile(int sockfd);
+//客户端向服务器发送数据
 int sendn(int sockfd, const void * buff, int len);
+
+//接收服务器返回的数据
 int recvn(int sockfd, void * buff, int len);
 
 //将本地文件上传至服务器
@@ -92,10 +95,8 @@ void putsCommand(task_t * task);
 void getsCommand(task_t * task);
 //客户端登录校验
 int usrCheck(int sockfd);
-//客户端发送信息
-int sendMessage(int sockfd, char* buffer, CmdType cmdType);
-//客户端接收信息
-void recvMessage(int sockfd, char* buffer);
+//TCP连接
+int tcpConnect(const char *ip,unsigned short port);
 
 //建立tcp连接
 int tcpConnect(const char *ip,unsigned short port);
