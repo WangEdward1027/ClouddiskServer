@@ -22,9 +22,9 @@ int recvn(int sockfd, void * buff, int len)
     return len - left;
 }
 
-void getsCommand(task_t* task)
+void getsCommand(int peerfd)
 {
-    int clientfd = task->peerfd;
+    int clientfd = peerfd;
     int ret = 1;
 
     //向客户端发送文件可接收请求
