@@ -40,7 +40,7 @@ int main()
             buff[strlen(buff)-1]='\0';//忽略换行符
             //分词解析命令
             parseCommand(buff,strlen(buff)-1,&train);//int parseCommand(const char*buff,int len,train_t*pt)
-            sendn(clientfd,&train,4+4+train.len);
+            sendtrain(clientfd,&train,4+4+train.len);
         }
 
         //接收服务器数据
