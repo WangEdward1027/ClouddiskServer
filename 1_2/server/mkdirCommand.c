@@ -6,9 +6,6 @@
  */
 
 #include "thread_pool.h"
-#include <stdio.h>
-#include <string.h>
-#include <sys/syslog.h>
 
 #define MODE 0777
 
