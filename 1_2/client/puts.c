@@ -12,9 +12,8 @@ int sendn(int sockfd, const void* buff, int len) {
         pbuf += ret;
         left -= ret;
     }
-
+    return 0;
 }
-
 
 //将文件上传到服务器
 void putsCommand(task_t *task)
@@ -63,8 +62,6 @@ void putsCommand(task_t *task)
             printf("send ret: %d\n", ret);
         }
     }
-
     close(fd);//关闭文件
-
 }
 
