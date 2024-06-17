@@ -101,4 +101,7 @@ int tcpConnect(const char *ip,unsigned short port);
 //建立tcp连接
 int tcpConnect(const char *ip,unsigned short port);
 
+//分词
+int parseCommand(const char*buff,int len,train_t*pt);
+
 #endif
