@@ -25,7 +25,6 @@ void freeStrs(char * pstrs[], int count)
     }
 }
 
-
 int main()
 {
     char input[] = "A bird came down the walk";
@@ -40,4 +39,3 @@ int main()
 
     return 0;
 }
-

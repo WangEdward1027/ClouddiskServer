@@ -1,14 +1,26 @@
 #include <stdio.h>
 #include <string.h>
 
-int main()
-{
+void test1(){
     char str[] = "hello world good morning";
     char* token = strtok(str, " ");
     while(token != NULL){
         printf("%s\n", token);
         token = strtok(NULL, " ");
     }
-    return 0;
 }
 
+void test2(){
+    char str[] = "hello world good morning";
+    char* token = strtok(str, " ");
+    char buff[1000];
+    strcpy(buff, strtok(NULL, ""));
+    printf("%s\n", buff);
+}
+
+int main()
+{
+    /* test1(); */
+    test2();
+    return 0;
+}
