@@ -8,9 +8,12 @@
 
 void lsCommand(task_t * task)
 {
-    char* cwd;
+    char* cwd; // 用于保存用户传入的目录
+    char buff[1024]; // 用于保存要发送给客户端的内容
+    bzero(&buff, sizeof(buff));
 
     if (strcmp(task->data, "") == 0) {
+        // 用户未传入任何内容
 
         cwd = getcwd(NULL, 0); // 获取当前工作目录的绝对路径
 
@@ -49,18 +52,24 @@ void lsCommand(task_t * task)
         // 打印目录项名字
         // puts(filename); 这里不用puts的原因是 puts属于行缓冲，
         // 每次输出都会在末尾自动加一个换行符，不符合ls命令的形式 
-        printf("%-15s\t", filename);
+        // printf("%-15s\t", filename);
+        sprintf(buff, "%-15s\t", filename);
 
         i++;
         if (i % 4 == 0) {
-            printf("\n");   // 为了美观设置每输出4个单词就换行
+            // printf("\n");   // 为了美观设置每输出4个单词就换行
+            sprintf(buff, "\n");
         }
         
     }
     
-    printf("\n");
+    // printf("\n");
+    sprintf(buff, "\n");
     
     closedir(stream);
+    
+    // 将服务器端ls产生的内容，发送到客户端
+    sendn(task->peerfd, buff, sizeof(buff));
 
 }
 
