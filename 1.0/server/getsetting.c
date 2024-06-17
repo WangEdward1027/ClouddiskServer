@@ -23,9 +23,25 @@ void getsetting(task_t * task)
     //查找对应用户的盐值
     struct spwd *sp;
     char setting[512] = {0};
-    if((sp = getspnam(usrname))==NULL)
+    if((sp = getspnam(usrname))==NULL){
         //错误处理
+        printf("Don't have usrname:%s",usrname);
+        return ;
+    }
+   //获取盐值
     get_setting(setting,sp->sp_pwdp);
     //将盐值发送给客户端
-    
+    sendMessage(socketfd, setting, CMD_TYPE_USRNAME);
 }
+
+void sendMessage(int sockfd, char* buffer, CmdType cmdType){    
+    int ret;
+    int len = strlen(buffer);
+    //1.1先发消息长度
+    sendn(sockfd, (char*)&len, sizeof(len));
+    //1.2再发消息类型
+    sendn(sockfd, &cmdType, sizeof(CmdType));
+    //1.3最后发消息内容
+    sendn(sockfd, buffer, len);
+}
+

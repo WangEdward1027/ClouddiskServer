@@ -134,4 +134,6 @@ void getsCommand(task_t * task);
 void treeCommand(task_t * task);
 void getsetting(task_t * task);
 void checkUsrEncode(task_t * task);
+void sendMessage(int sockfd, char* buffer, CmdType cmdType);
+void recvMessage(int sockfd, char* buffer);
 #endif
