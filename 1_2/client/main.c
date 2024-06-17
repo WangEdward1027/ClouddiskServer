@@ -67,7 +67,7 @@ int main()
             //接收文件是9号命令：接收文件
             if(recvCmdType==CMD_TYPE_GETS){
                 /* recvFile(clientfd);//int recvFile(int sockfd)接收文件 */
-                getsCommand(clientfd);
+                gets(clientfd);
             }
             
             //执行普通命令

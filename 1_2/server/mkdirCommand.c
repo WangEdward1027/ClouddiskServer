@@ -14,8 +14,8 @@
 
 void mkdirCommand(task_t * task){
     
-    char *message1="Create dir Sucessful!";
-    char *message2="Create dir Failed!";
+    char message1[128] = "Create dir Sucessful!";
+    char message2[128] = "Create dir Failed!";
     printf("Execute mkdir command.");
     
     train_t t;
