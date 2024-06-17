@@ -16,7 +16,7 @@ int sendn(int sockfd, const void* buff, int len) {
 }
 
 //将文件上传到服务器
-void puts(int sockfd, char* filename)
+void putsFile(int sockfd, char* filename)
 {
     //参数校验
     assert(task);

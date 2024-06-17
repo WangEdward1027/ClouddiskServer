@@ -90,9 +90,9 @@ int sendn(int sockfd, const void * buff, int len);
 int recvn(int sockfd, void * buff, int len);
 
 //将本地文件上传至服务器
-void puts(int sockfd, char* filename);
+void putsFile(int sockfd, char* filename);
 //从服务器下载文件
-void gets(int scokfd);
+void getsFile(int scokfd);
 //客户端登录校验
 int usrCheck(int sockfd);
 //TCP连接

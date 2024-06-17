@@ -22,7 +22,7 @@ int recvn(int sockfd, void * buff, int len)
     return len - left;
 }
 
-void gets(int peerfd)
+void getsFile(int peerfd)
 {
     int clientfd = peerfd;
     int ret = 1;
