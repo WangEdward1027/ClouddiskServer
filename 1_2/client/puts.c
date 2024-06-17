@@ -16,23 +16,21 @@ int sendn(int sockfd, const void* buff, int len) {
 }
 
 //将文件上传到服务器
-void putsCommand(task_t *task)
+void puts(int sockfd, char* filename)
 {
     //参数校验
     assert(task);
 
     //读取本地文件
-    char filename[128];
-    strcpy(filename,task->data);
     int fd = open(filename, O_RDWR);
 
     train_t t;
     memset(&t, 0, sizeof(t));
-    int peerfd = task->peerfd;
+
     //先发送文件名
     t.len = strlen(filename);
     strcpy(t.buff, filename);
-    send(peerfd, &t, 4 + t.len, 0);
+    send(sockfd, &t, 4 + t.len, 0);
 
     //其次发送文件长度
     struct stat st;
@@ -40,7 +38,7 @@ void putsCommand(task_t *task)
     fstat(fd, &st);
     printf("filelength: %ld\n", st.st_size);//off_t
 
-    send(peerfd, &st.st_size, sizeof(st.st_size), 0);
+    send(sockfd, &st.st_size, sizeof(st.st_size), 0);
 
     //最后发送文件内容
     while(1) {
@@ -54,7 +52,7 @@ void putsCommand(task_t *task)
             break;
         }
         t.len = ret;
-        ret = sendn(peerfd, &t, 4 + t.len);
+        ret = sendn(sockfd, &t, 4 + t.len);
         if(ret == -1) {
             break;
         }

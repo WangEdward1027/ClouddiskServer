@@ -23,10 +23,12 @@ int recvn(int sockfd, void * buff, int len)
 void putsCommand(task_t* task)
 {
     int clientfd = task->peerfd;
-    int ret = 1;
+    int ret;
 
+    char notice[64];
     //向客户端发送文件可接收请求
-    ret = send(clientfd, (char*)&ret, sizeof(ret),0);
+    sprintf(notice, "%d%s",CMD_TYPE_PUTS,"server can recive");
+    ret = send(clientfd, notice, strlen(notice),0);
 
     //先接收文件名
     char filename[100] = {0};

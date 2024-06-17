@@ -4,7 +4,7 @@ void cdCommand(task_t* task) {
 
     // 保存用户要切换的目录
     char* path = task->data;
-    char buff[1024];
+    char buff[4096];
     bzero(buff, sizeof(buff));
     
     // 切换到相应的目录
@@ -14,7 +14,7 @@ void cdCommand(task_t* task) {
     }
 
     // 切换成功，打印新的当前工作目录
-    char cwd[1024];
+    char cwd[2048];
     bzero(cwd, sizeof(cwd));
 
     if (getcwd(cwd, sizeof(cwd)) != NULL) {
