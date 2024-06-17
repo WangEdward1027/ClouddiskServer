@@ -1,29 +1,27 @@
 #include "client.h"
 
-int main()
-{
-    //创建客户端套接字
-    int clientfd = socket(AF_INET, SOCK_STREAM, 0);
-    ERROR_CHECK(clientfd, -1, "socket");
+int tcpConnect(const char *ip,unsigned short port){
+    //创立TCP套接字
+    int clientfd =socket(AF_INET,SOCK_STREAM,0);
+    if(clientfd<0){
+        perror("socket");
+        return -1;
+    }
 
+    //填写服务器网络地址
     struct sockaddr_in serveraddr;
-    memset(&serveraddr, 0, sizeof(serveraddr));//初始化
-    serveraddr.sin_family = AF_INET;
-    serveraddr.sin_port = htons(8080);
-    serveraddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    memset(&serveraddr,0,sizeof(serveraddr));
+    serveraddr.sin_family=AF_INET;
+    serveraddr.sin_port=htons(port);
+    serveraddr.sin_addr.s_addr=inet_addr(ip);
 
-    int ret = connect(clientfd, 
-                      (const struct sockaddr *)&serveraddr, 
-                      sizeof(serveraddr));
-    ERROR_CHECK(ret, -1, "connect");
-
-    //用户身份校验,0表示登录成功
-    while(!usrCheck(clientfd))
-        printf("登录失败，请重新登录！\n");
-    //用户输入命令分词执行
-
-
-
-    return 0;
+    //请求连接
+    int ret=connect(clientfd,(const struct sockaddr*)&serveraddr,sizeof(serveraddr));
+    if(ret<0)
+    {
+        perror("connect");
+        close(clientfd);
+        return -1;
+    }
+    return clientfd;
 }
-
