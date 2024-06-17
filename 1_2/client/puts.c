@@ -1,5 +1,21 @@
 #include "client.h"
 
+int sendn(int sockfd, const void* buff, int len) {
+    
+     int left = len;
+     const char* pbuf = (char*)buff;
+     int ret = 0;
+     while (left > 0) {
+        ret = send(sockfd, pbuf, left, 0);
+        ERROR_CHECK(ret, -1, "send");
+
+        pbuf += ret;
+        left -= ret;
+    }
+
+}
+
+
 //将文件上传到服务器
 void putsCommand(task_t *task)
 {
