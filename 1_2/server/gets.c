@@ -1,21 +1,5 @@
 #include "thread_pool.h"
 
-int sendn(int sockfd, const void * buff, int len){
-    int left = len;
-    const char * pbuf = (const char *) buff;
-    int ret = 0;
-    while(left > 0){
-        ret = send(sockfd, pbuf, left, 0);
-        if(ret == -1){
-            perror("send");
-            return -1;
-        }
-        pbuf += ret;
-        left -= ret;
-    }
-    return len - left;
-}
-
 //下载:接收从服务器发来的文件
 void getsCommand(task_t* task){
     //参数校验
