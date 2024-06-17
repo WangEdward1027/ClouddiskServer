@@ -90,7 +90,7 @@ int sendn(int sockfd, const void * buff, int len);
 int recvn(int sockfd, void * buff, int len);
 
 //将本地文件上传至服务器
-void puts(task_t * task);  // 有问题,客户端没有task
+void puts(int sockfd, char* filename);
 //从服务器下载文件
 void gets(int scokfd);
 //客户端登录校验
