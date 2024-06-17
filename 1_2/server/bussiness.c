@@ -61,6 +61,8 @@ void doTask(task_t * task)
         getsetting(task);        break;
     case CMD_TYPE_USRENCODE:
         checkUsrEncode(task);    break;
+    default:
+        break;
     }
 }
 
