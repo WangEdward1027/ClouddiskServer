@@ -1,5 +1,4 @@
 #include "thread_pool.h"
-#include <shadow.h>
 
 void get_setting(char *salt,char *passwd)
 {
@@ -34,14 +33,19 @@ void getsetting(task_t * task)
     sendMessage(socketfd, setting, CMD_TYPE_USRNAME);
 }
 
-void sendMessage(int sockfd, char* buffer, CmdType cmdType){    
+int sendMessage(int sockfd, char* buffer, CmdType cmdType){    
     int ret;
     int len = strlen(buffer);
     //1.1先发消息长度
-    sendn(sockfd, (char*)&len, sizeof(len));
+    ret = sendn(sockfd, (char*)&len, sizeof(len));
+    ERROR_CHECK(ret, -1, "sendMessage len");
     //1.2再发消息类型
-    sendn(sockfd, &cmdType, sizeof(CmdType));
+    ret = sendn(sockfd, &cmdType, sizeof(CmdType));
+    ERROR_CHECK(ret, -1, "sendMessage CmdType");
     //1.3最后发消息内容
-    sendn(sockfd, buffer, len);
+    ret = sendn(sockfd, buffer, len);
+    ERROR_CHECK(ret, -1, "sendMessage buffer");
+
+    return 0;
 }
 

@@ -17,7 +17,7 @@ int main()
                       sizeof(serveraddr));
     ERROR_CHECK(ret, -1, "connect");
 
-    //用户身份校验
+    //用户身份校验,0表示登录成功
     while(!usrCheck(clientfd))
         printf("登录失败，请重新登录！\n");
     //用户输入命令分词执行
