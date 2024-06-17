@@ -90,9 +90,9 @@ int sendn(int sockfd, const void * buff, int len);
 int recvn(int sockfd, void * buff, int len);
 
 //将本地文件上传至服务器
-void putsCommand(task_t * task);  // 有问题,客户端没有task
+void puts(task_t * task);  // 有问题,客户端没有task
 //从服务器下载文件
-void getsCommand(int scokfd);
+void gets(int scokfd);
 //客户端登录校验
 int usrCheck(int sockfd);
 //TCP连接
