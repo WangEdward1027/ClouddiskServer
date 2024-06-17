@@ -1,6 +1,6 @@
 #include "thread_pool.h"
 
-#define ARGS_CHECK(x,y){\
+#define ARGS_CHECK_TREE(x,y){\
     if(x != y)error(-1,0,"./tree filename\n");\
 }
 
