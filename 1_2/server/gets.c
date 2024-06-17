@@ -1,5 +1,3 @@
-//王绪飞:下载
-
 #include "client.h"
 
 int sendn(int sockfd, const void * buff, int len){
@@ -18,7 +16,7 @@ int sendn(int sockfd, const void * buff, int len){
     return len - left;
 }
 
-//下载:从服务器将目标文件下载到本地客户端,即服务器发送文件给客户端
+//下载:接收从服务器发来的文件
 void getsCommand(task_t* task){
     //参数校验
     assert(task);
