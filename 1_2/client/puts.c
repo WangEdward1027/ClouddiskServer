@@ -20,6 +20,7 @@ void putsFile(int sockfd, train_t * pt)
 {
     char filename[20] = {0};
     strcpy(filename, pt->buff);
+    printf("filename:%s\n",filename);
 
     //打开文件
     int fd = open(filename, O_RDWR);
