@@ -48,7 +48,8 @@ typedef void (*sighandler_t)(int);
     if(ret != 0) {\
         fprintf(stderr, "%s:%s\n", func, strerror(ret));\
     }}
-
+#define USER_NAME "please input a valid user name:\n"
+#define PASSWORD "please input the right password:\n"
 typedef enum {
     CMD_TYPE_PWD=1,
     CMD_TYPE_LS,
@@ -58,11 +59,15 @@ typedef enum {
     CMD_TYPE_PUTS,
     CMD_TYPE_GETS,
     CMD_TYPE_TREE,
-    CMD_TYPE_USRNAME,
-    CMD_TYPE_USRENCODE,
-    CMD_TYPE_USRCHECK,
-    CMD_TYPE_NOTCMD  //不是命令
+    CMD_TYPE_NOTCMD,  //不是命令
+    
 
+    TASK_LOGIN_SECTION1 = 100,
+    TASK_LOGIN_SECTION1_RESP_OK,
+    TASK_LOGIN_SECTION1_RESP_ERROR,
+    TASK_LOGIN_SECTION2,
+    TASK_LOGIN_SECTION2_RESP_OK,
+    TASK_LOGIN_SECTION2_RESP_ERROR,
 }CmdType;
 
 typedef struct 
