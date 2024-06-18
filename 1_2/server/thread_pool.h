@@ -34,6 +34,7 @@
 #include "user.h"
 #include <limits.h>
 #include <asm-generic/errno-base.h>
+#include<unistd.h>
 
 #define SIZE(a) (sizeof(a)/sizeof(a[0]))
 
