@@ -80,7 +80,7 @@ int main()
             //接收文件是接收文件命令
             if(recvCmdType==CMD_TYPE_GETS){
                 getsFile(clientfd);
-                /* recvFile(clientfd);//int recvFile(int sockfd)接收文件,文件名 */
+                // recvFile(clientfd);//int recvFile(int sockfd)接收文件,文件名 
             }else if(recvCmdType==CMD_TYPE_PUTS){
                 sendFile(clientfd);            
             }
