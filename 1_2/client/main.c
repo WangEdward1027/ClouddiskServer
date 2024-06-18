@@ -30,7 +30,7 @@ void sendtrain(int peerfd, train_t* train, int len) {
 int main()
 {
     //tcp连接
-    int clientfd=tcpConnect("127.0.0.1",8080);//int tcp(const char *ip,unsigned short port)
+    int clientfd=tcpConnect("192.168.127.129",8080);//int tcp(const char *ip,unsigned short port)
     
     //登录
    // usrCheck(clientfd);
