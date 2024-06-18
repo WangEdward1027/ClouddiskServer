@@ -96,7 +96,7 @@ int sendn(int sockfd, const void * buff, int len);
 int recvn(int sockfd, void * buff, int len);
 
 //将本地文件上传至服务器
-void putsFile(int sockfd, char* filename);
+void putsFile(int sockfd, train_t * pt);
 //从服务器下载文件
 void getsFile(int scokfd);
 //客户端登录校验

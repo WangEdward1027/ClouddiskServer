@@ -16,50 +16,38 @@ int sendn(int sockfd, const void* buff, int len) {
 }
 
 //将文件上传到服务器
-void putsFile(int sockfd, char* filename)
+void putsFile(int sockfd, train_t * pt)
 {
-    //参数校验
-    /* assert(task); */
+    char filename[20] = {0};
+    strcpy(filename, pt->buff);
 
-    //读取本地文件
+    //打开文件
     int fd = open(filename, O_RDWR);
-
-    train_t t;
-    memset(&t, 0, sizeof(t));
-
-    //先发送文件名
-    t.len = strlen(filename);
-    strcpy(t.buff, filename);
-    send(sockfd, &t, 4 + t.len, 0);
-
-    //其次发送文件长度
+    if(fd < 0) {
+        perror("open"); return;
+    }
+    //获取文件大小
     struct stat st;
     memset(&st, 0, sizeof(st));
     fstat(fd, &st);
-    printf("filelength: %ld\n", st.st_size);//off_t
-
-    send(sockfd, &st.st_size, sizeof(st.st_size), 0);
-
-    //最后发送文件内容
-    while(1) {
-        memset(&t, 0, sizeof(t));
-        int ret = read(fd, t.buff, sizeof(t.buff));
-        if(ret != 1000) {
-            printf("read ret: %d\n", ret);
-        }
+    printf("file length: %ld\n", st.st_size);
+    //发送文件大小
+    sendn(sockfd, &st.st_size, sizeof(st.st_size));
+    off_t cur = 0;
+    char buff[1000] = {0};
+    int ret = 0;
+    //发送内容
+    while(cur < st.st_size) {
+        memset(buff, 0, sizeof(buff));
+        ret = read(fd, buff, sizeof(buff));
         if(ret == 0) {
-            //文件已经读取完毕
             break;
         }
-        t.len = ret;
-        ret = sendn(sockfd, &t, 4 + t.len);
-        if(ret == -1) {
-            break;
-        }
-        if(ret != 1004) {
-            printf("send ret: %d\n", ret);
-        }
+        ret = sendn(sockfd, buff, ret);
+        cur +=  ret;
     }
-    close(fd);//关闭文件
+    //发送完成
+    printf("file send over.\n");
+    close(fd);
 }
 

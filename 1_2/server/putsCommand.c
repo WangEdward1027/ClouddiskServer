@@ -2,47 +2,34 @@
 
 void putsCommand(task_t* task)
 {
-    int clientfd = task->peerfd;
-    int ret;
+    printf("execute puts command.\n");
+    char filename[20] = {0};
+    strcpy(filename, task->data);
+    printf("filname: %s\n", filename);
+    off_t len = 0;
+    int ret = recvn(task->peerfd, &len, sizeof(len));
+    printf("filelen: %ld.\n", len);
 
-    char notice[128];
-    //向客户端发送文件可接收请求包含包含文件名、文件长度
-    ret = strlen(task->data);
-    strcpy(notice, (char*)&ret);
-    strcat(notice,task->data);
-    ret = sendn(clientfd, notice, strlen(notice));
-
-    //先接收文件名
-    char filename[100] = {0};
-    int len = 0;
-    ret = recvn(clientfd, (char*)&len, sizeof(len));//先接文件名长度
-    printf("ret: %d, filename's len:%d\n", ret, len);
-    ret = recvn(clientfd, filename, len);//再接文件名内容
-    printf("ret: %d, recv msg:%s\n", ret, filename);
-    
-    int wfd = open(filename, O_CREAT | O_RDWR, 0644);
-
-    //再获取的是文件内容的长度
-    off_t length = 0;
-    recvn(clientfd, (char*)&length, sizeof(length));
-    printf("file length: %ld\n", length);
-    
-    //最后接收文件内容
+    //打开文件
+    int fd = open(filename, O_CREAT|O_RDWR, 0644);
+    if(fd < 0) {
+        perror("open"); return;
+    }
+    //接收并写入文件
     char buff[1000] = {0};
-    while(1) {
-        ret = recvn(clientfd, (char*)&len, sizeof(len));//先接长度
-        if(ret == 0) {
+    off_t left = len;
+    while(left > 0) {
+        if(left < 1000) {
+            ret = recvn(task->peerfd, buff, left);
+        } else {
+            ret = recvn(task->peerfd, buff, sizeof(buff));
+        }
+        if(ret < 0) {
             break;
         }
-        //可以确定接收len个字节的长度
-        ret = recvn(clientfd, buff, len);//再接文件内容
-        if(ret != 1000) {
-            printf("ret: %d\n", ret);
-        }
-        //最后再写入本地
-        write(wfd, buff, ret);
+        ret = write(fd, buff, ret);
+        left -= ret;
     }
-    close(wfd);
-    close(clientfd);   
+    close(fd);  
 }
 

@@ -1,14 +1,8 @@
 #include "client.h"
 
-void sendFile(int clientfd){
-    //先接受文件名长度
-    int filenamelen;
-    recvn(clientfd, &filenamelen,sizeof(filenamelen));
-    //再接受文件名
-    char filename[64];
-    recvn(clientfd, filename, filenamelen);
+void sendFile(int clientfd, train_t * train){
     //执行发送函数
-    putsFile(clientfd, filename);
+    putsFile(clientfd, train);
 
 }
 
@@ -99,7 +93,7 @@ int main(int argc, char* argv[])
                 getsFile(clientfd);
                 // recvFile(clientfd);//int recvFile(int sockfd)接收文件,文件名 
             }else if(recvCmdType==CMD_TYPE_PUTS){
-                sendFile(clientfd);            
+                sendFile(clientfd, &train);            
             }
             
             //执行普通命令
