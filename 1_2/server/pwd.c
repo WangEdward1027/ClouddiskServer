@@ -24,7 +24,7 @@ void pwdCommand(task_t * task)
     free(cwd);
     
     // 将buff的内容发送给客户端
-    sendn(task->peerfd, buff, sizeof(buff));
+    sendn(task->peerfd, buff, strlen(buff));
 
 }
 

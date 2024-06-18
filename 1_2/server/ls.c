@@ -25,7 +25,7 @@ void lsCommand(task_t * task)
     if (!stream) {
         // 打开目录失败
         sprintf(buff, "opendir %s failed, %s not exist.\n", cwd, cwd);
-        sendn(task->peerfd, buff, sizeof(buff));
+        sendn(task->peerfd, buff, strlen(buff));
         return;
     }
 
@@ -69,7 +69,7 @@ void lsCommand(task_t * task)
     closedir(stream);
     
     // 将服务器端ls产生的内容，发送到客户端
-    sendn(task->peerfd, buff, sizeof(buff));
+    sendn(task->peerfd, buff, strlen(buff));
 
 }
 
