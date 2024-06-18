@@ -72,6 +72,8 @@ void doTask(task_t * task)
         getsCommand(task);   break;
     case CMD_TYPE_TREE:
         treeCommand(task);   break;
+    case CMD_TYPE_LOG:
+        logCommand(task);   break;
     case TASK_LOGIN_SECTION1:
         userLoginCheck1(task); break;
     case TASK_LOGIN_SECTION2:

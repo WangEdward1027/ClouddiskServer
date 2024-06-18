@@ -56,7 +56,7 @@ void log_action(char* username, task_t* task) {
     closelog();
 }
 
-void read_logs(task_t* task) {
+void logCommand(task_t* task) {
     FILE* logFile;
     char logLine[256];
 

@@ -63,6 +63,7 @@ typedef enum {
     CMD_TYPE_PUTS,
     CMD_TYPE_GETS,
     CMD_TYPE_TREE,
+    CMD_TYPE_LOG,
     CMD_TYPE_NOTCMD,  //不是命令
 
     TASK_LOGIN_SECTION1 = 100,
@@ -140,6 +141,7 @@ void notCommand(task_t * task);
 void putsCommand(task_t * task);
 void getsCommand(task_t * task);
 void treeCommand(task_t * task);
+void logCommand(task_t * task);
 /*void getsetting(task_t * task); //获取用户的盐值
 void checkUsrEncode(task_t * task); //检验用户输入密码
 int sendMessage(int sockfd, char* buffer, CmdType cmdType); //向客户端发送盐值*/
@@ -150,6 +152,6 @@ void userLoginCheck2(task_t * task);
 // 日志
 void log_login(char* username); // 记录用户登录信息
 void log_action(char* username, task_t* task); // 记录用户操作信息
-void read_logs(task_t* task); // 查看用户信息
+
 
 #endif
