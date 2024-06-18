@@ -42,6 +42,7 @@ void handleMessage(int sockfd, int epfd, task_queue_t * que)
 void notCommand(task_t *task){
     //服务器判断不是正常的指令, 给客户端发回提示
     char buff[128] = "This is not a command.\n";
+    buff[strlen(buff)+1] = '\0';
     sendn(task->peerfd, buff , strlen(buff) + 1); 
 }
 
