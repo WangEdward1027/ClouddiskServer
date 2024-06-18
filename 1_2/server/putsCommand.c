@@ -7,7 +7,7 @@ void putsCommand(task_t* task)
 
     char notice[128];
     //向客户端发送文件可接收请求包含包含消息类型、文件名、文件长度
-    sprintf(notice, "ld%s", strlen(task->data), task->data);
+    sprintf(notice, "%ld%s", strlen(task->data), task->data);
     ret = sendn(clientfd, notice, strlen(notice));
 
     //先接收文件名
