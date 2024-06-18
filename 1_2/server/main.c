@@ -70,6 +70,10 @@ int main(int argc, char ** argv)
                     printf("\n conn %d has conneted.\n", peerfd);
                     //将新连接添加到epoll的监听红黑树上
                     addEpollReadfd(epfd, peerfd);
+                    //添加用户节点
+                    user_info_t * user = (user_info_t*)calloc(1, sizeof(user_info_t));
+                    user->sockfd = peerfd;
+                    appendNode(&userList, user);
                 } else if(fd == exitPipe[0]) {
                     //线程池要退出
                     int howmany = 0;
