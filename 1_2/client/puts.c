@@ -1,18 +1,22 @@
 #include "client.h"
 
-int sendn(int sockfd, const void* buff, int len) {
-    
-     int left = len;
-     const char* pbuf = (char*)buff;
-     int ret = 0;
-     while (left > 0) {
+//作用: 确定发送len字节的数据
+int sendn(int sockfd, const void * buff, int len)
+{
+    int left = len;
+    const char * pbuf = (const char *)buff;
+    int ret = -1;
+    while(left > 0) {
         ret = send(sockfd, pbuf, left, 0);
-        ERROR_CHECK(ret, -1, "send");
+        if(ret < 0) {
+            perror("send");
+            return -1;
+        }
 
-        pbuf += ret;
         left -= ret;
+        pbuf += ret;
     }
-    return 0;
+    return len - left;
 }
 
 //将文件上传到服务器

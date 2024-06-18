@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
     int clientfd=tcpConnect(argv[1], 8080);//int tcp(const char *ip,unsigned short port)
     
     //登录
-   // usrCheck(clientfd);
+    usrCheck(clientfd);
 
     char buff[128]={0};
 
