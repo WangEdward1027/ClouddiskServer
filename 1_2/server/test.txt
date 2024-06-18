@@ -1,6 +1,0 @@
-<<<<<<< Updated upstream:1_2/server/test.txt
-This is a textfile.
-YES
-=======
-hi!!!!!
->>>>>>> Stashed changes:1_2/client/test

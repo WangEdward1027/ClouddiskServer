@@ -68,6 +68,7 @@ typedef enum {
     CMD_TYPE_LOG = 9,
     CMD_TYPE_NOTCMD = 10,  //不是命令
     CMD_TYPE_TOUCH = 11,  
+    CMD_TYPE_REMOVE=12,
 
     TASK_LOGIN_SECTION1 = 100,
     TASK_LOGIN_SECTION1_RESP_OK,
@@ -145,6 +146,7 @@ void putsCommand(task_t * task);
 void getsCommand(task_t * task);
 void treeCommand(task_t * task);
 void logCommand(task_t * task);
+void removeCommand(task_t *task);
 /*void getsetting(task_t * task); //获取用户的盐值
 void checkUsrEncode(task_t * task); //检验用户输入密码
 int sendMessage(int sockfd, char* buffer, CmdType cmdType); //向客户端发送盐值*/

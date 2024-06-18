@@ -22,6 +22,8 @@ const char* cmdTypeToString(CmdType type) {
             return "CMD_TYPE_TREE";
         case CMD_TYPE_NOTCMD:
             return "CMD_TYPE_NOTCMD";
+        case CMD_TYPE_REMOVE:
+            return "CMD_TYPE_REMOVE";
         default:
             return "Unknown";
     }

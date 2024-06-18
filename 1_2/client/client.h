@@ -61,7 +61,8 @@ typedef enum {
     CMD_TYPE_TREE,
     CMD_TYPE_LOG,
     CMD_TYPE_NOTCMD,  //不是命令
-    
+    CMD_TYPE_TOUCH,
+    CMD_TYPE_REMOVE,
 
     TASK_LOGIN_SECTION1 = 100,
     TASK_LOGIN_SECTION1_RESP_OK,

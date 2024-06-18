@@ -31,6 +31,8 @@ int parseCommand(const char* buff, int len, train_t* pt){
         pt->type = CMD_TYPE_TREE;
     }else if(strcmp(token, "log") == 0){
         pt->type = CMD_TYPE_LOG;
+    }else if(strcmp(token,"rm")==0){
+        pt->type=CMD_TYPE_REMOVE;
     }else{
         pt->type = CMD_TYPE_NOTCMD;
     }
