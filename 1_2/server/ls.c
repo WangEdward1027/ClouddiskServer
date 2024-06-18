@@ -69,8 +69,10 @@ void lsCommand(task_t * task)
     
     closedir(stream);
     
+    buff[strlen(buff)] = '\0';
+
     // 将服务器端ls产生的内容，发送到客户端
-    sendn(task->peerfd, buff, strlen(buff));
+    sendn(task->peerfd, buff, strlen(buff) + 1);
     printf("%s", buff);
 }
 
