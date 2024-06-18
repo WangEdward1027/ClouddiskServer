@@ -32,6 +32,7 @@
 #include <sys/syslog.h>
 #include "linked_list.h"
 #include "user.h"
+#include <limits.h>
 
 #define SIZE(a) (sizeof(a)/sizeof(a[0]))
 
