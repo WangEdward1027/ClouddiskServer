@@ -9,7 +9,7 @@
 void lsCommand(task_t * task)
 {
     char* cwd; // 用于保存用户传入的目录
-    char buff[1024]; // 用于保存要发送给客户端的内容
+    char buff[2048]; // 用于保存要发送给客户端的内容
     bzero(&buff, sizeof(buff));
 
     if (strcmp(task->data, "") == 0) {
@@ -58,18 +58,20 @@ void lsCommand(task_t * task)
         // puts(filename); 这里不用puts的原因是 puts属于行缓冲，
         // 每次输出都会在末尾自动加一个换行符，不符合ls命令的形式 
         // printf("%-15s\t", filename);
-        sprintf(buff, "%-15s\t", filename);
+        char str[20] = "";
+        sprintf(str, "%-15s\t", filename);
+        strcat(buff, str);
 
         i++;
         if (i % 4 == 0) {
             // printf("\n");   // 为了美观设置每输出4个单词就换行
-            sprintf(buff, "\n");
+            strcat(buff, "\n");
         }
         
     }
     
     // printf("\n");
-    sprintf(buff, "\n");
+    strcat(buff, "\n");
     
     closedir(stream);
     

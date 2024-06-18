@@ -57,6 +57,7 @@ void loginCheck2(user_info_t * user, const char * encrypted)
         strcpy(t.buff, "/server/$ ");
         ret = sendn(user->sockfd, &t, 8 + t.len);
         printf("Login success.\n");
+        log_login(user->name);
     } else {
         //登录失败, 密码错误
         t.type = TASK_LOGIN_SECTION2_RESP_ERROR;
