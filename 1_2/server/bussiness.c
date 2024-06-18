@@ -62,8 +62,6 @@ void doTask(task_t * task)
         mkdirCommand(task);  break;
     case CMD_TYPE_RMDIR:
         rmdirCommand(task);  break;
-    case CMD_TYPE_NOTCMD:
-        notCommand(task);   break;
     case CMD_TYPE_PUTS:
         putsCommand(task);   break;
         //上传任务执行完毕之后，再加回来
@@ -73,6 +71,10 @@ void doTask(task_t * task)
         getsCommand(task);   break;
     case CMD_TYPE_TREE:
         treeCommand(task);   break;
+    case CMD_TYPE_NOTCMD:
+        notCommand(task);   break;
+    case CMD_TYPE_TOUCH:
+        touchCommand(task);   break;
     case CMD_TYPE_LOG:
         logCommand(task);   break;
     case TASK_LOGIN_SECTION1:
