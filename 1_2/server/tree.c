@@ -30,6 +30,7 @@ void dfs_print(const char* path, int width){
                 strcat(treestr,"_");
         }
         strcat(treestr, filename);
+        strcat(treestr, "\n");
         //递归继续打印
         if(pdirent->d_type == DT_DIR){
             directories++;
@@ -57,6 +58,7 @@ void treeCommand(task_t* task)
     // ./tree dir
     memset(treestr, 0, sizeof(treestr));
     strcpy(treestr, dirname); // 打印目录的名字
+    strcat(treestr, "\n"); //
     dfs_print(dirname, 4); // 递归打印每一个目录项
     //返回结果发送给客户端
     sendn(socketfd, treestr, strlen(treestr));
