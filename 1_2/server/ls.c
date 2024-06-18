@@ -8,23 +8,16 @@
 
 void lsCommand(task_t * task)
 {
-    char* cwd; // 用于保存用户传入的目录
+    char cwd[20] = ""; // 用于保存用户传入的目录
     char buff[2048]; // 用于保存要发送给客户端的内容
     bzero(&buff, sizeof(buff));
 
     if (strcmp(task->data, "") == 0) {
         // 用户未传入任何内容
+        strcpy(cwd, "."); // 当前工作目录
 
-        cwd = getcwd(NULL, 0); // 获取当前工作目录的绝对路径
-
-        if (cwd == NULL) {
-            // 获取当前目录失败
-            sprintf(buff, "getcwd failed");
-            sendn(task->peerfd, buff, sizeof(buff));
-            return;
-        }
     }else {
-        cwd = task->data;
+        strcpy(cwd, task->data);
     }
     
 
