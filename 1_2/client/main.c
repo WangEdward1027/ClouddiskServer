@@ -105,7 +105,7 @@ int main(int argc, char* argv[])
             //执行普通命令
             else{
                 char buff[4096];
-                recvn(clientfd,&buff,sizeof(buff));
+                recv(clientfd,&buff,sizeof(buff),0);
                 printf("%s\n",buff);//接收命令执行结果
             }
         }
