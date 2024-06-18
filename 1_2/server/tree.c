@@ -20,16 +20,16 @@ void dfs_print(const char* path, int width){
         //忽略隐藏文件
         if(filename[0] == '.')continue;
         //打印文件名
-        sprintf(treestr, "%s|", treestr);
+        strcat(treestr,"|");
         for(int i = 0; i < width; i++){
             if(i < width-4)
-                sprintf(treestr, "%s ",treestr);
+                strcat(treestr," ");
             else if(i!= 0 && i%4==0)
-                sprintf(treestr, "%s|", treestr);
-            else
-                sprintf(treestr, "%s_", treestr);
+                strcat(treestr,"|");
+            else 
+                strcat(treestr,"_");
         }
-        sprintf(treestr, "%s%s", treestr, filename);
+        strcat(treestr, filename);
         //递归继续打印
         if(pdirent->d_type == DT_DIR){
             directories++;
@@ -54,9 +54,8 @@ void treeCommand(task_t* task)
     char * dirname = task->data;
     // ./tree dir
     memset(treestr, 0, sizeof(treestr));
-    sprintf(treestr, "%s",dirname); // 打印目录的名字
+    strcpy(treestr, dirname); // 打印目录的名字
     dfs_print(dirname, 4); // 递归打印每一个目录项
-    sprintf(treestr,"%s\n%d directories, %d files\n", treestr, directories, files); //最后打印统计信息
     //返回结果发送给客户端
     sendn(socketfd, treestr, strlen(treestr));
 }
