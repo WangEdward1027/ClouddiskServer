@@ -20,11 +20,12 @@ void pwdCommand(task_t * task)
     
     // 将获取的pwd保存到buff中
     strcpy(buff, cwd);
+    buff[strlen(buff)] = '\0';
 
     free(cwd);
     
     // 将buff的内容发送给客户端
-    sendn(task->peerfd, buff, strlen(buff));
+    sendn(task->peerfd, buff, strlen(buff) + 1);
 
 }
 
