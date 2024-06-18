@@ -10,7 +10,9 @@ void cdCommand(task_t* task) {
     // 切换到相应的目录
     if (chdir(path) == -1) {
         // 切换失败
-        error(1, errno, "chdir %s failed!\n", path);
+        sprintf(buff, "切换目录失败, %s不存在\n", path);
+        sendn(task->peerfd, buff, sizeof(buff));
+        return;
     }
 
     // 切换成功，打印新的当前工作目录
