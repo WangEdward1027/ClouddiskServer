@@ -56,16 +56,16 @@ typedef void (*sighandler_t)(int);
     }}
 
 typedef enum {
-    CMD_TYPE_PWD=1,
-    CMD_TYPE_LS,
-    CMD_TYPE_CD,
-    CMD_TYPE_MKDIR,
-    CMD_TYPE_RMDIR,
-    CMD_TYPE_PUTS,
-    CMD_TYPE_GETS,
-    CMD_TYPE_TREE,
-    CMD_TYPE_LOG,
-    CMD_TYPE_NOTCMD,  //不是命令
+    CMD_TYPE_PWD = 1,
+    CMD_TYPE_LS = 2,
+    CMD_TYPE_CD = 3,
+    CMD_TYPE_MKDIR = 4,
+    CMD_TYPE_RMDIR = 5,
+    CMD_TYPE_PUTS = 6,
+    CMD_TYPE_GETS = 7,
+    CMD_TYPE_TREE = 8,
+    CMD_TYPE_LOG = 9,
+    CMD_TYPE_NOTCMD = 10,  //不是命令
 
     TASK_LOGIN_SECTION1 = 100,
     TASK_LOGIN_SECTION1_RESP_OK,
