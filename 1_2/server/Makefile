@@ -8,6 +8,7 @@ ALL: $(BIN)
 
 $(BIN): $(Outs)
 	$(CC) -o $@ $^ $(CFLAGS)
+	rm -f $(Outs)  # 删除所有 .o 文件
 
 %.o: %.c
 	$(CC) -c $< -o $@ $(CFLAGS)
