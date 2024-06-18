@@ -64,7 +64,7 @@ int main()
             recvn(clientfd,&recvCmdType,sizeof(recvCmdType));//接收命令类型
 
             printf("命令是：%d号命令\n",recvCmdType);
-            //接收文件是9号命令：接收文件
+            //接收文件是接收文件命令
             if(recvCmdType==CMD_TYPE_GETS){
                 getsFile(clientfd);
                 /* recvFile(clientfd);//int recvFile(int sockfd)接收文件,文件名 */
