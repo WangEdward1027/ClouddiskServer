@@ -60,14 +60,10 @@ typedef enum {
     CMD_TYPE_PUTS,
     CMD_TYPE_GETS,
     CMD_TYPE_TREE,
-    CMD_TYPE_NOTCMD,  //不是命令
-
-    TASK_LOGIN_SECTION1 = 100,
-    TASK_LOGIN_SECTION1_RESP_OK,
-    TASK_LOGIN_SECTION1_RESP_ERROR,
-    TASK_LOGIN_SECTION2,
-    TASK_LOGIN_SECTION2_RESP_OK,
-    TASK_LOGIN_SECTION2_RESP_ERROR
+    CMD_TYPE_USRNAME,
+    CMD_TYPE_USRENCODE,
+    CMD_TYPE_USRCHECK,
+    CMD_TYPE_NOTCMD  //不是命令
 }CmdType;
 
 typedef struct 
@@ -137,10 +133,7 @@ void notCommand(task_t * task);
 void putsCommand(task_t * task);
 void getsCommand(task_t * task);
 void treeCommand(task_t * task);
-/*void getsetting(task_t * task); //获取用户的盐值
+void getsetting(task_t * task); //获取用户的盐值
 void checkUsrEncode(task_t * task); //检验用户输入密码
-int sendMessage(int sockfd, char* buffer, CmdType cmdType); //向客户端发送盐值*/
-//用户登录的操作
-void userLoginCheck1(task_t * task);
-void userLoginCheck2(task_t * task);
+int sendMessage(int sockfd, char* buffer, CmdType cmdType); //向客户端发送盐值
 #endif

@@ -1,6 +1,8 @@
 #include "client.h"
 
 int parseCommand(const char* buff, int len, train_t* pt){
+    pt->len = strlen(pt->buff);
+    
     //把buff里的第一个命令分词，然后判断CmdTpe的类型,填入train_t中
     char* tempbuff =(char *)calloc(len + 1, sizeof(char));
     strcpy(tempbuff, buff);     //buff是const

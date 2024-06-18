@@ -3,8 +3,6 @@
 #define EPOLL_ARR_SIZE 100
 
 int exitPipe[2];
-//定义存储用户信息的链表
-ListNode * userList = NULL;
 
 void sigHandler(int num)
 {

@@ -60,48 +60,15 @@ void doTask(task_t * task)
         notCommand(task);   break;
     case CMD_TYPE_PUTS:
         putsCommand(task);   break;
-        //上传任务执行完毕之后，再加回来
-        addEpollReadfd(task->peerfd, task->peerfd);
     case CMD_TYPE_GETS:
         getsCommand(task);   break;
     case CMD_TYPE_TREE:
         treeCommand(task);   break;
-    case TASK_LOGIN_SECTION1:
-        userLoginCheck1(task); break;
-    case TASK_LOGIN_SECTION2:
-        userLoginCheck2(task); break;
-
+    case CMD_TYPE_USRNAME:
+        getsetting(task);        break;
+    case CMD_TYPE_USRENCODE:
+        checkUsrEncode(task);    break;
     default:
         break;
-    }
-}
-
-//外部变量(userList是在main.c文件中定义的)
-extern ListNode * userList;
-
-void userLoginCheck1(task_t * task) {
-    printf("userLoginCheck1.\n");
-    ListNode * pNode = userList;
-    while(pNode != NULL) {
-        user_info_t * user = (user_info_t *)pNode->val;
-        if(user->sockfd == task->peerfd) {
-            //拷贝用户名
-            strcpy(user->name, task->data);
-            loginCheck1(user);
-            return;
-        }
-    }
-}
-
-void userLoginCheck2(task_t * task) {
-    printf("userLoginCheck2.\n");
-    ListNode * pNode = userList;
-    while(pNode != NULL) {
-        user_info_t * user = (user_info_t *)pNode->val;
-        if(user->sockfd == task->peerfd) {
-            //拷贝加密密文
-            loginCheck2(user, task->data);
-            return;
-        }
     }
 }

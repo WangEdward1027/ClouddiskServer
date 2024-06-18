@@ -72,15 +72,14 @@ int main()
 
         //接收服务器数据
         else if(FD_ISSET(clientfd,&rdset)){
-            int recvCmdType=train.type;
-            //memset(&recvCmdType,0,sizeof(recvCmdType));
-            //recvn(clientfd,&recvCmdType,sizeof(recvCmdType));//接收命令类型
+            int recvCmdType;
+            recvn(clientfd,&recvCmdType,sizeof(recvCmdType));//接收命令类型
 
             printf("命令是：%d号命令\n",recvCmdType);
             //接收文件是接收文件命令
             if(recvCmdType==CMD_TYPE_GETS){
                 getsFile(clientfd);
-                // recvFile(clientfd);//int recvFile(int sockfd)接收文件,文件名 
+                /* recvFile(clientfd);//int recvFile(int sockfd)接收文件,文件名 */
             }else if(recvCmdType==CMD_TYPE_PUTS){
                 sendFile(clientfd);            
             }
