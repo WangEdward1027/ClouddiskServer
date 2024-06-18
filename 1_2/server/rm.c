@@ -8,7 +8,7 @@ void rmDirRec(const char *path)
     DIR *dp=opendir(path);
     if(dp==NULL)
     {
-        error(1,errno,"opendir");
+        error(1, errno, "opendir");
     }
     //遍历目录流，递归删除每一项目录项
     errno=0;
@@ -45,10 +45,27 @@ void rmDirRec(const char *path)
 
 void rmdirCommand(task_t *task){
     //接收任务中的目录
+    if(strlen(task->data)==0){
+        const char *msg = "请输入目录";
+        sendn(task->peerfd, msg, strlen(msg));
+        return;
+    }
     char dirPath[1000];
     strncpy(dirPath,task->data,sizeof(dirPath)-1);
     dirPath[sizeof(dirPath)-1]='\0';//确保字符串以null结尾
     
+    
+    DIR *testp=opendir(dirPath);
+    if(testp==NULL){
+        const char *msg = "请输入目录";
+        sendn(task->peerfd, msg, strlen(msg));
+        return;
+    }
+
     //递归删除函数
     rmDirRec(dirPath);
+
+     // 删除成功信息
+    const char *successMsg = "删除成功";
+    sendn(task->peerfd, successMsg, strlen(successMsg));
 }
