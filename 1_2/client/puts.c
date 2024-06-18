@@ -29,7 +29,8 @@ void putsFile(int sockfd, train_t * pt)
     //打开文件
     int fd = open(filename, O_RDWR);
     if(fd < 0) {
-        perror("open"); return;
+        perror("open");
+        return;
     }
     //获取文件大小
     struct stat st;
@@ -42,6 +43,9 @@ void putsFile(int sockfd, train_t * pt)
     char buff[1000] = {0};
     int ret = 0;
     //发送内容
+    
+     lseek(fd, 0, SEEK_SET);
+
     while(cur < st.st_size) {
         memset(buff, 0, sizeof(buff));
         ret = read(fd, buff, sizeof(buff));
@@ -51,6 +55,8 @@ void putsFile(int sockfd, train_t * pt)
         ret = sendn(sockfd, buff, ret);
         cur +=  ret;
     }
+    char buff1[4096];
+    recv(sockfd,&buff1,sizeof(buff1),0);
     //发送完成
     printf("file send over.\n");
     close(fd);

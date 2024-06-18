@@ -86,19 +86,21 @@ int main(int argc, char* argv[])
             int recvCmdType=train.type;
             //memset(&recvCmdType,0,sizeof(recvCmdType));
             //recvn(clientfd,&recvCmdType,sizeof(recvCmdType));//接收命令类型
-
-            //printf("命令是：%d号命令\n",recvCmdType);
+            
+            char buff1[4096];
+            printf("命令是：%d号命令\n",recvCmdType);
             //接收文件是接收文件命令
             if(recvCmdType==CMD_TYPE_GETS){
                 getsFile(clientfd);
                 // recvFile(clientfd);//int recvFile(int sockfd)接收文件,文件名 
             }else if(recvCmdType==CMD_TYPE_PUTS){
-                sendFile(clientfd, &train);            
+                printf("开始发送文件\n");
+                sendFile(clientfd, &train); 
+                recv(clientfd,&buff1,sizeof(buff1),0);
             }
             
             //执行普通命令
             else{
-                char buff1[4096];
                 memset(&buff1,0,sizeof(buff1));
                 recv(clientfd,&buff1,sizeof(buff1),0);
                 printf("%s\n",buff1);//接收命令执行结果
