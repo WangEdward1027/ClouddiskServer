@@ -27,6 +27,13 @@ void sendtrain(int peerfd, train_t* train, int len) {
 
 }
 
+//测试函数，小火车打印
+void print_train(train_t* train){
+    printf("类型：%d\n ",train->type);
+    printf("长度：%d\n ",train->len);
+    printf("缓冲区内容：%s\n",train->buff);
+}
+
 int main()
 {
     //tcp连接
@@ -67,7 +74,12 @@ int main()
             buff[strlen(buff)-1]='\0';//忽略换行符
             //分词解析命令
             parseCommand(buff,strlen(buff)-1,&train);//int parseCommand(const char*buff,int len,train_t*pt)
+            //测试
+            print_train(&train);
+
             sendtrain(clientfd,&train,4+4+train.len);
+
+            
         }
 
         //接收服务器数据
