@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
 
         //调用select进行多路复用监听
         int nready=select(clientfd+1,&rdset,NULL,NULL,NULL);
-        printf("nready:%d\n",nready);
+        //printf("nready:%d\n",nready);
 
         //检查用户是否输入
         if(FD_ISSET(STDIN_FILENO,&rdset)){
@@ -80,7 +80,7 @@ int main(int argc, char* argv[])
             //分词解析命令
             parseCommand(buff,strlen(buff)-1,&train);//int parseCommand(const char*buff,int len,train_t*pt)
             //测试
-            print_train(&train);
+            //print_train(&train);
 
             sendtrain(clientfd,&train,4+4+train.len);
 
@@ -93,7 +93,7 @@ int main(int argc, char* argv[])
             //memset(&recvCmdType,0,sizeof(recvCmdType));
             //recvn(clientfd,&recvCmdType,sizeof(recvCmdType));//接收命令类型
 
-            printf("命令是：%d号命令\n",recvCmdType);
+            //printf("命令是：%d号命令\n",recvCmdType);
             //接收文件是接收文件命令
             if(recvCmdType==CMD_TYPE_GETS){
                 getsFile(clientfd);
