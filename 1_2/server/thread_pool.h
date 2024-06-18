@@ -146,4 +146,10 @@ int sendMessage(int sockfd, char* buffer, CmdType cmdType); //向客户端发送
 //用户登录的操作
 void userLoginCheck1(task_t * task);
 void userLoginCheck2(task_t * task);
+
+// 日志
+void log_login(char* username); // 记录用户登录信息
+void log_action(char* username, task_t* task); // 记录用户操作信息
+void read_logs(task_t* task); // 查看用户信息
+
 #endif
