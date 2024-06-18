@@ -152,7 +152,7 @@ void userLoginCheck2(task_t * task);
 
 // 日志
 void log_login(char* username); // 记录用户登录信息
-void log_action(char* username, task_t* task); // 记录用户操作信息
+void log_action(task_t* task); // 记录用户操作信息
 
 
 #endif
