@@ -34,10 +34,15 @@ void print_train(train_t* train){
     printf("缓冲区内容：%s\n",train->buff);
 }
 
-int main()
+int main(int argc, char* argv[])
 {
     //tcp连接
-    int clientfd=tcpConnect("192.168.127.129",8080);//int tcp(const char *ip,unsigned short port)
+    //Usage:./clent IP 
+    if(argc != 2){
+        printf("Usage:./client IP\n");
+        exit(1);
+    }
+    int clientfd=tcpConnect(argv[1], 8080);//int tcp(const char *ip,unsigned short port)
     
     //登录
    // usrCheck(clientfd);
