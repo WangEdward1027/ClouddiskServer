@@ -6,8 +6,10 @@ void putsCommand(task_t* task)
     int ret;
 
     char notice[128];
-    //向客户端发送文件可接收请求包含包含消息类型、文件名、文件长度
-    sprintf(notice, "%ld%s", strlen(task->data), task->data);
+    //向客户端发送文件可接收请求包含包含文件名、文件长度
+    ret = strlen(task->data);
+    strcpy(notice, (char*)&ret);
+    strcat(notice,task->data);
     ret = sendn(clientfd, notice, strlen(notice));
 
     //先接收文件名
