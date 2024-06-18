@@ -14,14 +14,14 @@ void mkdirCommand(task_t * task){
         
         // 检查创建失败是否因为目录已存在
         if(errno==EEXIST){
-            sprintf(buff,"Directory '%s' already exists.\n",Dir_Name);
+            sprintf(buff,"Directory  '%s'  already exists.\n",Dir_Name);
             sendn(task->peerfd,buff,sizeof(buff));
             return;
         }
 
         //其他创建失败
         else{
-            sprintf(buff,"Create dir Failed.\n");
+            sprintf(buff,"Create  '%s'  Failed.\n",Dir_Name);
             sendn(task->peerfd,buff,sizeof(buff));
 
             syslog(LOG_WARNING,"User execute MKDIR command: Failed.");
@@ -30,7 +30,7 @@ void mkdirCommand(task_t * task){
     } 
     else{
         //创建成功
-        sprintf(buff,"Create dir Sucessful.");
+        sprintf(buff,"Create  '%s'  Sucessful.",Dir_Name);
         sendn(task->peerfd,buff,sizeof(buff));
         syslog(LOG_INFO,"User execute MKDIR command: Successful.");
         return;
