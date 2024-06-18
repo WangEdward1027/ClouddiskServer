@@ -33,7 +33,7 @@ int main()
     int clientfd=tcpConnect("127.0.0.1",8080);//int tcp(const char *ip,unsigned short port)
     
     //登录
-    usrCheck(clientfd);
+   // usrCheck(clientfd);
 
     char buff[128]={0};
 
