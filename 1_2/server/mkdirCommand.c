@@ -27,7 +27,7 @@ void mkdirCommand(task_t * task){
         //然后通过 sendn 函数发送消息和其长度到 task->peerfd 指定的套接字
         strcpy(t.buff,message2);
         t.len=strlen(t.buff);
-        sendn(task->peerfd,&t,sizeof(t.len));
+        sendn(task->peerfd,&t,t.len+sizeof(t.len));
 
         //使用 syslog 函数记录一条警告级别的日志
         syslog(LOG_WARNING,"User execute MKDIR command: Failed.");
@@ -38,7 +38,7 @@ void mkdirCommand(task_t * task){
         //然后通过 sendn 函数发送消息和其长度到 task->peerfd 指定的套接字
         strcpy(t.buff,message1);
         t.len=strlen(t.buff);
-        sendn(task->peerfd,&t,sizeof(t.len));
+        sendn(task->peerfd,&t,t.len+sizeof(t.len));
 
         //使用 syslog 函数记录一条信息级别的日志
         syslog(LOG_INFO,"User execute MKDIR command: Successful.");
