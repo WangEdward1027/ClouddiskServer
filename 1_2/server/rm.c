@@ -2,57 +2,45 @@
 
 #include"thread_pool.h"
 
-void delete_directory(const char *directory_path) {
-    DIR *dir;
-    struct dirent *entry;
-    char path[PATH_MAX];
-    struct stat statbuf;
-
-    // 打开目录
-    dir = opendir(directory_path);
-    if (!dir) {
-        perror("opendir");
-        return;
+void rmDirRec(const char *path)
+{
+    //打开目录
+    DIR *dp=opendir(path);
+    if(dp==NULL)
+    {
+        error(1, errno, "opendir");
     }
-
-    // 遍历目录中的每个子项
-    while ((entry = readdir(dir)) != NULL) {
-        // 忽略当前目录（"."）和上级目录（".."）
-        if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0) {
+    //遍历目录流，递归删除每一项目录项
+    errno=0;
+    struct dirent*pdir;
+    while((pdir=readdir(dp))!=NULL){
+        //忽略.和..
+        char *name =pdir->d_name;
+        if(strcmp(name,".")==0||strcmp(name,"..")==0){
             continue;
         }
 
-        // 构建子项的完整路径
-        snprintf(path, sizeof(path), "%s/%s", directory_path, entry->d_name);
+        //拼接路径
+        char subpath[1024];
+        sprintf(subpath,"%s/%s",path,name);
+        
+        //递归删除
+        if(pdir->d_type==DT_DIR){
+            rmDirRec(subpath);
+        }else if(pdir->d_type==DT_REG){
+            unlink(subpath);
+            /*对于硬链接来说，unlink 用来删除目录项，并把 inode 引用计数减 1，这两步也是一个原子过程。
+             * 直到 inode 引用计数为 0，才会真正删除文件。
+             对于软链接来说，unlink 直接删除软链接，而不影响软链接指向的文件。*/
+        }
+    }//pdir==NULL
+    closedir(dp);
 
-        // 获取子项的信息
-        if (lstat(path, &statbuf) == -1) {
-            perror("lstat");
-            continue;
-        }
-
-        // 递归删除子目录
-        if (S_ISDIR(statbuf.st_mode)) {
-            delete_directory(path);
-        }
-        // 删除文件
-        else {
-            if (unlink(path) == -1) {
-                perror("unlink");
-                continue;
-            }
-        }
+    if(errno){
+        error(1,errno,"readdir");
     }
-
-    // 关闭目录
-    closedir(dir);
-
-    // 删除空目录
-    if (rmdir(directory_path) == -1) {
-        perror("rmdir");
-    } else {
-        printf("目录 '%s' 已成功删除。\n", directory_path);
-    }
+    //再删除目录
+    rmdir(path);
 }
 
 void rmdirCommand(task_t *task){
@@ -75,7 +63,7 @@ void rmdirCommand(task_t *task){
     }
 
     //递归删除函数
-    delete_directory(dirPath);
+    rmDirRec(dirPath);
 
      // 删除成功信息
     const char *successMsg = "删除成功";
