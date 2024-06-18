@@ -44,14 +44,14 @@ void log_login(char* username) {
 
 }
 
-void log_action(char* username, task_t* task) {
+void log_action(task_t* task) {
 
     time_t now = time(NULL);
 
     openlog("ClouddiskServer", LOG_PID | LOG_CONS, LOG_USER);
 
-    syslog(LOG_INFO, "action_time:%.24s user:%s file:%s action:%s", 
-           ctime(&now), username, task->data, cmdTypeToString(task->type));
+    syslog(LOG_INFO, "action_time:%.24s file:%s action:%s", 
+           ctime(&now), task->data, cmdTypeToString(task->type));
 
     closelog();
 }

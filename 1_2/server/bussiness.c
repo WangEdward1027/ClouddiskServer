@@ -50,6 +50,7 @@ void notCommand(task_t *task){
 void doTask(task_t * task)
 {
     assert(task);
+    log_action(task);
     switch(task->type) {
     case CMD_TYPE_PWD:  
         pwdCommand(task);   break;
