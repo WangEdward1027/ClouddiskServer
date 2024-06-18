@@ -104,9 +104,10 @@ int main(int argc, char* argv[])
             
             //执行普通命令
             else{
-                char buff[4096];
-                recv(clientfd,&buff,sizeof(buff),0);
-                printf("%s\n",buff);//接收命令执行结果
+                char buff1[4096];
+                memset(&buff1,0,sizeof(buff1));
+                recv(clientfd,&buff1,sizeof(buff1),0);
+                printf("%s\n",buff1);//接收命令执行结果
             }
         }
 
