@@ -1,11 +1,13 @@
 Srcs := $(wildcard *.c)
 Outs := $(patsubst %.c, %.o, $(Srcs))
-BIN:=server
+BIN := server
 CC := gcc
-CFLAGS = -Wall -g
+CFLAGS := -Wall -g -pthread
 
-ALL: $(Outs) 
-	$(CC) -o $(BIN) $^ $(CFLAGS)
+ALL: $(BIN)
+
+$(BIN): $(Outs)
+	$(CC) -o $@ $^ $(CFLAGS)
 
 %.o: %.c
 	$(CC) -c $< -o $@ $(CFLAGS)
@@ -14,4 +16,6 @@ ALL: $(Outs)
 
 clean:
 	$(RM) $(Outs) $(BIN)
+
 rebuild: clean ALL
+
