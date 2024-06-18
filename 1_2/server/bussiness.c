@@ -20,6 +20,11 @@ void handleMessage(int sockfd, int epfd, task_queue_t * que)
         //1.3 获取消息内容
         ret = recvn(sockfd, ptask->data, length);
         if(ret > 0) {
+            //puts命令预处理
+            if(ptask->type == CMD_TYPE_PUTS) {
+                //是上传文件任务，就暂时先从epoll中删除监听
+                delEpollReadfd(epfd, sockfd);
+            }
             //往线程池中添加任务
             taskEnque(que, ptask);
         }
@@ -62,6 +67,7 @@ void doTask(task_t * task)
         putsCommand(task);   break;
         //上传任务执行完毕之后，再加回来
         addEpollReadfd(task->peerfd, task->peerfd);
+        break;
     case CMD_TYPE_GETS:
         getsCommand(task);   break;
     case CMD_TYPE_TREE:

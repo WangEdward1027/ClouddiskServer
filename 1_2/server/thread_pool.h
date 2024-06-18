@@ -30,6 +30,9 @@
 #include <syslog.h>
 #include <shadow.h>
 #include <sys/syslog.h>
+#include "linked_list.h"
+#include "user.h"
+
 #define SIZE(a) (sizeof(a)/sizeof(a[0]))
 
 typedef void (*sighandler_t)(int);
