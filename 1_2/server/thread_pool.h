@@ -147,6 +147,7 @@ void getsCommand(task_t * task);
 void treeCommand(task_t * task);
 void logCommand(task_t * task);
 void removeCommand(task_t *task);
+void touchCommand(task_t *task);
 /*void getsetting(task_t * task); //获取用户的盐值
 void checkUsrEncode(task_t * task); //检验用户输入密码
 int sendMessage(int sockfd, char* buffer, CmdType cmdType); //向客户端发送盐值*/
