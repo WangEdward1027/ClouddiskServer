@@ -19,10 +19,11 @@ int sendMessage(int sockfd, char* buffer, CmdType cmdType){
 }
 
 //客户端接收信息
-void recvMessage(int sockfd, char* buffer){
+int recvMessage(int sockfd, char* buffer){
     //1.1 获取消息长度
     int length = -1;
     int ret = recvn(sockfd, &length, sizeof(length));
+    ERROR_CHECK(ret, -1, "recvMessage");
     printf("recv length: %d\n", length);
 
     //1.2 获取消息类型
@@ -31,6 +32,8 @@ void recvMessage(int sockfd, char* buffer){
     printf("recv cmd type: %d\n", cmdType);
     //1.3 获取消息内容
     ret = recvn(sockfd, buffer, length);
+
+    return 0;
 }
 
 //用户校验
