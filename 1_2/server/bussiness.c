@@ -74,7 +74,7 @@ void doTask(task_t * task)
     case CMD_TYPE_NOTCMD:
         notCommand(task);   break;
     case CMD_TYPE_TOUCH:
-        /* touchCommand(task);   break; */
+        touchCommand(task);   break;
     case CMD_TYPE_REMOVE:
         removeCommand(task);  break;
     case CMD_TYPE_LOG:
