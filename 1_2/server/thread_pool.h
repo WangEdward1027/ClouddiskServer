@@ -33,6 +33,7 @@
 #include "linked_list.h"
 #include "user.h"
 #include <limits.h>
+#include <asm-generic/errno-base.h>
 
 #define SIZE(a) (sizeof(a)/sizeof(a[0]))
 
