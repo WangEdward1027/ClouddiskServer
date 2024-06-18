@@ -6,6 +6,11 @@ int parseCommand(const char* buff, int len, train_t* pt){
     char* tempbuff =(char *)calloc(len + 1, sizeof(char));
     strcpy(tempbuff, buff);     //buff是const
     char * token = strtok(tempbuff, " "); //按照空格进行分词
+    
+    if(token == NULL){
+        free(tempbuff);
+        return -1;  //解析失败
+    }
 
     if(token == NULL) return -1;  //解析失败
     if(strcmp(token, "pwd") == 0){
@@ -29,7 +34,17 @@ int parseCommand(const char* buff, int len, train_t* pt){
     }
     
     //把剩余的字符串放进train_t 的 buff里
-    strcpy(pt->buff, strtok(NULL, " "));
+    token = strtok(NULL, " ");
+    if(token != NULL){
+        strcpy(pt->buff, token);
+        while((token = strtok(NULL, " ")) != NULL) {
+            strcat(pt->buff, " ");
+            strcat(pt->buff, token);
+        }
+    } else {
+        pt->buff[0] = '\0'; // 如果没有剩余字符串，则将buff清空
+    }
+
     free(tempbuff);
     return 0;
 }
