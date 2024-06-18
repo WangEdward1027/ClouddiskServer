@@ -19,7 +19,7 @@ int sendn(int sockfd, const void* buff, int len) {
 void putsFile(int sockfd, char* filename)
 {
     //参数校验
-    assert(task);
+    /* assert(task); */
 
     //读取本地文件
     int fd = open(filename, O_RDWR);
