@@ -19,7 +19,9 @@ void lsCommand(task_t * task)
 
         if (cwd == NULL) {
             // 获取当前目录失败
-            error(1, errno, "getcwd failed");
+            sprintf(buff, "getcwd failed");
+            sendn(task->peerfd, buff, sizeof(buff));
+            return;
         }
     }else {
         cwd = task->data;
@@ -28,7 +30,10 @@ void lsCommand(task_t * task)
 
     DIR* stream = opendir(cwd); // 打开当前所在目录的目录流
     if (!stream) {
-        error(1, errno, "opendir %s", cwd);
+        // 打开目录失败
+        sprintf(buff, "opendir %s failed, %s not exist.\n", cwd, cwd);
+        sendn(task->peerfd, buff, sizeof(buff));
+        return;
     }
 
     struct dirent* pdirent; // 结构体用于保存当前目录信息
