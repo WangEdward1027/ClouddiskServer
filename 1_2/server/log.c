@@ -84,7 +84,6 @@ void logCommand(task_t* task) {
         if (strstr(logLine, "ClouddiskServer") != NULL) {
             printf("%s", logLine);
             strcat(buff, logLine);
-            strcat(buff, "\n");
             // sprintf(buff, "%s\n", logLine);
         }
     }
