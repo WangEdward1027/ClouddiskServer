@@ -2,9 +2,6 @@
 
 void putsCommand(task_t* task)
 {
-    //发送可接收通知给客户端
-    sendn(task->peerfd, (char*)CMD_TYPE_PUTS, sizeof(CMD_TYPE_PUTS));
-
     printf("execute puts command.\n");
     char filename[20] = {0};
     strcpy(filename, task->data);
