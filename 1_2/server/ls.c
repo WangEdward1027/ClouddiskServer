@@ -65,7 +65,6 @@ void lsCommand(task_t * task)
     }
     
     // printf("\n");
-    strcat(buff, "\n");
     
     closedir(stream);
     
