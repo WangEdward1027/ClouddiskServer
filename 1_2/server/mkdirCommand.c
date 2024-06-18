@@ -3,7 +3,7 @@
 //0777 是创建目录的权限设置
 #define MODE 0777
 
-void mkdirCommand1(task_t * task){
+void mkdirCommand(task_t * task){
     
     const char *Dir_Name=task->data;
     char buff[128];
