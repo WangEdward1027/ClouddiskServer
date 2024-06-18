@@ -1,5 +1,4 @@
 #include "thread_pool.h"
-#include <asm-generic/errno-base.h>
 
 //0777 是创建目录的权限设置
 #define MODE 0777
