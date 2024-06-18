@@ -52,6 +52,8 @@ void treeCommand(task_t* task)
 {   
     int socketfd = task->peerfd;
     char * dirname = task->data;
+    if(strcmp(dirname,"") == 0)
+        dirname = getcwd(NULL, 0);
     // ./tree dir
     memset(treestr, 0, sizeof(treestr));
     strcpy(treestr, dirname); // 打印目录的名字
