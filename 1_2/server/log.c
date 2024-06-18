@@ -57,11 +57,20 @@ void log_action(task_t* task) {
 }
 
 void logCommand(task_t* task) {
+    
+
     FILE* logFile;
     char logLine[256];
 
     char buff[4096];
     bzero(buff, sizeof(buff));
+   
+    if (strcmp(task->data, "") != 0) {
+        strcpy(buff, "输入命令错误,应该是log,后面无参数！\n");
+        sendn(task->peerfd, buff, strlen(buff));
+        return;
+    }
+
 
     // 打开系统日志文件
     logFile = fopen("/var/log/syslog", "r");
@@ -74,12 +83,14 @@ void logCommand(task_t* task) {
         // 检查与项目相关的目录行
         if (strstr(logLine, "ClouddiskServer") != NULL) {
             printf("%s", logLine);
-            sprintf(buff, "%s\n", logLine);
+            strcat(buff, logLine);
+            strcat(buff, "\n");
+            // sprintf(buff, "%s\n", logLine);
         }
     }
 
     // 发送日志到客户端
-    sendn(task->peerfd, buff, sizeof(buff));
+    sendn(task->peerfd, buff, strlen(buff));
 
     // 关闭日志文件
     fclose(logFile);
