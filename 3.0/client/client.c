@@ -36,7 +36,6 @@ static int userLogin2(int sockfd, train_t *t);
 
 int userLogin(int sockfd)
 {
-    int ret;
     train_t t;
     memset(&t, 0, sizeof(t));
     userLogin1(sockfd, &t);
@@ -118,7 +117,7 @@ static int userLogin2(int sockfd, train_t * pt)
 int recvn(int sockfd, void * buff, int len)
 {
     int left = len;//还剩下多少个字节需要接收
-    char * pbuf = buff;
+    char * pbuf = (char*)buff;
     int ret = -1;
     while(left > 0) {
         ret = recv(sockfd, pbuf, left, 0);
@@ -140,7 +139,7 @@ int recvn(int sockfd, void * buff, int len)
 int sendn(int sockfd, const void * buff, int len)
 {
     int left = len;
-    const char * pbuf = buff;
+    const char * pbuf = (const char*)buff;
     int ret = -1;
     while(left > 0) {
         ret = send(sockfd, pbuf, left, 0);
@@ -153,23 +152,6 @@ int sendn(int sockfd, const void * buff, int len)
         pbuf += ret;
     }
     return len - left;
-}
-
-//解析命令
-int parseCommand(const char * pinput, int len, train_t * pt)
-{
-    char * pstrs[10] = {0};
-    int cnt = 0;
-    splitString(pinput, " ", pstrs, 10, &cnt);
-    pt->type = getCommandType(pstrs[0]);
-    //暂时限定命令行格式为：
-    //1. cmd
-    //2. cmd content
-    if(cnt > 1) {
-        pt->len = strlen(pstrs[1]);
-        strncpy(pt->buff, pstrs[1], pt->len);
-    }
-    return 0;
 }
 
 int getCommandType(const char * str)
@@ -226,3 +208,22 @@ void putsCommand(int sockfd, train_t * pt)
     printf("file send over.\n");
     close(fd);
 }
+
+//解析命令
+int parseCommand(const char * pinput, int len, train_t * pt)
+{
+    char * pstrs[10] = {0};
+    int cnt = 0;
+    splitString(pinput, " ", pstrs, 10, &cnt);
+    pt->type = getCommandType(pstrs[0]);
+    //暂时限定命令行格式为：
+    //1. cmd
+    //2. cmd content
+    if(cnt > 1) {
+        pt->len = strlen(pstrs[1]);
+        strncpy(pt->buff, pstrs[1], pt->len);
+    }
+    return 0;
+}
+
+

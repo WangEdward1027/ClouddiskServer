@@ -42,4 +42,12 @@ int parseCommand(const char * input, int len, train_t * pt);
 int getCommandType(const char * str);
 //执行上传文件操作
 void putsCommand(int sockfd, train_t * pt);
-
+//将本地文件上传至服务器
+void putsFile(int sockfd, train_t * pt);
+//从服务器下载文件
+void getsFile(int scokfd);
+//监听事件
+int addEpollReadfd(int epfd, int fd);
+int delEpollReadfd(int epfd, int fd);
+//大文件传输
+int transferFile(int sockfd);
