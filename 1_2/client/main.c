@@ -47,6 +47,8 @@ int main(int argc, char* argv[])
     fd_set rdset;
     train_t train;
 
+    printf("欢迎使用“白渡运网盘”>>>>\n");
+
     while(1){
         //初始化fd_set
         FD_ZERO(&rdset);
@@ -56,7 +58,6 @@ int main(int argc, char* argv[])
         //调用select进行多路复用监听
         int nready=select(clientfd+1,&rdset,NULL,NULL,NULL);
         //printf("nready:%d\n",nready);
-
         //检查用户是否输入
         if(FD_ISSET(STDIN_FILENO,&rdset)){
             //读取数据
@@ -88,7 +89,7 @@ int main(int argc, char* argv[])
             //recvn(clientfd,&recvCmdType,sizeof(recvCmdType));//接收命令类型
             
             char buff1[4096];
-            printf("命令是：%d号命令\n",recvCmdType);
+            //printf("命令是：%d号命令\n",recvCmdType);
             //接收文件是接收文件命令
             if(recvCmdType==CMD_TYPE_GETS){
                 getsFile(clientfd);
@@ -105,6 +106,8 @@ int main(int argc, char* argv[])
                 recv(clientfd,&buff1,sizeof(buff1),0);
                 printf("%s\n",buff1);//接收命令执行结果
             }
+
+        printf("---------------命令执行完毕------------------\n");
         }
 
     }
