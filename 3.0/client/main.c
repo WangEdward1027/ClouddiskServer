@@ -7,9 +7,9 @@ int main()
     printf("欢迎使用“龟速网盘”\n");
     
     //登录模块
-    login_view();
+    login_view(clientfd);
 
-    char buf[128] = {0};
+    char buf[1024] = {0};
     //4. 使用select进行监听
     fd_set rdset;
     train_t train;
