@@ -11,20 +11,20 @@ void touchCommand(task_t *task){
     int fd=open(Dir_Name,O_CREAT,MODE);
     if(fd!=-1){
 
-        sprintf(buff,"Create '%s' Success.",Dir_Name);
+        sprintf(buff,"创建文件 '%s' 成功.",Dir_Name);
         sendn(task->peerfd,buff,sizeof(buff));
         close(fd);
         return;
     }
     else{
         if(errno==EEXIST){
-            sprintf(buff,"File '%s' already exists.\n",Dir_Name);
+            sprintf(buff,"文件 '%s' 已经存在.\n",Dir_Name);
             sendn(task->peerfd,buff,sizeof(buff));
             close(fd);
             return;
         }
 
-        sprintf(buff,"Create '%s' Failed.\n",Dir_Name);
+        sprintf(buff,"创建文件 '%s' 失败.\n",Dir_Name);
         sendn(task->peerfd,buff,sizeof(buff));
         close(fd);
         return;
