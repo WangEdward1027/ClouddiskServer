@@ -1,9 +1,4 @@
 #include "thread_pool.h"
-#include <asm-generic/errno-base.h>
-#include <errno.h>
-#include <strings.h>
-#include <time.h>
-#include <unistd.h>
 
 #define MODE 0644
 
