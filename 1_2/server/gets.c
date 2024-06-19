@@ -17,6 +17,8 @@ void getsCommand(task_t* task){
     }
     
     //获取peerfd
+    train_t t;
+    memset(&t, 0, sizeof(t));
     int peerfd = task->peerfd;
     
     //1.发送文件名的长度
@@ -35,37 +37,28 @@ void getsCommand(task_t* task){
     fstat(fd, &st);
     printf("文件%s的大小:%ld\n",filename, st.st_size);
     
-    //3.2 发送文件的长度a
-    int filelen = st.st_size;
-    send(peerfd, &filelen, sizeof(filelen), 0);
+    //3.2 发送文件的长度
+    send(peerfd, &st.st_size, sizeof(st.st_size), 0);
 
     //4.发送文件内容
-    char buff[1000] = {0};
-    len = read(fd, buff, st.st_size);
-    printf("测试: 发送缓冲区内容: buff: %s \n", buff);
-    printf("测试:read的返回值: %d\n",len);
-    send(peerfd, buff, len, 0);
-
-    /* while(1){ */
-    /*     int ret = read(fd, t.buff, sizeof(t.buff)); */
-    /*     if(ret != 1000){ */
-    /*         printf("read ret: %d\n", ret); */
-    /*     } */
-    /*     if(ret == 0){ */
-    /*         break; // 文件已经读取完毕 */
-    /*     } */
-    /*     t.len = ret; */
-    /*     ret = sendn(peerfd, &t, 8 + t.len); */
-    /*     if(ret == -1){ */
-    /*         break; */
-    /*     } */
-    /*     if(ret != 1008){ */
-    /*         printf("send ret:%d\n", ret); */
-    /*     } */
-    /* } */
-    
-
-
+    while(1){
+        memset(&t, 0, sizeof(t));
+        int ret = read(fd, t.buff, sizeof(t.buff));
+        if(ret != 1000){
+            printf("read ret: %d\n", ret);
+        }
+        if(ret == 0){
+            break; // 文件已经读取完毕
+        }
+        t.len = ret;
+        ret = sendn(peerfd, &t, 8 + t.len);
+        if(ret == -1){
+            break;
+        }
+        if(ret != 1008){
+            printf("send ret:%d\n", ret);
+        }
+    }
     printf("send file over.\n");
     close(fd);
 }
