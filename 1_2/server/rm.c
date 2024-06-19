@@ -2,7 +2,6 @@
 
 #include"thread_pool.h"
 
-
 void removeCommand(task_t *task){
     //接收任务中的目录
     printf("开始删除");
@@ -36,13 +35,11 @@ void removeCommand(task_t *task){
 
     //删除文件
     if(remove(filename)==0){
-        const char *successMsg = "删除成功";
+        const char *successMsg = "删除文件成功";
         sendn(task->peerfd, successMsg, strlen(successMsg));
-
     }else{
         perror("remove");
         const char *msg="删除文件失败";
         sendn(task->peerfd,msg,strlen(msg));
     }
 }
-

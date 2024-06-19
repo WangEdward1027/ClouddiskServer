@@ -66,6 +66,6 @@ void rmdirCommand(task_t *task){
     rmDirRec(dirPath);
 
      // 删除成功信息
-    const char *successMsg = "删除成功";
+    const char *successMsg = "删除目录成功";
     sendn(task->peerfd, successMsg, strlen(successMsg));
 }
