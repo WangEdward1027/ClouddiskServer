@@ -3,22 +3,17 @@
 void sendFile(int clientfd, train_t * train){
     //执行发送函数
     putsFile(clientfd, train);
-
 }
 
 void sendtrain(int peerfd, train_t* train, int len) {
-
     // 1. 先发送len
     int contLen = train->len;
     send(peerfd, &contLen, sizeof(contLen), 0);
-
     // 2. 发送cmdtype
     CmdType type = train->type;
     send(peerfd, &type, sizeof(type), 0);
-
     // 3. 发送内容
     sendn(peerfd, train->buff, train->len);
-
 }
 
 //测试函数，小火车打印
@@ -36,12 +31,12 @@ int main(int argc, char* argv[])
         printf("Usage:./client IP\n");
         exit(1);
     }
-    int clientfd=tcpConnect(argv[1], 8080);//int tcp(const char *ip,unsigned short port)
+    int clientfd = tcpConnect(argv[1], 8080);//int tcp(const char *ip,unsigned short port)
     
     //登录
     //usrCheck(clientfd);
 
-    char buff[128]={0};
+    char buff[128] = {0};
 
     //select监听
     fd_set rdset;
@@ -70,16 +65,13 @@ int main(int argc, char* argv[])
 
             //正常输入
             memset(&train,0,sizeof(train));
+            
             //解析命令行
             buff[strlen(buff)-1]='\0';//忽略换行符
+            
             //分词解析命令
             parseCommand(buff,strlen(buff)-1,&train);//int parseCommand(const char*buff,int len,train_t*pt)
-            //测试
-            //print_train(&train);
-
             sendtrain(clientfd,&train,4+4+train.len);
-
-            
         }
 
         //接收服务器数据
@@ -106,7 +98,6 @@ int main(int argc, char* argv[])
                 recv(clientfd,&buff1,sizeof(buff1),0);
                 printf("%s\n",buff1);//接收命令执行结果
             }
-
         printf("---------------命令执行完毕------------------\n");
         }
 
@@ -114,4 +105,3 @@ int main(int argc, char* argv[])
     close(clientfd);
     return 0;
 }
-
