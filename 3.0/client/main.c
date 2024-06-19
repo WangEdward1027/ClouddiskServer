@@ -4,9 +4,10 @@
 int main()
 {
     int clientfd = tcpConnect("127.0.0.1", 8080);
-
-    //用户登录操作
-    userLogin(clientfd);
+    printf("欢迎使用“龟速网盘”\n");
+    
+    //登录模块
+    login_view();
 
     char buf[128] = {0};
     //4. 使用select进行监听
