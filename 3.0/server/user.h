@@ -15,8 +15,8 @@ typedef struct {
 
 }user_info_t;
 
-void loginCheck1(user_info_t * user);
-void loginCheck2(user_info_t * user, const char * encrypted);
+//void loginCheck1(user_info_t * user);
+//void loginCheck2(user_info_t * user, const char * encrypted);
 
 #endif
 

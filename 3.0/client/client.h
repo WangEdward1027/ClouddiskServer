@@ -16,9 +16,12 @@ typedef enum {
     CMD_TYPE_NOTCMD,  //不是命令
 
     //user login
-    CMD_TYPE_USRNAME = 100,
-    MSG_TYPE_SALT,
-    CMD_TYPE_ENCRYTPTEDCODE,
+    CMD_TYPE_LOGIN_USRNAME = 100,
+    CMD_TYPE_REGISTER_USRNAME,
+    MSG_TYPE_LOGIN_SALT,
+    MSG_TYPE_REGISTER_SALT,
+    CMD_TYPE_LOGIN_ENCRYTPTEDCODE,
+    CMD_TYPE_REGISTER_ENCRYTPTEDCODE,
     MSG_TYPE_LOGINOK,
     MSG_TYPE_LOGINERROR,
     MSG_TYPE_REGISTEROK,
@@ -40,6 +43,7 @@ int sendn(int sockfd, const void * buff, int len);
 //登录和注册，0成功，1失败
 int login_client(int sockfd);
 int register_client(int sockfd);
+
 
 int parseCommand(const char * input, int len, train_t * pt);
 
