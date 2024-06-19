@@ -55,14 +55,7 @@ void getsFile(int peerfd)
 
     char buff[1000] = {0};
     off_t left = len;
-
     while(left > 0) {
-        if(left < 1000){
-            ret = recvn(clientfd, buff, left);
-            printf("")
-        }
-
-
         //可以确定接收len个字节的长度
         ret = recvn(clientfd, buff, len);//再接文件内容
         if(ret != 1000) {
@@ -72,8 +65,6 @@ void getsFile(int peerfd)
         write(fd, buff, ret);
         left -= ret;
     }
-    
-
     close(fd);
     close(clientfd);
 }
