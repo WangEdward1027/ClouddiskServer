@@ -49,6 +49,29 @@ typedef void (*sighandler_t)(int);
         fprintf(stderr, "%s:%s\n", func, strerror(ret));\
     }}
 
+typedef struct FileEntry{
+    int id;
+    int parentId;
+    char fileName[64];
+    int ownerId;
+    char md5[64];
+    int fileSize;
+    int fileType;
+}FileEntry;
+
+typedef struct FileInfo{
+    char md5[64];
+    char fileName[64];
+}FileInfo;
+
+typedef struct User{
+    int id;
+    char userName[64];
+    char salt[64];
+    char cryptpasswd[64];
+    char pwd[64];
+}User;
+
 typedef enum {
     CMD_TYPE_PWD=1,
     CMD_TYPE_LS,
@@ -80,6 +103,7 @@ typedef struct task_s{
     int epfd;//epoll的实例
     CmdType type;
     char data[1000];
+    FileEntry* fileEntry;
     struct task_s * pNext;
 }task_t;
 
