@@ -212,8 +212,3 @@ void login_view(int sockfd){
         }
     }
 }
-
-// 以下是占位的 register_client 和 login_client 函数
-void register_client(int sockfd) {
-    // 注册逻辑实现
-}
