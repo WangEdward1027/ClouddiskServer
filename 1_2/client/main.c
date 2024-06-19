@@ -47,7 +47,7 @@ int main(int argc, char* argv[])
     fd_set rdset;
     train_t train;
 
-    printf("欢迎使用“白渡运网盘”>>>>\n");
+    printf("欢迎使用 “Linux云盘” >>>> \n");
 
     while(1){
         //初始化fd_set
