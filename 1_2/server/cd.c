@@ -1,7 +1,6 @@
 #include "thread_pool.h"
 
 void cdCommand(task_t* task) {
-
     // 保存用户要切换的目录
     char* path = task->data;
     char buff[4096];
@@ -21,10 +20,8 @@ void cdCommand(task_t* task) {
 
     if (getcwd(cwd, sizeof(cwd)) != NULL) {
         // 获取当前工作目录成功
-        sprintf(buff, "切换目录成功！当前目录为：%s\n", cwd);
+        sprintf(buff, "切换目录成功!\n当前工作目录:%s\n", cwd);
     } 
-
     // 发送buff到客户端
     sendn(task->peerfd, buff, sizeof(buff));
-
 }
