@@ -37,7 +37,7 @@ void getsFile(int peerfd)
     
     //2.接收文件名
     char filename[100] = {0};
-    recv(clientfd, filename, sizeof(filename), 0);
+    recv(clientfd, filename, len, 0);
     filename[len] = '\0';
     printf("filename:%s\n",filename);
 
