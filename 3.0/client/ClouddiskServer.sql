@@ -11,7 +11,7 @@
  Target Server Version : 80023
  File Encoding         : 65001
 
- Date: 19/06/2024 16:18:44
+ Date: 19/06/2024 21:21:13
 */
 
 SET NAMES utf8mb4;
@@ -26,13 +26,12 @@ CREATE TABLE `fileentry`  (
   `parent_id` int NULL DEFAULT NULL COMMENT '所在上一层目录',
   `filename` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '文件名',
   `owner_id` int NULL DEFAULT NULL COMMENT '文件属于用户的ID',
-  `md5` char(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '文件对应的md5码',
+  `md5` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '文件对应的md5码',
   `filesize` int NULL DEFAULT NULL COMMENT '文件大小',
   `type` int NULL DEFAULT NULL COMMENT '文件类型',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `owner_id`(`owner_id`) USING BTREE,
   INDEX `md5`(`md5`) USING BTREE,
-  CONSTRAINT `md5` FOREIGN KEY (`md5`) REFERENCES `fileinfo` (`md5`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `owner_id` FOREIGN KEY (`owner_id`) REFERENCES `user` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 

@@ -16,7 +16,6 @@ void sigHandler(int num)
 
 int main(int argc, char ** argv)
 {   //ip,port,threadNum
-    printf("sizeof(CmdType):%lu\n", sizeof(CmdType));
     ARGS_CHECK(argc, 4);
     //创建匿名管道
     pipe(exitPipe);
@@ -67,7 +66,7 @@ int main(int argc, char ** argv)
                 int fd = pEventArr[i].data.fd;
                 if(fd == listenfd) {//对新连接进行处理
                     int peerfd = accept(listenfd, NULL, NULL);
-                    printf("\n conn %d has conneted.\n", peerfd);
+                    printf("\nconn %d has conneted.\n", peerfd);
                     //将新连接添加到epoll的监听红黑树上
                     addEpollReadfd(epfd, peerfd);
                     //添加用户节点
