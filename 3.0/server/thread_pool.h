@@ -1,7 +1,7 @@
 #ifndef __THREAD_POOL_H__
 #define __THREAD_POOL_H__
 
-#define _GNU_SOURCE
+#define _SERVER_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -80,6 +80,8 @@ typedef enum {
     CMD_TYPE_RMDIR,
     CMD_TYPE_PUTS,
     CMD_TYPE_GETS,
+    CMD_TYPE_TOUCH,
+    CMD_TYPE_REMOVE,
     CMD_TYPE_NOTCMD,  //不是命令
 
     TASK_LOGIN_SECTION1 = 100,
@@ -158,6 +160,8 @@ void rmdirCommand(task_t * task);
 void notCommand(task_t * task);
 void putsCommand(task_t * task);
 void getsCommand(task_t * task);
+void touchCommand(task_t * task);
+void removeCommand(task_t * task);
 
 //用户登录的操作
 void userLoginCheck1(task_t * task);

@@ -67,3 +67,15 @@ void loginCheck2(user_info_t * user, const char * encrypted)
     return;
 }
 
+//登录
+void login_server(task_t * task)
+{
+
+}
+
+//注册
+void register_server(task_t * task)
+{
+    
+}
+

@@ -68,7 +68,7 @@ int delEpollReadfd(int epfd, int fd)
 int sendn(int sockfd, const void * buff, int len)
 {
     int left = len;
-    const char * pbuf = buff;
+    const char * pbuf = (const char*)buff;
     int ret = -1;
     while(left > 0) {
         ret = send(sockfd, pbuf, left, 0);
@@ -87,7 +87,7 @@ int sendn(int sockfd, const void * buff, int len)
 int recvn(int sockfd, void * buff, int len)
 {
     int left = len;//还剩下多少个字节需要接收
-    char * pbuf = buff;
+    char * pbuf = (char*)buff;
     int ret = -1;
     while(left > 0) {
         ret = recv(sockfd, pbuf, left, 0);

@@ -52,7 +52,8 @@ int main(int argc, char ** argv)
     threadpoolStart(&threadpool);
 
     //创建监听套接字
-    int listenfd = tcpInit(find(&ht, IP), find(&ht, PORT));
+    //int listenfd = tcpInit(find(&ht, IP), find(&ht, PORT));
+    int listenfd = tcpInit(argv[1], argv[2]);
 
     //创建epoll实例
     int epfd = epoll_create1(0);

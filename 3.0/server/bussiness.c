@@ -68,45 +68,27 @@ void doTask(task_t * task)
         mkdirCommand(task);  break;
     case CMD_TYPE_RMDIR:
         rmdirCommand(task);  break;
-    case CMD_TYPE_NOTCMD:
-        notCommand(task);   break;
     case CMD_TYPE_PUTS:
         putsCommand(task);   break;
+        //上传任务执行完毕之后，再加回来
+        addEpollReadfd(task->peerfd, task->peerfd);
+        break;
     case CMD_TYPE_GETS:
         getsCommand(task);   break;
+    case CMD_TYPE_NOTCMD:
+        notCommand(task);   break;
     case TASK_LOGIN_SECTION1:
         userLoginCheck1(task); break;
     case TASK_LOGIN_SECTION2:
         userLoginCheck2(task); break;
+    case CMD_TYPE_TOUCH:
+        touchCommand(task);   break;
+    case CMD_TYPE_REMOVE:
+        removeCommand(task);  break;
+
+    default:
+        break;
     }
-}
-
-//每一个具体任务的执行，交给一个成员来实现
-
-void cdCommand(task_t * task)
-{
-    printf("execute cd command.\n");
-}
-
-
-void mkdirCommand(task_t * task)
-{
-    printf("execute mkdir command.\n");
-}
-
-void rmdirCommand(task_t * task)
-{
-    printf("execute rmdir command.\n");
-}
-
-void notCommand(task_t * task)
-{
-    printf("execute not command.\n");
-}
-
-
-void getsCommand(task_t * task) {
-    printf("execute gets command.\n");
 }
 
 
