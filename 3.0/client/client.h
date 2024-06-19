@@ -54,3 +54,6 @@ int addEpollReadfd(int epfd, int fd);
 int delEpollReadfd(int epfd, int fd);
 //大文件传输
 int transferFile(int sockfd);
+
+//登录模块
+void login_view(int sockfd);
