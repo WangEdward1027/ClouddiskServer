@@ -172,3 +172,48 @@ int parseCommand(const char* buff, int len, train_t* pt){
     free(tempbuff);
     return 0;
 }
+
+void login_view(int sockfd){
+    int user_choice;
+
+    while(1){
+        printf("————————登录界面——————————\n");
+        printf("请输入选项序号：\n");
+        printf("1.注册\n");
+        printf("2.登录\n");
+        printf("3.退出\n");
+        printf("请输入您的选择：");
+
+        if(scanf("%d", &user_choice) != 1) {
+            // 清除输入缓冲区
+            while(getchar() != '\n');
+            printf("无效输入，请输入数字。\n");
+            continue;
+        }
+
+        switch(user_choice){
+        case 1:
+            register_client(sockfd);
+            break;
+        case 2:
+            if (login_client(sockfd)) {
+                printf("登录成功\n");
+                return; // 退出函数，结束循环
+            } else {
+                printf("登录失败，请重试。\n");
+            }
+            break;
+        case 3:
+            printf("正在退出...\n");
+            exit(0); // 退出程序
+        default:
+            printf("输入错误，重新输入！\n");
+            break;
+        }
+    }
+}
+
+// 以下是占位的 register_client 和 login_client 函数
+void register_client(int sockfd) {
+    // 注册逻辑实现
+}
