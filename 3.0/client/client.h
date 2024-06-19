@@ -11,6 +11,8 @@ typedef enum {
     CMD_TYPE_RMDIR,
     CMD_TYPE_PUTS,
     CMD_TYPE_GETS,
+    CMD_TYPE_TOUCH,
+    CMD_TYPE_REMOVE,
     CMD_TYPE_NOTCMD,  //不是命令
 
     TASK_LOGIN_SECTION1 = 100,
@@ -33,8 +35,9 @@ typedef struct
 int tcpConnect(const char * ip, unsigned short port);
 int recvn(int sockfd, void * buff, int len);
 int sendn(int sockfd, const void * buff, int len);
-
-int userLogin(int sockfd);
+//登录和注册
+int login_client(int sockfd);
+int register_client(int sockfd);
 
 int parseCommand(const char * input, int len, train_t * pt);
 

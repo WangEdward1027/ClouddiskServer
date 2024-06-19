@@ -34,15 +34,6 @@ int tcpConnect(const char * ip, unsigned short port)
 static int userLogin1(int sockfd, train_t *t);
 static int userLogin2(int sockfd, train_t *t);
 
-int userLogin(int sockfd)
-{
-    train_t t;
-    memset(&t, 0, sizeof(t));
-    userLogin1(sockfd, &t);
-    userLogin2(sockfd, &t);
-    return 0;
-}
-
 static int userLogin1(int sockfd, train_t *pt)
 {
     /* printf("userLogin1.\n"); */
@@ -113,6 +104,20 @@ static int userLogin2(int sockfd, train_t * pt)
     return 0;
 }
 
+int register_client(int sockfd)
+{
+    return 0;
+}
+
+int login_client(int sockfd)
+{
+    train_t t;
+    memset(&t, 0, sizeof(t));
+    userLogin1(sockfd, &t);
+    userLogin2(sockfd, &t);
+    return 0;
+}
+
 //其作用：确定接收len字节的数据
 int recvn(int sockfd, void * buff, int len)
 {
@@ -154,26 +159,6 @@ int sendn(int sockfd, const void * buff, int len)
     return len - left;
 }
 
-int getCommandType(const char * str)
-{
-    if(!strcmp(str, "pwd")) 
-        return CMD_TYPE_PWD;
-    else if(!strcmp(str, "ls"))
-        return CMD_TYPE_LS;
-    else if(!strcmp(str, "cd"))
-        return CMD_TYPE_CD;
-    else if(!strcmp(str, "mkdir"))
-        return CMD_TYPE_MKDIR;
-    else if(!strcmp(str,"rmdir"))
-        return CMD_TYPE_RMDIR;
-    else if(!strcmp(str, "puts"))
-        return CMD_TYPE_PUTS;
-    else if(!strcmp(str, "gets"))
-        return CMD_TYPE_GETS;
-    else
-        return CMD_TYPE_NOTCMD;
-}
-
 void putsCommand(int sockfd, train_t * pt)
 {
     char filename[20] = {0};
@@ -210,20 +195,55 @@ void putsCommand(int sockfd, train_t * pt)
 }
 
 //解析命令
-int parseCommand(const char * pinput, int len, train_t * pt)
-{
-    char * pstrs[10] = {0};
-    int cnt = 0;
-    splitString(pinput, " ", pstrs, 10, &cnt);
-    pt->type = getCommandType(pstrs[0]);
-    //暂时限定命令行格式为：
-    //1. cmd
-    //2. cmd content
-    if(cnt > 1) {
-        pt->len = strlen(pstrs[1]);
-        strncpy(pt->buff, pstrs[1], pt->len);
+int parseCommand(const char* buff, int len, train_t* pt){
+    pt->len = strlen(buff);
+    //把buff里的第一个命令分词，然后判断CmdTpe的类型,填入train_t中
+    char* tempbuff =(char *)calloc(len + 1, sizeof(char));
+    strcpy(tempbuff, buff);     //buff是const
+    char * token = strtok(tempbuff, " "); //按照空格进行分词
+    
+    if(token == NULL){
+        free(tempbuff);
+        return -1;  //解析失败
     }
+
+    if(token == NULL) return -1;  //解析失败
+    if(strcmp(token, "pwd") == 0){
+        pt->type = CMD_TYPE_PWD;
+    }else if(strcmp(token, "ls") == 0){
+        pt->type = CMD_TYPE_LS;
+    }else if(strcmp(token, "cd") == 0){
+        pt->type = CMD_TYPE_CD;
+    }else if(strcmp(token, "mkdir") == 0){
+        pt->type = CMD_TYPE_MKDIR;
+    }else if(strcmp(token, "rmdir") == 0){
+        pt->type = CMD_TYPE_RMDIR;
+    }else if(strcmp(token, "puts") == 0){
+        pt->type = CMD_TYPE_PUTS;
+    }else if(strcmp(token, "gets") == 0){
+        pt->type = CMD_TYPE_GETS;
+    }else if(strcmp(token,"rm")==0){
+        pt->type=CMD_TYPE_REMOVE;
+    }
+    else if(strcmp(token,"touch")==0){
+        pt->type=CMD_TYPE_TOUCH;
+    }
+    else{
+        pt->type = CMD_TYPE_NOTCMD;
+    }
+    
+    //把剩余的字符串放进train_t 的 buff里
+    token = strtok(NULL, " ");
+    if(token != NULL){
+        strcpy(pt->buff, token);
+        while((token = strtok(NULL, " ")) != NULL) {
+            strcat(pt->buff, " ");
+            strcat(pt->buff, token);
+        }
+    } else {
+        pt->buff[0] = '\0'; // 如果没有剩余字符串，则将buff清空
+    }
+
+    free(tempbuff);
     return 0;
 }
-
-
