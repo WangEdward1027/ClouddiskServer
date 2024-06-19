@@ -39,7 +39,7 @@ int recvn(int sockfd, void * buff, int len);
 int sendn(int sockfd, const void * buff, int len);
 //登录和注册，0成功，1失败
 int login_client(int sockfd);
-int register_client(int sockfd);
+void register_client(int sockfd);
 
 int parseCommand(const char * input, int len, train_t * pt);
 
