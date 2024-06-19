@@ -31,11 +31,6 @@ int tcpConnect(const char * ip, unsigned short port)
     return clientfd;
 }
 
-//用户注册
-int register_client(int sockfd)
-{
-    return 0;
-}
 
 //用户登录
 int login_client(int sockfd)
