@@ -2,6 +2,8 @@
 
 //下载:服务器根据客户端发来的文件名，把对应的文件发给客户端
 void getsCommand(task_t* task){
+
+    printf("开始发送\n");
     //参数校验
     assert(task);
 

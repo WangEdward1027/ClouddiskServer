@@ -1,5 +1,6 @@
 #include "client.h"
 
+
 //客服端接收服务器发送的内容
 
 //接收确定个字节的数据
@@ -25,10 +26,9 @@ int recvn(int sockfd, void * buff, int len)
 void getsFile(int peerfd)
 {
     int clientfd = peerfd;
-    int ret = 1;
 
     //向服务端发送文件下载请求
-    ret = send(clientfd, (char*)&ret, sizeof(ret),0);
+    int ret = send(clientfd, (char*)&ret, sizeof(ret),0);
 
     //1.接收文件名的长度
     int len = 0;
@@ -38,21 +38,33 @@ void getsFile(int peerfd)
     //2.接收文件名
     char filename[100] = {0};
     recv(clientfd, filename, sizeof(filename), 0);
+    filename[len] = '\0';
     printf("filename:%s\n",filename);
-    
+
+     // 检查文件是否存在
+    if (access(filename, F_OK) != -1) {
+        // 文件已存在，报错并返回
+        fprintf(stderr, "文件 '%s' 已存在，无法覆盖。\n", filename);
+        close(clientfd);
+        return;
+    }
+
     //3.接收文件的长度
     recv(clientfd, &len, sizeof(len), 0);
     printf("文件长度:%d\n", len);
     
     //4.接收文件
-        //打印当前工作目录
-        char cwd[128] = {0};
-        getcwd(cwd, sizeof(cwd));
-        printf("当前工作目录cwd: %s\n",cwd);
+    //打印当前工作目录
+    char cwd[128] = {0};
+    getcwd(cwd, sizeof(cwd));
+    printf("当前工作目录cwd: %s\n",cwd);
+
+
     int fd = open(filename, O_RDWR | O_CREAT , 0644); 
     printf("fd = %d\n",fd);
-    if(fd == -1)    error(1, errno, "open %s", filename);
-
+    if(fd == -1){    
+        error(1, errno, "open %s", filename);
+    }
     char buff[1000] = {0};
     off_t left = len;
     while(left > 0) {
@@ -63,6 +75,7 @@ void getsFile(int peerfd)
         }
         //最后再写入本地
         write(fd, buff, ret);
+        left-=ret;
     }
     close(fd);
     close(clientfd);
