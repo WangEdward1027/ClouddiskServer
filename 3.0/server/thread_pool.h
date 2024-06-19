@@ -172,4 +172,6 @@ void userLoginCheck2(task_t * task);
 
 //用户注册
 void register_server(task_t*task);
+
+MYSQL* create_db_connection();
 #endif
