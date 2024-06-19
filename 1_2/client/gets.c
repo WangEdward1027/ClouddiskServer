@@ -1,6 +1,6 @@
-#include "client.h"
+//王绪飞:客服端接收服务器发送的内容
 
-//客服端接收服务器发送的内容
+#include "client.h"
 
 //接收确定个字节的数据
 int recvn(int sockfd, void * buff, int len)
@@ -25,21 +25,21 @@ int recvn(int sockfd, void * buff, int len)
 void getsFile(int peerfd)
 {
     int clientfd = peerfd;
-    int ret = 1;
 
     //向服务端发送文件下载请求
-    ret = send(clientfd, (char*)&ret, sizeof(ret),0);
+    int ret = send(clientfd, (char*)&ret, sizeof(ret),0);
 
     //1.接收文件名的长度
-    int len = 0;
+    int len = 0;    //len是文件名的长度
     recv(clientfd, &len, sizeof(len), 0);
     printf("文件名长度:%d\n",len);
     
     //2.接收文件名
-    char filename[100] = {0};
-    recv(clientfd, filename, sizeof(filename), 0);
+    char filename[20] = {0};
+    recv(clientfd, filename, len, 0);
+    filename[len] = '\0';
     printf("filename:%s\n",filename);
-    
+
     //3.接收文件的长度
     recv(clientfd, &len, sizeof(len), 0);
     printf("文件长度:%d\n", len);
@@ -63,6 +63,7 @@ void getsFile(int peerfd)
         }
         //最后再写入本地
         write(fd, buff, ret);
+        left -= ret;
     }
     close(fd);
     close(clientfd);

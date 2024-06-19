@@ -6,7 +6,7 @@ void getsCommand(task_t* task){
     assert(task);
 
     //读取本地文件
-    char filename[128] = {0};
+    char filename[20] = {0};
     strcpy(filename, task->data);
     printf("server gets.c filename: %s\n", filename);
     
