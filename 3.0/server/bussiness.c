@@ -77,10 +77,20 @@ void doTask(task_t * task)
         getsCommand(task);   break;
     case CMD_TYPE_NOTCMD:
         notCommand(task);   break;
-    case TASK_LOGIN_SECTION1:
+    case CMD_TYPE_LOGIN_USRNAME:
         userLoginCheck1(task); break;
-    case TASK_LOGIN_SECTION2:
+    case CMD_TYPE_LOGIN_ENCRYTPTEDCODE:
         userLoginCheck2(task); break;
+    case CMD_TYPE_REGISTER_USRNAME:
+        userRegister1(task); break;
+    case CMD_TYPE_REGISTER_ENCRYTPTEDCODE:
+        userRegister2(task); break;
+    case MSG_TYPE_LOGIN_SALT:
+    case MSG_TYPE_LOGINOK:
+    case MSG_TYPE_LOGINERROR:
+    case MSG_TYPE_REGISTEROK:
+    case MSG_TYPE_REGISTERERROR:
+        break;
     case CMD_TYPE_TOUCH:
         touchCommand(task);   break;
     case CMD_TYPE_REMOVE:
@@ -92,31 +102,3 @@ void doTask(task_t * task)
 }
 
 
-void userLoginCheck1(task_t * task) {
-    printf("userLoginCheck1.\n");
-    ListNode * pNode = userList;
-    while(pNode != NULL) {
-        user_info_t * user = (user_info_t *)pNode->val;
-        if(user->sockfd == task->peerfd) {
-            //拷贝用户名
-            strcpy(user->name, task->data);
-            loginCheck1(user);
-            return;
-        }
-        pNode = pNode->next;
-    }
-}
-
-void userLoginCheck2(task_t * task) {
-    printf("userLoginCheck2.\n");
-    ListNode * pNode = userList;
-    while(pNode != NULL) {
-        user_info_t * user = (user_info_t *)pNode->val;
-        if(user->sockfd == task->peerfd) {
-            //拷贝加密密文
-            loginCheck2(user, task->data);
-            return;
-        }
-        pNode = pNode->next;
-    }
-}
