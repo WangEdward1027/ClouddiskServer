@@ -27,6 +27,7 @@
 #include <pthread.h>
 #include <sys/uio.h>
 #include <sys/sendfile.h>
+#include <mysql/mysql.h>
 
 #define SIZE(a) (sizeof(a)/sizeof(a[0]))
 
