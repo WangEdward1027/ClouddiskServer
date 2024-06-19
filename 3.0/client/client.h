@@ -15,12 +15,14 @@ typedef enum {
     CMD_TYPE_REMOVE,
     CMD_TYPE_NOTCMD,  //不是命令
 
-    TASK_LOGIN_SECTION1 = 100,
-    TASK_LOGIN_SECTION1_RESP_OK,
-    TASK_LOGIN_SECTION1_RESP_ERROR,
-    TASK_LOGIN_SECTION2,
-    TASK_LOGIN_SECTION2_RESP_OK,
-    TASK_LOGIN_SECTION2_RESP_ERROR,
+    //user login
+    CMD_TYPE_USRNAME = 100,
+    MSG_TYPE_SALT,
+    CMD_TYPE_ENCRYTPTEDCODE,
+    MSG_TYPE_LOGINOK,
+    MSG_TYPE_LOGINERROR,
+    MSG_TYPE_REGISTEROK,
+    MSG_TYPE_REGISTERERROR,
 
 }CmdType;
 
@@ -35,7 +37,7 @@ typedef struct
 int tcpConnect(const char * ip, unsigned short port);
 int recvn(int sockfd, void * buff, int len);
 int sendn(int sockfd, const void * buff, int len);
-//登录和注册
+//登录和注册，0成功，1失败
 int login_client(int sockfd);
 int register_client(int sockfd);
 
