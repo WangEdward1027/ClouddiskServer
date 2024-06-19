@@ -27,39 +27,43 @@ void getsFile(int peerfd)
     int clientfd = peerfd;
     int ret = 1;
 
-    //向客户端发送文件可接收请求
+    //向服务端发送文件下载请求
     ret = send(clientfd, (char*)&ret, sizeof(ret),0);
 
-    //先接收文件名
-    char filename[100] = {0};
+    //1.接收文件名的长度
     int len = 0;
-    ret = recvn(clientfd, (char*)&len, sizeof(len));//先接文件名长度
-    printf("ret: %d, filename's len:%d\n", ret, len);
-    ret = recvn(clientfd, filename, len);//再接文件名内容
-    printf("ret: %d, recv msg:%s\n", ret, filename);
+    recv(clientfd, &len, sizeof(len), 0);
+    printf("文件名长度:%d\n",len);
+    
+    //2.接收文件名
+    char filename[100] = {0};
+    recv(clientfd, filename, sizeof(filename), 0);
+    printf("filename:%s\n",filename);
+    
+    //3.接收文件的长度
+    recv(clientfd, &len, sizeof(len), 0);
+    printf("文件长度:%d\n", len);
+    
+    //4.接收文件
+        //打印当前工作目录
+        char cwd[128] = {0};
+        getcwd(cwd, sizeof(cwd));
+        printf("当前工作目录cwd: %s\n",cwd);
+    int fd = open(filename, O_RDWR | O_CREAT , 0644); 
+    printf("fd = %d\n",fd);
+    if(fd == -1)    error(1, errno, "open %s", filename);
 
-    int wfd = open(filename, O_CREAT | O_RDWR, 0644);
-
-    //再获取的是文件内容的长度
-    off_t length = 0;
-    recvn(clientfd, (char*)&length, sizeof(length));
-    printf("file length: %ld\n", length);
-
-    //最后接收文件内容
     char buff[1000] = {0};
-    while(1) {
-        ret = recvn(clientfd, (char*)&len, sizeof(len));//先接长度
-        if(ret == 0) {
-            break;
-        }
+    off_t left = len;
+    while(left > 0) {
         //可以确定接收len个字节的长度
         ret = recvn(clientfd, buff, len);//再接文件内容
         if(ret != 1000) {
             printf("ret: %d\n", ret);
         }
         //最后再写入本地
-        write(wfd, buff, ret);
+        write(fd, buff, ret);
     }
-    close(wfd);
+    close(fd);
     close(clientfd);
 }
