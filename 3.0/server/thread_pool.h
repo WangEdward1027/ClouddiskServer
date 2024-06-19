@@ -50,23 +50,6 @@ typedef void (*sighandler_t)(int);
         fprintf(stderr, "%s:%s\n", func, strerror(ret));\
     }}
 
-
-//1.用户注册表
-typedef struct User{
-    int id;
-    char userName[64];
-    char salt[64];
-    char cryptpasswd[64];
-    char pwd[64];
-}User;
-
-//2.服务器文件表
-typedef struct FileInfo{
-    char md5[64];
-    char fileName[64];
-}FileInfo;
-
-//3.虚拟文件表
 typedef struct FileEntry{
     int id;
     int parentId;
@@ -76,6 +59,19 @@ typedef struct FileEntry{
     int fileSize;
     int fileType;
 }FileEntry;
+
+typedef struct FileInfo{
+    char md5[64];
+    char fileName[64];
+}FileInfo;
+
+typedef struct User{
+    int id;
+    char userName[64];
+    char salt[64];
+    char cryptpasswd[64];
+    char pwd[64];
+}User;
 
 typedef enum {
     CMD_TYPE_PWD=1,
@@ -173,19 +169,6 @@ void removeCommand(task_t * task);
 void userLoginCheck1(task_t * task);
 void userLoginCheck2(task_t * task);
 
-//数据库，返回0成功，返回-1失败
-int addUser(User* user);
-//int deleteUser(int userId);
-User* selsectUser(int userId);
-//int updateUser(User* user);
-
-int addFileInfo(FileInfo* fileInfo);
-FileInfo* selectFileInfo(char* md5, int md5Len);
-
-int addFileEntry(FileEntry* fileEntry);
-FileEntry* selectFileEntry(int id);
-int updateFileEntry(FileEntry* fileEntry);
-int deleteFileEntry(int id);
 
 //用户注册
 void register_server(task_t*task);
