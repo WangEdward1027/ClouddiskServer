@@ -173,6 +173,19 @@ void removeCommand(task_t * task);
 void userLoginCheck1(task_t * task);
 void userLoginCheck2(task_t * task);
 
+//数据库，返回0成功，返回-1失败
+int addUser(User* user);
+//int deleteUser(int userId);
+User* selsectUser(int userId);
+//int updateUser(User* user);
+
+int addFileInfo(FileInfo* fileInfo);
+FileInfo* selectFileInfo(char* md5, int md5Len);
+
+int addFileEntry(FileEntry* fileEntry);
+FileEntry* selectFileEntry(int id);
+int updateFileEntry(FileEntry* fileEntry);
+int deleteFileEntry(int id);
 
 //用户注册
 void register_server(task_t*task);
