@@ -51,11 +51,15 @@ typedef struct
 int tcpConnect(const char * ip, unsigned short port);
 int recvn(int sockfd, void * buff, int len);
 int sendn(int sockfd, const void * buff, int len);
+
 //登录和注册，0成功，1失败
 int login_client(int sockfd, User* user);
 void register_client(int sockfd);
 
+void receive_response(int sockfd, char *response);
+void encrypt_password(const char *password, const char *salt, char *encrypted_password);
 
+//命令解析
 int parseCommand(const char * input, int len, train_t * pt, const User* user);
 
 

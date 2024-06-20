@@ -172,6 +172,12 @@ void getsCommand(task_t * task);
 void touchCommand(task_t * task);
 void removeCommand(task_t * task);
 
+//用户注册
+void register_server(task_t * task);
+void userRegister1(task_t* task);
+void userRegister2(task_t* task);
+void generateSalt(char* salt,size_t length);
+
 //用户登录的操作
 void userLoginCheck1(task_t * task);
 void userLoginCheck2(task_t * task);
@@ -198,10 +204,6 @@ FileEntry* selectFileEntryByFileNameAndOwnerId(const char* fileName, int ownerId
 char* getCurrentDirectory(const char* pwd);
 char* getParentDirectory(const char* pwd);
 
-//用户注册
-void register_server(task_t * task);
-void userRegister1(task_t* task);
-void userRegister2(task_t* task);
 
 //对指定文件生成相应的MD5值
 void generateMD5(const char *filename, char *md5String);
