@@ -5,7 +5,6 @@ void sendFile(int clientfd, train_t * train){
     putsFile(clientfd, train);
 }
 
-//发送新版小火车
 void sendtrain(int peerfd, train_t* train, int len) {
     // 1. 先发送len
     int contLen = train->len;
@@ -52,14 +51,14 @@ int main(int argc, char* argv[])
         FD_SET(clientfd,&rdset);//将客户端套接字加入监听集合
 
         //调用select进行多路复用监听
-        int nready = select(clientfd+1,&rdset,NULL,NULL,NULL);
+        int nready=select(clientfd+1,&rdset,NULL,NULL,NULL);
         //printf("nready:%d\n",nready);
         //检查用户是否输入
         if(FD_ISSET(STDIN_FILENO,&rdset)){
             //读取数据
             memset(buff,0,sizeof(buff));
-            int ret = read(STDIN_FILENO,buff,sizeof(buff));
-            if(ret == 0){
+            int ret=read(STDIN_FILENO,buff,sizeof(buff));
+            if(ret==0){
                 printf("再见。\n");
                 break;
             }//用户ctrl c退出
@@ -72,7 +71,7 @@ int main(int argc, char* argv[])
             
             //分词解析命令
             parseCommand(buff,strlen(buff)-1,&train);//int parseCommand(const char*buff,int len,train_t*pt)
-            sendtrain(clientfd, &train, 4 + 4 + train.len);
+            sendtrain(clientfd,&train,4+4+train.len);
         }
 
         //接收服务器数据
@@ -85,12 +84,11 @@ int main(int argc, char* argv[])
             //printf("命令是：%d号命令\n",recvCmdType);
             //接收文件是接收文件命令
             if(recvCmdType==CMD_TYPE_GETS){
-                printf("开始下载文件\n");    
-                getsFile(clientfd);     //下载文件
+                getsFile(clientfd);
                 // recvFile(clientfd);//int recvFile(int sockfd)接收文件,文件名 
             }else if(recvCmdType==CMD_TYPE_PUTS){
-                printf("开始上传文件\n");    
-                sendFile(clientfd, &train);  //上传文件
+                printf("开始发送文件\n");
+                sendFile(clientfd, &train); 
                 recv(clientfd,&buff1,sizeof(buff1),0);
             }
             
