@@ -192,6 +192,7 @@ int deleteFileEntry(int id);
 FileEntry* selectFileEntryByFileName(const char* fileName);
 FileEntry* selectFileEntryByOwnerId(int ownerId, int* entryCount);
 FileEntry* selectFileEntryByparentId(int parentId);
+FileEntry* selectFileEntryByFileNameAndOwnerId(const char* fileName, int ownerId, int* entryCount);
 
 // 获取pwd的最后一个目录项和倒数第二个目录项
 char* getCurrentDirectory(const char* pwd);
