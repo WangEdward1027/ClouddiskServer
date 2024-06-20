@@ -7,7 +7,8 @@ int main()
     printf("欢迎使用“龟速网盘”\n");
     
     //登录模块
-    login_view(clientfd);
+    User user;
+    login_view(clientfd, &user);
 
     char buf[1024] = {0};
     //4. 使用select进行监听
@@ -31,9 +32,9 @@ int main()
             memset(&train, 0, sizeof(train));
             //解析命令行
             buf[strlen(buf)-1] = '\0';
-            parseCommand(buf, strlen(buf), &train);
+            parseCommand(buf, strlen(buf), &train, &user);
             //TODO 修改发送内容的类型
-            sendn(clientfd, &train, 4 + 4 + train.len);
+            sendn(clientfd, &train, 4 + 4 + sizeof(User) + train.len);
             if(train.type == CMD_TYPE_PUTS) {
                 putsCommand(clientfd, &train);
             }

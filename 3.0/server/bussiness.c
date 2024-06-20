@@ -1,6 +1,5 @@
 #include "linked_list.h"
 #include "thread_pool.h"
-#include "user.h"
 
 //外部变量(userList是在main.c文件中定义的)
 extern ListNode * userList;
@@ -29,9 +28,19 @@ void handleMessage(int sockfd, int epfd, task_queue_t * que)
     ptask->peerfd = sockfd;
     ptask->epfd = epfd;
     ptask->type= cmdType;
-    //TODO ptask->fileEntry = 
+
+    //1.3 获取用户信息
+    //ptask->user
+    User user;
+    ret = recvn(sockfd, &user, sizeof(User));
+    if(ret == 0)
+        goto end;
+    printf("User:usrname=%s, salt=%s, cryptpasswd=%s, pwd=%s",
+           user.userName, user.salt, user.cryptpasswd, user.pwd);
+    ptask->user = user;
+
     if(length > 0) {
-        //1.3 获取消息内容
+        //1.4 获取消息内容
         ret = recvn(sockfd, ptask->data, length);
         if(ret > 0) {
             //往线程池中添加任务
@@ -101,5 +110,4 @@ void doTask(task_t * task)
         break;
     }
 }
-
 
