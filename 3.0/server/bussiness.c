@@ -1,8 +1,8 @@
-#include "linked_list.h"
+/* #include "linked_list.h" */
 #include "thread_pool.h"
 
 //外部变量(userList是在main.c文件中定义的)
-extern ListNode * userList;
+/* extern ListNode * userList; */
 
 //主线程调用:处理客户端发过来的消息
 void handleMessage(int sockfd, int epfd, task_queue_t * que)
@@ -58,7 +58,7 @@ end:
         printf("\nconn %d is closed.\n", sockfd);
         delEpollReadfd(epfd, sockfd);
         close(sockfd);
-        deleteNode2(&userList, sockfd);//删除用户信息
+        /* deleteNode2(&userList, sockfd);//删除用户信息 */
     }
 }
 
@@ -86,7 +86,7 @@ void doTask(task_t * task)
     case CMD_TYPE_GETS:
         getsCommand(task);   break;
     case CMD_TYPE_NOTCMD:
-        notCommand(task);   break;
+        /* notCommand(task);   break; */
     case CMD_TYPE_LOGIN_USRNAME:
         userLoginCheck1(task); break;
     case CMD_TYPE_LOGIN_ENCRYTPTEDCODE:

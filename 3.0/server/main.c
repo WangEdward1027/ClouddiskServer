@@ -1,12 +1,13 @@
 #include "config.h"
-#include "linked_list.h"
+/* #include "linked_list.h" */
 #include "thread_pool.h"
 
 #define EPOLL_ARR_SIZE 100
 
 int exitPipe[2];
+
 //定义存储用户信息的链表
-ListNode * userList = NULL;
+/* ListNode * userList = NULL; */
 
 void sigHandler(int num)
 {
@@ -82,8 +83,8 @@ int main(int argc, char ** argv)
                     //将新连接添加到epoll的监听红黑树上
                     addEpollReadfd(epfd, peerfd);
                     //添加用户节点
-                    User * user = (User*)calloc(1, sizeof(User));
-                    appendNode(&userList, user);
+                    /* User * user = (User*)calloc(1, sizeof(User)); */
+                    /* appendNode(&userList, user); */
                 } else if(fd == exitPipe[0]) {
                     //线程池要退出
                     int howmany = 0;

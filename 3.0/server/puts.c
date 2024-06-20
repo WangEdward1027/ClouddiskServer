@@ -10,7 +10,6 @@ void putsCommand(task_t * task) {
     if(selectFileInfo(md5String, 33)){
         strncpy(task->data, "instantTransfer", sizeof(task->data));
         send(task->peerfd, task->data, strlen(task->data), 0);
-        
 
         return;
     }
