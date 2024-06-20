@@ -329,3 +329,67 @@ FileEntry* selectFileEntryByparentId(int parentId, int* entryCount) {
     mysql_close(conn);
     return entries;
 }
+
+//---------------------------甘博--------------------------------
+
+FileEntry *getEntriesInDir(int dirId){
+    //创建数据库连接
+    MYSQL *conn=create_db_connection();
+    if(conn==NULL){
+        return NULL;
+    }
+
+    //SQL查询语句，获取指定父目录ID下所有的条目
+    char query[1024];
+    snprintf(query,sizeof(query),"SELECT * FROM fileentry WHERE parent_id=%d",dirId);
+
+    //执行SQL语句查询
+    if(mysql_query(conn,query)){
+        fprintf(stderr,"SELECT ERROR:%s\n",mysql_error(conn));
+        mysql_close(conn);
+        return NULL;
+    }
+    
+    //获取查询结果
+    MYSQL_RES*result=mysql_store_result(conn);
+    if(result==NULL){
+        fprintf(stderr,"mysql_store_result failed:%s\n",mysql_error(conn));
+        mysql_close(conn);
+        return NULL; 
+    }
+
+    //获取结果集中条目的数量
+    int num_rows=mysql_num_rows(result);
+    if(num_rows==0){
+        mysql_free_result(result);
+        mysql_close(conn);
+        return NULL;
+    }
+    
+    //为条目数组分配内存
+    FileEntry *entries=(FileEntry*)malloc((num_rows+1)*sizeof(FileEntry));
+    int index=0;
+    MYSQL_ROW row;
+    
+    //遍历查询结果，填充条目数组
+    while((row=mysql_fetch_row(result))){
+        entries[index].id=atoi(row[0]);
+        entries[index].parentId=atoi(row[1]);
+        strncpy(entries[index].fileName,row[2],sizeof(entries[index].fileName)-1);
+        entries[index].fileName[sizeof(entries[index].fileName)-1]='\0';
+        entries[index].ownerId=atoi(row[3]);
+        strncpy(entries[index].md5,row[4],sizeof(entries[index].md5)-1);
+        entries[index].md5[sizeof(entries[index].md5)-1]='\0';
+        entries[index].fileSize=atoi(row[5]);
+        entries[index].fileType=atoi(row[6]);
+        index++;
+    }
+
+    //添加结束标志
+    entries[index].id=0;
+    mysql_free_result(result);
+    mysql_close(conn);
+    return entries;
+}
+
+
