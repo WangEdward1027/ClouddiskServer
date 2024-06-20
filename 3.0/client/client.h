@@ -121,10 +121,8 @@ int parseCommand(const char * input, int len, train_t * pt, User* user);
 //执行上传文件操作
 void putsCommand(int sockfd, train_t * pt);
 void generateMD5(const char *filename, char *md5String);
-//将本地文件上传至服务器
-void putsFile(int sockfd, train_t * pt);
 //从服务器下载文件
-void getsFile(int scokfd);
+void getsFile(int scokfd, train_t * pt);
 //监听事件
 int addEpollReadfd(int epfd, int fd);
 int delEpollReadfd(int epfd, int fd);
