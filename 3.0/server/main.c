@@ -52,8 +52,8 @@ int main(int argc, char ** argv)
     threadpoolStart(&threadpool);
 
     //创建监听套接字
-    //int listenfd = tcpInit(find(&ht, IP), find(&ht, PORT));
-    int listenfd = tcpInit(argv[1], argv[2]);
+    int listenfd = tcpInit((const char*)find(&ht, IP), (const char*)find(&ht, PORT));
+    //int listenfd = tcpInit(argv[1], argv[2]);
 
     //创建epoll实例
     int epfd = epoll_create1(0);
@@ -83,8 +83,8 @@ int main(int argc, char ** argv)
                     //将新连接添加到epoll的监听红黑树上
                     addEpollReadfd(epfd, peerfd);
                     //添加用户节点
-                    user_info_t * user = (user_info_t*)calloc(1, sizeof(user_info_t));
-                    user->sockfd = peerfd;
+                    User * user = (User*)calloc(1, sizeof(User));
+                    //TODO 填入用户信息
                     appendNode(&userList, user);
                 } else if(fd == exitPipe[0]) {
                     //线程池要退出

@@ -32,6 +32,7 @@ int main()
             //解析命令行
             buf[strlen(buf)-1] = '\0';
             parseCommand(buf, strlen(buf), &train);
+            //TODO 修改发送内容的类型
             sendn(clientfd, &train, 4 + 4 + train.len);
             if(train.type == CMD_TYPE_PUTS) {
                 putsCommand(clientfd, &train);
