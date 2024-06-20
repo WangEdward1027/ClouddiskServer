@@ -84,12 +84,12 @@ int main(int argc, char* argv[])
             char buff1[4096];
             //printf("命令是：%d号命令\n",recvCmdType);
             //接收文件是接收文件命令
-            if(recvCmdType==CMD_TYPE_GETS){
-                printf("开始下载文件\n");    
+            if(recvCmdType == CMD_TYPE_GETS){
+                printf("开始下载文件...\n");    
                 getsFile(clientfd);     //下载文件
                 // recvFile(clientfd);//int recvFile(int sockfd)接收文件,文件名 
-            }else if(recvCmdType==CMD_TYPE_PUTS){
-                printf("开始上传文件\n");    
+            }else if(recvCmdType == CMD_TYPE_PUTS){
+                printf("开始上传文件...\n");    
                 sendFile(clientfd, &train);  //上传文件
                 recv(clientfd,&buff1,sizeof(buff1),0);
             }

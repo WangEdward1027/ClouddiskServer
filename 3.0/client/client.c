@@ -116,7 +116,10 @@ void putsCommand(int sockfd, train_t * pt)
 
 //解析命令
 int parseCommand(const char* buff, int len, train_t* pt, const User* user){
+    //填写train结构体
     pt->len = strlen(buff);
+    pt->user = user;
+
     //把buff里的第一个命令分词，然后判断CmdTpe的类型,填入train_t中
     char* tempbuff =(char *)calloc(len + 1, sizeof(char));
     strcpy(tempbuff, buff);     //buff是const

@@ -31,7 +31,6 @@ void handleMessage(int sockfd, int epfd, task_queue_t * que)
     } else if(length == 0){
         taskEnque(que, ptask);
     }
-
     if(ret == 0) {//连接断开的情况
         printf("\nconn %d is closed.\n", sockfd);
         delEpollReadfd(epfd, sockfd);
@@ -83,7 +82,6 @@ void doTask(task_t * task)
         userLoginCheck1(task); break;
     case TASK_LOGIN_SECTION2:
         userLoginCheck2(task); break;
-
     default:
         break;
     }

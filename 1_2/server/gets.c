@@ -63,8 +63,6 @@ void getsCommand(task_t* task){
     /*         printf("send ret:%d\n", ret); */
     /*     } */
     /* } */
-    
-
 
     printf("send file over.\n");
     close(fd);
