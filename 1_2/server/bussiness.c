@@ -7,7 +7,7 @@ void handleMessage(int sockfd, int epfd, task_queue_t * que)
     //1.1 获取消息长度
     int length = -1;
     int ret = recvn(sockfd, &length, sizeof(length));
-    printf("recv length: %d\n", length);
+    printf("收到客户端发来的数据长度: recvn = %d\n", length);
 
     //1.2 获取消息类型
     CmdType cmdType;
