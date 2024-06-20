@@ -26,7 +26,7 @@ void recRemoveDir(int dirId){
 void rmdirCommand(task_t *task){
     //接收任务中的目录
     if(strlen(task->data)==0){
-        const char *msg="请输入目录";
+        const char *msg="你不会把目录输入吗？？你搁着删除空气呢？？";
         sendn(task->peerfd,msg,strlen(msg));
         return;
     }
