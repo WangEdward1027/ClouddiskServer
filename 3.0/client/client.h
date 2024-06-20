@@ -30,10 +30,21 @@ typedef enum {
 }CmdType;
 
 
+//1.用户注册表
+typedef struct User{
+    int id;
+    char userName[64];
+    char salt[64];
+    char cryptpasswd[64];
+    char pwd[64];
+}User;
+
+
 typedef struct 
 {
     int len;//记录内容长度
     CmdType type;//消息类型
+    User* user;  //对应用户信息
     char buff[1000];//记录内容本身
 }train_t;
 
@@ -41,14 +52,13 @@ int tcpConnect(const char * ip, unsigned short port);
 int recvn(int sockfd, void * buff, int len);
 int sendn(int sockfd, const void * buff, int len);
 //登录和注册，0成功，1失败
-int login_client(int sockfd);
+int login_client(int sockfd, User* user);
 void register_client(int sockfd);
 
 
-int parseCommand(const char * input, int len, train_t * pt);
+int parseCommand(const char * input, int len, train_t * pt, const User* user);
 
-//判断一个字符串是什么命令
-int getCommandType(const char * str);
+
 //执行上传文件操作
 void putsCommand(int sockfd, train_t * pt);
 //将本地文件上传至服务器
@@ -62,4 +72,4 @@ int delEpollReadfd(int epfd, int fd);
 int transferFile(int sockfd);
 
 //登录模块
-void login_view(int sockfd);
+void login_view(int sockfd, User* user);

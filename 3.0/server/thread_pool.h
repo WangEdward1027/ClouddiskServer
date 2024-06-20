@@ -176,10 +176,10 @@ void removeCommand(task_t * task);
 void userLoginCheck1(task_t * task);
 void userLoginCheck2(task_t * task);
 
-//数据库，返回0成功，返回-1失败
+//数据库，返回0成功，返回-1失败，实体返回NULL为失败
 int addUser(User* user);
 //int deleteUser(int userId);
-User* selsectUser(int userId);
+User* selectUser(int userId);
 //int updateUser(User* user);
 User* selectUserByUserName(const char* userName);
 int addFileInfo(FileInfo* fileInfo);
@@ -191,7 +191,7 @@ int updateFileEntry(FileEntry* fileEntry);
 int deleteFileEntry(int id);
 FileEntry* selectFileEntryByFileName(const char* fileName);
 FileEntry* selectFileEntryByOwnerId(int ownerId, int* entryCount);
-
+FileEntry* selectFileEntryByparentId(int parentId);
 //用户注册
 void register_server(task_t * task);
 void userRegister1(task_t* task);

@@ -32,8 +32,8 @@ int tcpConnect(const char * ip, unsigned short port)
 }
 
 
-//用户登录
-int login_client(int sockfd)
+//TODO 用户登录，需要将用户信息填入user
+int login_client(int sockfd, User* user)
 {
     return 0;
 }
@@ -115,8 +115,11 @@ void putsCommand(int sockfd, train_t * pt)
 }
 
 //解析命令
-int parseCommand(const char* buff, int len, train_t* pt){
+int parseCommand(const char* buff, int len, train_t* pt, const User* user){
+    //填写train结构体
     pt->len = strlen(buff);
+    pt->user = user;
+
     //把buff里的第一个命令分词，然后判断CmdTpe的类型,填入train_t中
     char* tempbuff =(char *)calloc(len + 1, sizeof(char));
     strcpy(tempbuff, buff);     //buff是const
@@ -168,7 +171,7 @@ int parseCommand(const char* buff, int len, train_t* pt){
     return 0;
 }
 
-void login_view(int sockfd){
+void login_view(int sockfd, User* user){
     int user_choice;
 
     while(1){
@@ -191,7 +194,7 @@ void login_view(int sockfd){
             register_client(sockfd);
             break;
         case 2:
-            if (login_client(sockfd)) {
+            if (login_client(sockfd, user)) {
                 printf("登录成功\n");
                 return; // 退出函数，结束循环
             } else {
