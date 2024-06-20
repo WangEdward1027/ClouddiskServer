@@ -37,7 +37,7 @@ void handleMessage(int sockfd, int epfd, task_queue_t * que)
         goto end;
     printf("User:usrname=%s, salt=%s, cryptpasswd=%s, pwd=%s",
            user.userName, user.salt, user.cryptpasswd, user.pwd);
-    ptask->user = user;
+    ptask->user = &user;
 
     if(length > 0) {
         //1.4 获取消息内容
