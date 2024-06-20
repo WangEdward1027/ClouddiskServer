@@ -49,22 +49,25 @@ void getsFile(int peerfd)
         char cwd[128] = {0};
         getcwd(cwd, sizeof(cwd));
         printf("当前工作目录cwd: %s\n",cwd);
-    int fd = open(filename, O_RDWR | O_CREAT , 0644); 
-    printf("fd = %d\n",fd);
-    if(fd == -1)    error(1, errno, "open %s", filename);
+    int filefd = open(filename, O_RDWR | O_CREAT |O_TRUNC , 0644); 
+    if(filefd == -1)    error(1, errno, "open %s", filename);
 
     char buff[1000] = {0};
-    off_t left = len;
-    while(left > 0) {
-        //可以确定接收len个字节的长度
-        ret = recvn(clientfd, buff, len);//再接文件内容
-        if(ret != 1000) {
-            printf("ret: %d\n", ret);
-        }
-        //最后再写入本地
-        write(fd, buff, ret);
-        left -= ret;
-    }
-    close(fd);
+    recv(peerfd, buff, sizeof(buff), 0);
+    write(filefd, buff, len);
+
+    /* off_t left = len; */
+    /* while(left > 0) { */
+    /*     //可以确定接收len个字节的长度 */
+    /*     ret = recvn(clientfd, buff, len);//再接文件内容 */
+    /*     if(ret != 1000) { */
+    /*         printf("ret: %d\n", ret); */
+    /*     } */
+    /*     //最后再写入本地 */
+    /*     write(fd, buff, ret); */
+    /*     left -= ret; */
+    /* } */
+
+    close(filefd);
     close(clientfd);
 }
