@@ -191,7 +191,7 @@ int updateFileEntry(FileEntry* fileEntry);
 int deleteFileEntry(int id);
 FileEntry* selectFileEntryByFileName(const char* fileName);
 FileEntry* selectFileEntryByOwnerId(int ownerId, int* entryCount);
-
+FileEntry* selectFileEntryByparentId(int parentId);
 //用户注册
 void register_server(task_t * task);
 void userRegister1(task_t* task);
