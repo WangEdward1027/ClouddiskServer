@@ -181,7 +181,7 @@ int addUser(User* user);
 //int deleteUser(int userId);
 User* selsectUser(int userId);
 //int updateUser(User* user);
-
+User* selectUserByUserName(const char* userName);
 int addFileInfo(FileInfo* fileInfo);
 FileInfo* selectFileInfo(char* md5, int md5Len);
 
@@ -189,6 +189,8 @@ int addFileEntry(FileEntry* fileEntry);
 FileEntry* selectFileEntry(int id);
 int updateFileEntry(FileEntry* fileEntry);
 int deleteFileEntry(int id);
+FileEntry* selectFileEntryByFileName(const char* fileName);
+FileEntry* selectFileEntryByOwnerId(int ownerId, int* entryCount);
 
 //用户注册
 void register_server(task_t * task);
