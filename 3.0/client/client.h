@@ -115,11 +115,12 @@ void receive_response(int sockfd, char *response);
 void encrypt_password(const char *password, const char *salt, char *encrypted_password);
 
 //命令解析
-int parseCommand(const char * input, int len, train_t * pt, const User* user);
+int parseCommand(const char * input, int len, train_t * pt, User* user);
 
 
 //执行上传文件操作
 void putsCommand(int sockfd, train_t * pt);
+void generateMD5(const char *filename, char *md5String);
 //将本地文件上传至服务器
 void putsFile(int sockfd, train_t * pt);
 //从服务器下载文件
@@ -132,4 +133,5 @@ int transferFile(int sockfd);
 
 //登录模块
 void login_view(int sockfd, User* user);
+
 #endif
