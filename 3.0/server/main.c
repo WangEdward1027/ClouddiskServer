@@ -1,7 +1,6 @@
 #include "config.h"
 #include "linked_list.h"
 #include "thread_pool.h"
-#include "user.h"
 
 #define EPOLL_ARR_SIZE 100
 
@@ -84,7 +83,6 @@ int main(int argc, char ** argv)
                     addEpollReadfd(epfd, peerfd);
                     //添加用户节点
                     User * user = (User*)calloc(1, sizeof(User));
-                    //TODO 填入用户信息
                     appendNode(&userList, user);
                 } else if(fd == exitPipe[0]) {
                     //线程池要退出

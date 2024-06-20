@@ -31,13 +31,13 @@ void handleMessage(int sockfd, int epfd, task_queue_t * que)
 
     //1.3 获取用户信息
     //ptask->user
-    User user;
-    ret = recvn(sockfd, &user, sizeof(User));
+    User* user = (User*)calloc(1 ,sizeof(User));
+    ret = recvn(sockfd, user, sizeof(User));
     if(ret == 0)
         goto end;
     printf("User:usrname=%s, salt=%s, cryptpasswd=%s, pwd=%s",
-           user.userName, user.salt, user.cryptpasswd, user.pwd);
-    ptask->user = &user;
+           user->userName, user->salt, user->cryptpasswd, user->pwd);
+    ptask->user = user;
 
     if(length > 0) {
         //1.4 获取消息内容
