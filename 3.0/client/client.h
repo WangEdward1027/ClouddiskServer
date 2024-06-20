@@ -44,6 +44,7 @@ typedef struct
 {
     int len;//记录内容长度
     CmdType type;//消息类型
+    User user;  //对应用户信息
     char buff[1000];//记录内容本身
 }train_t;
 
