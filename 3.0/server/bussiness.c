@@ -111,3 +111,64 @@ void doTask(task_t * task)
     }
 }
 
+//对指定文件生成响应的MD5值
+void generateMD5(const char *filename, char *md5String) {
+    EVP_MD_CTX *mdctx;
+    const EVP_MD *md;
+    unsigned char md_value[EVP_MAX_MD_SIZE];
+    unsigned int md_len, i;
+    FILE *file;
+    int bytes;
+    unsigned char data[1024];
+
+    // 初始化上下文
+    mdctx = EVP_MD_CTX_new();
+    if (mdctx == NULL) {
+        printf("EVP_MD_CTX_new failed\n");
+        return;
+    }
+
+    // 使用MD5算法
+    md = EVP_md5();
+    if (EVP_DigestInit_ex(mdctx, md, NULL) != 1) {
+        printf("EVP_DigestInit_ex failed\n");
+        EVP_MD_CTX_free(mdctx);
+        return;
+    }
+
+    // 打开文件
+    file = fopen(filename, "rb");
+    if (file == NULL) {
+        printf("%s can't be opened.\n", filename);
+        EVP_MD_CTX_free(mdctx);
+        return;
+    }
+
+    // 读取文件并更新MD5上下文
+    while ((bytes = fread(data, 1, 1024, file)) != 0) {
+        if (EVP_DigestUpdate(mdctx, data, bytes) != 1) {
+            printf("EVP_DigestUpdate failed\n");
+            fclose(file);
+            EVP_MD_CTX_free(mdctx);
+            return;
+        }
+    }
+
+    // 完成哈希计算
+    if (EVP_DigestFinal_ex(mdctx, md_value, &md_len) != 1) {
+        printf("EVP_DigestFinal_ex failed\n");
+        fclose(file);
+        EVP_MD_CTX_free(mdctx);
+        return;
+    }
+
+    // 释放上下文
+    EVP_MD_CTX_free(mdctx);
+    fclose(file);
+
+    // 将MD5值转换为十六进制字符串
+    for (i = 0; i < md_len; i++) {
+        sprintf(&md5String[i * 2], "%02x", md_value[i]);
+    }
+    md5String[md_len * 2] = '\0';
+}

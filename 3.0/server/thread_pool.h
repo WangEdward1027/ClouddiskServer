@@ -28,7 +28,7 @@
 #include <sys/uio.h>
 #include <sys/sendfile.h>
 #include <mysql/mysql.h>
-
+#include <openssl/evp.h>
 #define SIZE(a) (sizeof(a)/sizeof(a[0]))
 
 typedef void (*sighandler_t)(int);
@@ -202,6 +202,9 @@ char* getParentDirectory(const char* pwd);
 void register_server(task_t * task);
 void userRegister1(task_t* task);
 void userRegister2(task_t* task);
+
+//对指定文件生成相应的MD5值
+void generateMD5(const char *filename, char *md5String);
 
 MYSQL* create_db_connection();
 #endif
