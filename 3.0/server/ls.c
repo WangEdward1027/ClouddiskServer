@@ -94,8 +94,7 @@ bool do_select(task_t* task, char* sql) {
 void lsCommand(task_t * task)
 {
     int parent_id; // 保存用户当前父目录id
-    char sql[4096] = {0};
-    char buff[512] = {0};
+    char buff[2048] = {0};
     char* filename;
 
     // 1. 判断ls后是否有参数
@@ -130,17 +129,22 @@ void lsCommand(task_t * task)
     free(dir);
 
     // 3. 根据parent_id 查询对应的记录
-    FileEntry* reslist = selectFileEntryByParentId(parent_id);
-
-    // 4. 打印对应结果
-    while (reslist != NULL) {
-        printf("%-15s\t", )
-    }
-    // 3. 构造sql语句
-    sprintf(sql, "SELECT filename FROM fileentry WHERE parent_id = %d", id);
+    FileEntry* reslist = selectFileEntryByparentId(parent_id);
     
-    // 4. 执行sql
-    do_select(task, sql);
+    int i = 0;
+    // 4. 输出对应结果
+    while (reslist != NULL) {
+        sprintf(filename, "%-15s\t", reslist->fileName);
+        strcat(buff, filename);
+        i++;
+        if (i % 4 == 0) {
+            strcat(buff, "\n");
+        }
+        reslist++;
+    }
+    strcat(buff, "\0");
+    
+    sendn(task->peerfd, buff, strlen(buff));
     
     return;
 }
