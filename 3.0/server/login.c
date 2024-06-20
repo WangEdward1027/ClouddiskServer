@@ -39,9 +39,10 @@ void userLoginCheck2(task_t * task)
     if(encrypted_password == user->cryptpasswd){
         snprintf(task->data,sizeof(task->data),"MSG_TYPE_LOGINOK");
         strncpy(task->user->cryptpasswd, user->cryptpasswd, sizeof(task->user->cryptpasswd)); //4填加密密码
-        //5填当前目录
-        //需要一个接口
-        //to do
+        //5填充当前工作目录
+        char pwd[100];
+        sprintf(pwd, "dir%d", user->id);
+        strcpy(task->user->pwd, pwd);   //5填充pwd
     }
     //若密码不同，则返回登录失败
     else{

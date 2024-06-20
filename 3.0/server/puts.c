@@ -1,7 +1,21 @@
 #include "thread_pool.h"
 
 void putsCommand(task_t * task) {
-    printf("execute puts command.\n");
+    //秒传功能:
+    //服务器先接收md5码, 对比文件表中是否存在
+    char md5String[33];
+    sscanf(task->data, "%s", md5String);
+
+    //若存在, 实现秒传
+    if(selectFileInfo(md5String, 33)){
+        strncpy(task->data, "instantTransfer", sizeof(task->data));
+        send(task->peerfd, task->data, strlen(task->data), 0);
+        
+
+        return;
+    }
+    //若不存在, 开始普通上传
+    printf("文件不存在服务器，开始普通上传文件.\n");
     char filename[20] = {0};
     strcpy(filename, task->data);
     printf("filname: %s\n", filename);
@@ -32,4 +46,5 @@ void putsCommand(task_t * task) {
     close(fd);
     //上传任务执行完毕之后，再加回来
     addEpollReadfd(task->epfd, task->peerfd);
+    return;
 }
