@@ -10,9 +10,6 @@
 
 #define BUFFER_SIZE 256
 
-void send_request(int sockfd, char *request) {
-    send(sockfd, request, strlen(request), 0); // 0 表示默认标志位
-}
 
 void receive_response(int sockfd, char *response) {
     int len = recv(sockfd, response, BUFFER_SIZE - 1, 0); // 0 表示默认标志位
@@ -51,7 +48,7 @@ void register_client(int sockfd) {
     username[strcspn(username, "\n")] = 0;
 
     snprintf(request, sizeof(request), "CMD_TYPE_REGISTER_USRNAME:%s", username);
-    send_request(sockfd, request);
+    send(sockfd, request,strlen(request),0);
 
     // 接收服务器响应
     receive_response(sockfd, response);
@@ -70,7 +67,7 @@ void register_client(int sockfd) {
         encrypt_password(password, salt, encrypted_password);
         // 发送加密后的密码
         snprintf(request, sizeof(request), "CMD_TYPE_ENCRYPTECODE:%s", encrypted_password);
-        send_request(sockfd, request);
+        send(sockfd, request,strlen(request),0);
 
         // 接收服务器最终响应
         receive_response(sockfd, response);
