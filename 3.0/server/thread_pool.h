@@ -204,6 +204,7 @@ FileEntry* selectFileEntryByFileName(const char* fileName);
 FileEntry* selectFileEntryByOwnerId(int ownerId, int* entryCount);
 FileEntry* selectFileEntryByparentId(int parentId);
 FileEntry* selectFileEntryByFileNameAndOwnerId(const char* fileName, int ownerId, int* entryCount);
+FileEntry* selectFileEntryByOwnerIdAndFileType(int ownerId, int fileType, int* entryCount);
 
 //--------甘博---------
 FileEntry *getEntriesInDir(int dirId);
