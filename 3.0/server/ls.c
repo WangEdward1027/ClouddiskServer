@@ -1,5 +1,50 @@
 #include "thread_pool.h"
 
+char* getCurrentDirectory(const char* pwd) {
+    const char* delimiter = "/";
+    char* token;
+    char* lastToken = NULL;
+
+    // 使用 strtok 函数逐个切割路径
+    token = strtok((char*)pwd, delimiter);
+    while (token != NULL) {
+        lastToken = token;
+        token = strtok(NULL, delimiter);
+    }
+
+    if (lastToken != NULL) {
+        // 创建一个新的字符串存储目录名
+        char* result = strdup(lastToken);
+        return result;
+    }
+
+    return NULL;
+}
+
+char* getParentDirectory(const char* pwd) {
+    const char* delimiter = "/";
+    char* token;
+    char* lastToken = NULL;
+    char* secondLastToken = NULL;
+
+    // 使用 strtok 函数逐个切割路径
+    token = strtok((char*)pwd, delimiter);
+    while (token != NULL) {
+        secondLastToken = lastToken;
+        lastToken = token;
+        token = strtok(NULL, delimiter);
+    }
+
+    if (secondLastToken != NULL) {
+        // 创建一个新的字符串存储上级目录
+        char* result = strdup(secondLastToken);
+        return result;
+    }
+
+    return NULL;
+}
+
+
 bool do_select(task_t* task, char* sql) {
     
     char buff[1024] = {0};
@@ -45,22 +90,56 @@ bool do_select(task_t* task, char* sql) {
 }
 
 
+
 void lsCommand(task_t * task)
 {
-    int id; // 保存用户当前父目录id
+    int parent_id; // 保存用户当前父目录id
     char sql[4096] = {0};
+    char buff[512] = {0};
+    char* filename;
 
     // 1. 判断ls后是否有参数
     if (strcmp(task->data, "") == 0) {
         // 当前ls后面无参数
-        id = task->fileEntry->id;
-        sprintf(sql, "SELECT filename FROM fileentry WHERE parent_id = %d", id);
+        filename = getCurrentDirectory(task->user->pwd);
+    } else if (strcmp(task->data, "./") == 0){
+        filename = getCurrentDirectory(task->user->pwd); 
+    } else if (strcmp(task->user->pwd, "../") == 0) {
+        filename = getParentDirectory(task->user->pwd);
+        if (filename == NULL) {
+            strcpy(buff, "无效命令，重新输入。\n");
+            strcat(buff, "\0");
+            sendn(task->peerfd, buff, strlen(buff));
+            return;
+        }
     } else {
-        // 当前ls后面有参数
-        sprintf(sql, "SELECT filename FROM fileentry WHERE parent_id = (SELECT id FROM fileentry WHERE filename = %s)", task->data);
+        filename = getCurrentDirectory(task->data);
+    }
+
+    // 2. 获取filename 对应的id
+    FileEntry* dir = selectFileEntryByFileName(filename);
+    if (dir == NULL) {
+        strcpy(buff, "无效命令，重新输入。\n");
+        strcat(buff, "\0");
+        sendn(task->peerfd, buff, strlen(buff));
+        return;
     }
     
-    // 2. 执行sql
+    parent_id = dir->id; // 保存对应id
+    
+    free(dir);
+
+    // 3. 根据parent_id 查询对应的记录
+    FileEntry* reslist = selectFileEntryByParentId(parent_id);
+
+    // 4. 打印对应结果
+    while (reslist != NULL) {
+        printf("%-15s\t", )
+    }
+    // 3. 构造sql语句
+    sprintf(sql, "SELECT filename FROM fileentry WHERE parent_id = %d", id);
+    
+    // 4. 执行sql
     do_select(task, sql);
     
     return;
