@@ -1,12 +1,5 @@
 #include "client.h"
 #include "str_util.h"
-#include <openssl/sha.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/socket.h> // 新增的头文件，包含 send 和 recv 函数
 
 #define BUFFER_SIZE 256
 

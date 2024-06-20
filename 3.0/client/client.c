@@ -1,7 +1,5 @@
 #include "client.h"
 #include "str_util.h"
-#include <stdio.h>
-#include <unistd.h>
 
 int tcpConnect(const char * ip, unsigned short port)
 {
