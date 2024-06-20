@@ -122,6 +122,7 @@ void cdCommand(task_t* task) {
             sprintf(buff, ">%s", path);
             sendn(task->peerfd, buff, strlen(buff));
             strcpy(task->user->pwd, path); // 更新当前所在目录
+            updateUser(task->user); // 将更改保存到user表
             return;
         }
     } else {
@@ -156,6 +157,7 @@ void cdCommand(task_t* task) {
 
         // 更新当前path
         strcpy(task->user->pwd, path);
+        updateUser(task->user); // 将更改发送到数据库
         
         return;
     }
