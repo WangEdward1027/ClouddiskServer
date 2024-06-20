@@ -80,9 +80,10 @@ void lsCommand(task_t * task)
     parent_id = dir->id; // 保存对应id
     
     free(dir);
-
+    
+    int num = 0;
     // 3. 根据parent_id 查询对应的记录
-    FileEntry* reslist = selectFileEntryByparentId(parent_id);
+    FileEntry* reslist = selectFileEntryByparentId(parent_id, &num);
     
     int i = 0;
     // 4. 输出对应结果
