@@ -1,5 +1,4 @@
 #include "client.h"
-#include <func.h>
 
 int main()
 {
@@ -41,19 +40,14 @@ int main()
         }//接受服务器返回数据并打印 
         else if(FD_ISSET(clientfd, &rdset)) {
             int recvCmdType=train.type;
-            //memset(&recvCmdType,0,sizeof(recvCmdType));
-            //recvn(clientfd,&recvCmdType,sizeof(recvCmdType));//接收命令类型
 
             char buff1[4096];
-            //printf("命令是：%d号命令\n",recvCmdType);
             //接收文件是接收文件命令
             if(recvCmdType==CMD_TYPE_GETS){
-                getsFile(clientfd);
-                // recvFile(clientfd);//int recvFile(int sockfd)接收文件,文件名
+                getsCommand(clientfd, &train);
             }else if(recvCmdType==CMD_TYPE_PUTS){
                 printf("开始发送文件\n");
-                putsFile(clientfd, &train);
-                recv(clientfd,&buff1,sizeof(buff1),0);
+                putsCommand(clientfd, &train);
             }
 
             //执行普通命令
