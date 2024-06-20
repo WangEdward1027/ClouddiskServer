@@ -3,6 +3,7 @@
 void readConfig(const char* filename, HashTable * ht)
 {
     FILE * fp = fopen(filename, "rw");
+    /* printf("filename:%s\n", filename); */
     if(fp == NULL) {
         printf("open file %s error.\n", filename);
         return;
