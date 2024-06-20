@@ -393,7 +393,7 @@ FileEntry *getEntriesInDir(int dirId){
 }
 
 //根据路径查找并返回文件或目录条目
-FileEntry *getEntriesInDir(const char *path)
+FileEntry *getEntryByPath(const char *path)
 {
     //创建数据库连接
     MYSQL *conn =create_db_connection();
@@ -459,51 +459,4 @@ FileEntry *getEntriesInDir(const char *path)
     }
     mysql_close(conn);
     return entry;
-}
-
-// 根据ownerId和fileType查询FileEntry
-FileEntry* selectFileEntryByOwnerIdAndFileType(int ownerId, int fileType, int* entryCount) {
-    MYSQL *conn = create_db_connection();
-    char query[256];
-    snprintf(query, sizeof(query), "SELECT * FROM fileentry WHERE owner_id = %d AND filetype = %d", ownerId, fileType);
-
-    if (mysql_query(conn, query)) {
-        fprintf(stderr, "selectFileEntryByOwnerIdAndFileType() failed: %s\n", mysql_error(conn));
-        mysql_close(conn);
-        *entryCount = 0;
-        return NULL;
-    }
-
-    MYSQL_RES *res = mysql_store_result(conn);
-    if (res == NULL) {
-        fprintf(stderr, "mysql_store_result() failed: %s\n", mysql_error(conn));
-        mysql_close(conn);
-        *entryCount = 0;
-        return NULL;
-    }
-
-    *entryCount = mysql_num_rows(res);
-    if (*entryCount == 0) {
-        mysql_free_result(res);
-        mysql_close(conn);
-        return NULL;
-    }
-
-    FileEntry* entries = (FileEntry*)malloc(sizeof(FileEntry) * (*entryCount));
-    MYSQL_ROW row;
-    int i = 0;
-    while ((row = mysql_fetch_row(res))) {
-        entries[i].id = atoi(row[0]);
-        entries[i].parentId = atoi(row[1]);
-        strcpy(entries[i].fileName, row[2]);
-        entries[i].ownerId = atoi(row[3]);
-        strcpy(entries[i].md5, row[4]);
-        entries[i].fileSize = atoi(row[5]);
-        entries[i].fileType = atoi(row[6]);
-        i++;
-    }
-
-    mysql_free_result(res);
-    mysql_close(conn);
-    return entries;
 }
