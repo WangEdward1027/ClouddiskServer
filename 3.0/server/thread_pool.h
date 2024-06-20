@@ -114,7 +114,7 @@ typedef struct task_s{
     int epfd;//epoll的实例
     CmdType type;
     char data[1000];
-    FileEntry* fileEntry;
+    User* user;
     struct task_s * pNext;
 }task_t;
 
