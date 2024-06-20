@@ -202,7 +202,7 @@ int updateFileEntry(FileEntry* fileEntry);
 int deleteFileEntry(int id);
 FileEntry* selectFileEntryByFileName(const char* fileName);
 FileEntry* selectFileEntryByOwnerId(int ownerId, int* entryCount);
-FileEntry* selectFileEntryByparentId(int parentId);
+FileEntry* selectFileEntryByparentId(int parentId, int* entryCount);
 FileEntry* selectFileEntryByFileNameAndOwnerId(const char* fileName, int ownerId, int* entryCount);
 FileEntry* selectFileEntryByOwnerIdAndFileType(int ownerId, int fileType, int* entryCount);
 
