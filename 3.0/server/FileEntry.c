@@ -392,4 +392,71 @@ FileEntry *getEntriesInDir(int dirId){
     return entries;
 }
 
+//根据路径查找并返回文件或目录条目
+FileEntry *getEntriesInDir(const char *path)
+{
+    //创建数据库连接
+    MYSQL *conn =create_db_connection();
+    if(conn==NULL){
+        return NULL;
+    }
 
+    //临时路径存储，防止修改原始路径
+    char tempPath[1000];
+    strncpy(tempPath,path,sizeof(tempPath)-1);
+    tempPath[sizeof(tempPath)-1]='\0';
+    
+    //使用分隔符“/”解析路径
+    char *token =strtok(tempPath,"/");
+    int parentId=0;//更目录ID
+    FileEntry *entry=NULL;
+
+    //逐级解析路径
+    while(token!=NULL){
+        char query[1024];
+        //构建SQL查询语句，根据当前父亲ID和目录名查找条目
+        snprintf(query,sizeof(query),"SELECT * FROM fileentry WHERE parent_Id=%d AND fileName='%s'",parentId,token);
+
+        //执行SQL查询
+        if(mysql_query(conn,query)){
+            fprintf(stderr,"SELECT ERROR:%s\n",mysql_error(conn));
+            mysql_close(conn);
+            return NULL;
+        }
+
+        //获取查询结果
+        MYSQL_RES *result=mysql_store_result(conn);
+        if(result==NULL){
+            fprintf(stderr,"mysql_store_result() failed:%s\n",mysql_error(conn));
+            mysql_close(conn);
+            return NULL;
+        }
+
+        //获取查询结果的第一行
+        MYSQL_ROW row =mysql_fetch_row(result);
+        if(row==NULL){
+            mysql_free_result(result);
+            mysql_close(conn);
+            return NULL;
+        }
+
+        //填充条目结构体
+        entry = (FileEntry *)malloc(sizeof(FileEntry));
+        entry->id = atoi(row[0]);
+        entry->parentId = atoi(row[1]);
+        strncpy(entry->fileName, row[2], sizeof(entry->fileName) - 1);
+        entry->fileName[sizeof(entry->fileName) - 1] = '\0';
+        entry->ownerId = atoi(row[3]);
+        strncpy(entry->md5, row[4], sizeof(entry->md5) - 1);
+        entry->md5[sizeof(entry->md5) - 1] = '\0';
+        entry->fileSize = atoi(row[5]);
+        entry->fileType = atoi(row[6]);
+
+        //更新父ID，继续查找下一层级
+        parentId=entry->id;
+        token=strtok(NULL,"/");
+        mysql_free_result(result);
+    }
+    mysql_close(conn);
+    return entry;
+}
