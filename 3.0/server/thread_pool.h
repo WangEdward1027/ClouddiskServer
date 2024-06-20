@@ -183,14 +183,19 @@ void userLoginCheck1(task_t * task);
 void userLoginCheck2(task_t * task);
 
 //数据库，返回0成功，返回-1失败，实体返回NULL为失败
+//用户表
 int addUser(User* user);
 //int deleteUser(int userId);
 User* selectUser(int userId);
-//int updateUser(User* user);
+int updateUser(User* user);
 User* selectUserByUserName(const char* userName);
+
+//文件表
 int addFileInfo(FileInfo* fileInfo);
 FileInfo* selectFileInfo(char* md5, int md5Len);
+int updateFileInfo(FileInfo* fileInfo, const char* oldMd5);
 
+//虚拟文件表
 int addFileEntry(FileEntry* fileEntry);
 FileEntry* selectFileEntry(int id);
 int updateFileEntry(FileEntry* fileEntry);

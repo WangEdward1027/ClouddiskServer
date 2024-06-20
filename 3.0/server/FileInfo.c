@@ -48,3 +48,19 @@ FileInfo* selectFileInfo(char* md5, int md5Len) {
     return fileInfo;
 }
 
+int updateFileInfo(FileInfo* fileInfo, const char* oldMd5) {
+    MYSQL *conn = create_db_connection();
+    char query[512];
+    snprintf(query, sizeof(query),
+             "UPDATE fileinfo SET md5 = '%s', filename = '%s' WHERE md5 = '%s'",
+             fileInfo->md5, fileInfo->fileName, oldMd5);
+
+    if (mysql_query(conn, query)) {
+        fprintf(stderr, "updateFileInfo() failed: %s\n", mysql_error(conn));
+        mysql_close(conn);
+        return -1;
+    }
+
+    mysql_close(conn);
+    return 0;
+}

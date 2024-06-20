@@ -86,3 +86,21 @@ User* selectUserByUserName(const char* userName) {
     mysql_close(conn);
     return user;
 }
+
+//更新用户信息
+int updateUser(User* user) {
+    MYSQL *conn = create_db_connection();
+    char query[512];
+    snprintf(query, sizeof(query),
+             "UPDATE users SET username = '%s', salt = '%s', cryptpasswd = '%s', pwd = '%s' WHERE id = %d",
+             user->userName, user->salt, user->cryptpasswd, user->pwd, user->id);
+
+    if (mysql_query(conn, query)) {
+        fprintf(stderr, "updateUser() failed: %s\n", mysql_error(conn));
+        mysql_close(conn);
+        return -1;
+    }
+
+    mysql_close(conn);
+    return 0;
+}
