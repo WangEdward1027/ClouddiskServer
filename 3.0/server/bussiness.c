@@ -81,7 +81,7 @@ void doTask(task_t * task)
         userLoginCheck1(task); break;
     case CMD_TYPE_LOGIN_ENCRYTPTEDCODE:
         userLoginCheck2(task); break;
-    case CMD_TYPE_REGISTER_USRNAME:
+    case CMD_TYPE_REGISTER_USERNAME:
         userRegister1(task); break;
     case CMD_TYPE_REGISTER_ENCRYTPTEDCODE:
         userRegister2(task); break;

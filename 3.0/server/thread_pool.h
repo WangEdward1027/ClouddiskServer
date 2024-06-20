@@ -89,9 +89,12 @@ typedef enum {
     CMD_TYPE_REMOVE,
     CMD_TYPE_NOTCMD,  //不是命令
 
-    CMD_TYPE_USRNAME = 100,
-    MSG_TYPE_SALT,
-    CMD_TYPE_ENCRYTPTEDCODE,
+    CMD_TYPE_LOGIN_USRNAME = 100,
+    CMD_TYPE_REGISTER_USERNAME,
+    CMD_TYPE_LOGIN_ENCRYTPTEDCODE,
+    CMD_TYPE_REGISTER_ENCRYTPTEDCODE,
+    MSG_TYPE_LOGIN_SALT,
+    MSG_TYPE_REGISTER_SALT,
     MSG_TYPE_LOGINOK,
     MSG_TYPE_LOGINERROR,
     MSG_TYPE_REGISTEROK,
@@ -188,7 +191,8 @@ int updateFileEntry(FileEntry* fileEntry);
 int deleteFileEntry(int id);
 
 //用户注册
-void register_server(task_t*task);
+void userRegister1(task_t* task);
+void userRegister2(task_t* task);
 
 MYSQL* create_db_connection();
 #endif
