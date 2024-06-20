@@ -26,6 +26,10 @@ void getsCommand(task_t* task) {
     // 2. 接收客户端发来的文件长度
     off_t offset;
     recvn(task->peerfd, &offset, sizeof(offset));
+    
+    // 
+    FileInfo* fileinfo = selectFileInfo(file->md5, strlen(file->md5));
+    filename = fileinfo->fileName;
 
     // 3. 获取本地文件的长度
     int fd = open(filename, O_RDWR);
