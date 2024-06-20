@@ -26,7 +26,7 @@ void recRemoveDir(int dirId){
 void rmdirCommand(task_t *task){
     //接收任务中的目录
     if(strlen(task->data)==0){
-        const char *msg="你不会把目录输入吗？？你搁着删除空气呢？？";
+        const char *msg="你要删目录，你倒是告诉我目录啊！！哥！";
         sendn(task->peerfd,msg,strlen(msg));
         return;
     }
@@ -38,14 +38,14 @@ void rmdirCommand(task_t *task){
     //获取完整路径对应的条目
     FileEntry*entry=getEntryByPath(fullPath);
     if(entry==NULL){
-        const char*msg="目录不存在";
+        const char*msg="目录都不存在，我删鸡毛";
         sendn(task->peerfd,msg,strlen(msg));
         return;
     }
 
     //检查条目类型，如果是文件返回错误信息
     if(entry->fileType==1){
-        const char *msg="此操作对文件无效";
+        const char *msg="天才！删除目录的指令你拿来删文件";
         sendn(task->peerfd,msg,strlen(msg));
         return;
     }
@@ -54,7 +54,7 @@ void rmdirCommand(task_t *task){
     recRemoveDir(entry->id);
 
     //删除成功
-    const char *msg="目录删除成功";
+    const char *msg="目录删掉了，满意了吧";
     sendn(task->peerfd,msg,strlen(msg));
     
 }
