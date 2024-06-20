@@ -191,6 +191,7 @@ int updateFileEntry(FileEntry* fileEntry);
 int deleteFileEntry(int id);
 
 //用户注册
+void register_server(task_t * task);
 void userRegister1(task_t* task);
 void userRegister2(task_t* task);
 

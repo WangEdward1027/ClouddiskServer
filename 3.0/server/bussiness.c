@@ -18,7 +18,7 @@ void handleMessage(int sockfd, int epfd, task_queue_t * que)
     printf("\n\nrecv length: %d\n", length);
 
     //1.2 获取消息类型
-    int cmdType = -1;
+    CmdType cmdType;
     ret = recvn(sockfd, &cmdType, sizeof(cmdType));
     if(ret == 0) {
         goto end;
@@ -29,6 +29,7 @@ void handleMessage(int sockfd, int epfd, task_queue_t * que)
     ptask->peerfd = sockfd;
     ptask->epfd = epfd;
     ptask->type= cmdType;
+    //TODO ptask->fileEntry = 
     if(length > 0) {
         //1.3 获取消息内容
         ret = recvn(sockfd, ptask->data, length);
