@@ -2,6 +2,12 @@
 
 void putsCommand(int sockfd, train_t * pt)
 {
+    //上传功能，附加秒传功能:
+    //上传文件：
+    //先根据文件内容, 生成md5码, 客户端发送 用户名和md5码 给服务器
+    //服务器根据用户名查 文件表, 若md5码值存在，则秒传成功
+    //若用户名对应的md5值不存在,则开启普通传输
+
     char filename[20] = {0};
     strcpy(filename, pt->buff);
 
@@ -10,6 +16,9 @@ void putsCommand(int sockfd, train_t * pt)
     if(fd < 0) {
         perror("open"); return;
     }
+
+
+
     //获取文件大小
     struct stat st;
     memset(&st, 0, sizeof(st));
