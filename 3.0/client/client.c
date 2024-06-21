@@ -74,7 +74,11 @@ int sendn(int sockfd, const void * buff, int len)
 int parseCommand(const char* buff, int len, train_t* pt, User* user){
     //填写train结构体
     pt->len = strlen(buff);
-    pt->user = user;
+    pt->user.id = user->id;
+    strcpy(pt->user.userName,user->userName);
+    strcpy(pt->user.salt,user->salt);
+    strcpy(pt->user.cryptpasswd,user->cryptpasswd);
+    strcpy(pt->user.pwd,user->pwd);
 
     //把buff里的第一个命令分词，然后判断CmdTpe的类型,填入train_t中
     char* tempbuff =(char *)calloc(len + 1, sizeof(char));
