@@ -4,7 +4,7 @@
 #define DB_HOST "127.0.0.1"
 #define DB_USER "root"
 #define DB_PASS "1234"
-#define DB_NAME "clouddiskserver"
+#define DB_NAME "ClouddiskServer"
 
 //创建数据库连接
 MYSQL* create_db_connection(){

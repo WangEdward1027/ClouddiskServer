@@ -45,9 +45,8 @@ void userRegister2(task_t* task){
        FileEntry rootFileEntry;
        rootFileEntry.id=1;
        rootFileEntry.parentId=0;
-       strncpy(rootFileEntry.fileName,"/",sizeof(rootFileEntry.fileName));
+       strncpy(rootFileEntry.fileName,task->user->pwd,sizeof(rootFileEntry.fileName));
        rootFileEntry.ownerId=task->user->id;
-       printf("%d\n",task->user->id);
        rootFileEntry.fileType=1;
 
        addFileEntry(&rootFileEntry);
