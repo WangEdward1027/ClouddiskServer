@@ -1,5 +1,6 @@
 #include "client.h"
 #include "str_util.h"
+#include <stdlib.h>
 
 #define BUFFER_SIZE 256
 
@@ -16,10 +17,17 @@ int login_client(int sockfd, User* user){
     username[strcspn(username, "\n")] = 0;
     //登录第一次交互，只填充User结构体的用户名
     strncpy(user->userName, username, sizeof(user->userName)); //2填充用户名
-    
     snprintf(request, sizeof(request), "CMD_TYPE_REGISTER_USRNAME:%s", username);
     
-    send(sockfd, request,strlen(request),0);
+    //填充小火车协议
+    train_t t;
+    memset(&t, 0, sizeof(t));
+    t.len = strlen(username);
+    t.type = CMD_TYPE_LOGIN_USRNAME;
+    t.user = *user;
+    strcpy(t.buff, request);
+    //发送小火车
+    send(sockfd, &t, 4 + 4 + sizeof(t.user) + t.len, 0);
 
     // 接收服务器响应
     receive_response(sockfd, response);

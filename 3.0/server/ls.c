@@ -85,19 +85,22 @@ void lsCommand(task_t * task)
     // 3. 根据parent_id 查询对应的记录
     FileEntry* reslist = selectFileEntryByparentId(parent_id, &num);
     
-    int i = 0;
-    // 4. 输出对应结果
-    while (reslist != NULL) {
-        sprintf(filename, "%-15s\t", reslist->fileName);
-        strcat(buff, filename);
-        i++;
-        if (i % 4 == 0) {
-            strcat(buff, "\n");
-        }
-        reslist++;
+    // 4. 写入ls数据
+    if (reslist == NULL) {
+        sprintf(buff, " ");     
     }
-    strcat(buff, "\0");
+    else {
+        for (int i = 0; i < num; i++) {
+            sprintf(filename, "%-15s\t", reslist[i].fileName);
+            strcat(buff, filename);
+            i++;
+            if (i % 4 == 0) {
+                strcat(buff, "\n");
+            }
     
+        }
+        strcat(buff, "\0");
+    }
     sendn(task->peerfd, buff, strlen(buff));
     
     return;

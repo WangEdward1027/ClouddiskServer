@@ -76,7 +76,7 @@ int updateFileEntry(FileEntry* fileEntry) {
     
     // 验证ownerId是否存在
     char query[256];
-    snprintf(query, sizeof(query), "SELECT id FROM users WHERE id = %d", fileEntry->ownerId);
+    snprintf(query, sizeof(query), "SELECT id FROM user WHERE id = %d", fileEntry->ownerId);
     if (mysql_query(conn, query)) {
         fprintf(stderr, "updateFileEntry() failed: %s\n", mysql_error(conn));
         mysql_close(conn);
@@ -383,7 +383,7 @@ FileEntry *getEntryByPath(const char *path)
     while(token!=NULL){
         char query[1024];
         //构建SQL查询语句，根据当前父亲ID和目录名查找条目
-        snprintf(query,sizeof(query),"SELECT * FROM fileentry WHERE parent_Id=%d AND fileName='%s'",parentId,token);
+        snprintf(query,sizeof(query),"SELECT * FROM fileentry WHERE parent_Id=%d AND filename='%s'",parentId,token);
 
         //执行SQL查询
         if(mysql_query(conn,query)){
