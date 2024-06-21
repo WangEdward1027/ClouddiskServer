@@ -20,8 +20,8 @@ void putsCommand(task_t * task) {
         FileEntry* fileEntry_parent = selectFileEntryByFileNameAndOwnerId(curdir, task->user->id, &count);
         fileEntry.parentId = fileEntry_parent->id;
 
-        //fileName
-        strcpy(fileEntry.fileName, );
+        //fileName  //客户端传输md5,还要传文件名
+        /* strcpy(fileEntry.fileName, ); */
         fileEntry.ownerId = task->user->id;
         strcpy(fileEntry.md5, md5String);    
         //fileSize      //查虚拟文件表的md5码，得到文件的fileSize
