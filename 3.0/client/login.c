@@ -40,15 +40,11 @@ int login_client(int sockfd, User* user){
     // 盐值检查
     if (strstr(response, "SALT")) {
         sscanf(response, "SALT:%s", salt);
-        printf("测试盐值：%s\n", salt);
-        printf("-----------\n");
 
         // 提示用户输入密码
         printf("请输入密码：\n");
         scanf("%s",password);
         printf("输入的密码:%s\n",password);
-        /* fgets(password, sizeof(password), stdin); */
-        /* password[strcspn(password, "\n")] = 0; // 去除换行符 */
 
         // 盐值加密
         encrypt_password(password, salt, encrypted_password);
@@ -60,23 +56,27 @@ int login_client(int sockfd, User* user){
         //填充小火车协议
         train_t t;
         t.len = 1;
-        /* t.len = strlen(request); */
         t.type = CMD_TYPE_LOGIN_ENCRYTPTEDCODE;
         t.user = *user;
-        /* strcpy(t.buff, request); */
         int ret = send(sockfd, &t, 4 + 4 + sizeof(User) + t.len, 0);
+        printf("sizeof(User) = %ld\n",sizeof(User));
         printf("密码send ret = %d\n",ret);
         
-
         //登录第二次交互，填充User结构体的salt、pwd
-        recv(sockfd ,response, BUFFER_SIZE-1, 0);
+        //接收包装User的小火车
+        int len = 0;
+        ret = recvn(sockfd, &len, sizeof(len));
+        printf("recvn ret=%d, len=%d\n", ret, len);
+        CmdType cmdType;
+        ret = recvn(sockfd, &cmdType, sizeof(cmdType));
+        printf("recvn len = %d\n", ret);
+        printf("recvn cmdType = %d\n", cmdType);
+        ret = recvn(sockfd, user, sizeof(User));
+        printf("User:id为 %d,usrname=%s, salt=%s, cryptpasswd=%s, pwd=%s\n",
+               user->id,user->userName, user->salt, user->cryptpasswd, user->pwd);
 
-        /* strcpy(user->salt, ); */
-        strcpy(user->pwd, response);
-
-        // 接收服务器最终响应
-        receive_response(sockfd, response);
-        if(strstr(response, "MSG_TYPE_LOGINOK")) {
+        if(cmdType == MSG_TYPE_LOGINOK) {
+            printf("LOGINOK\n");
             return 1;
         }else {
             printf("登录失败，错误代码：%s\n", response);

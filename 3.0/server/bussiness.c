@@ -38,12 +38,10 @@ void handleMessage(int sockfd, int epfd, task_queue_t * que)
         printf("ret:%d\n",ret);
         if(ret == 0)
             goto end;
-        printf("User:usrname=%s, salt=%s, cryptpasswd=%s, pwd=%s\n",
-               user->userName, user->salt, user->cryptpasswd, user->pwd);
+        printf("User:id为 %d,usrname=%s, salt=%s, cryptpasswd=%s, pwd=%s\n",
+               user->id,user->userName, user->salt, user->cryptpasswd, user->pwd);
         ptask->user = user;
     }
-
-
 
     if(length > 0) {
         if(ptask->type==CMD_TYPE_REGISTER_USERNAME||ptask->type==CMD_TYPE_REGISTER_ENCRYTPTEDCODE)
@@ -53,8 +51,8 @@ void handleMessage(int sockfd, int epfd, task_queue_t * que)
             printf("ret:%d\n",ret);
             if(ret == 0)
                 goto end;
-            printf("User:usrname=%s, salt=%s, cryptpasswd=%s, pwd=%s\n",
-                   user->userName, user->salt, user->cryptpasswd, user->pwd);
+            printf("User:id = %d,usrname=%s, salt=%s, cryptpasswd=%s, pwd=%s\n",
+                   user->id,user->userName, user->salt, user->cryptpasswd, user->pwd);
             ptask->user = user;
         }else{
             //1.4 获取参数消息内容
