@@ -93,7 +93,6 @@ void lsCommand(task_t * task)
         for (int i = 0; i < num; i++) {
             sprintf(filename, "%-15s\t", reslist[i].fileName);
             strcat(buff, filename);
-            i++;
             if (i % 4 == 0) {
                 strcat(buff, "\n");
             }
