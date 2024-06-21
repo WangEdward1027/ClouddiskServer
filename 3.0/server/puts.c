@@ -10,6 +10,23 @@ void putsCommand(task_t * task) {
     if(selectFileInfo(md5String, 33)){
         strncpy(task->data, "instantTransfer", sizeof(task->data));
         send(task->peerfd, task->data, strlen(task->data), 0);
+        
+        //插入虚拟文件表    
+        FileEntry fileEntry;
+        //parentId
+        char* curdir = getCurrentDirectory(task->user->pwd);
+        int count;
+        //根据fileName和ownerId查询表，并填好结构体
+        FileEntry* fileEntry_parent = selectFileEntryByFileNameAndOwnerId(curdir, task->user->id, &count);
+        fileEntry.parentId = fileEntry_parent->id;
+
+        //fileName
+        strcpy(fileEntry.fileName, );
+        fileEntry.ownerId = task->user->id;
+        strcpy(fileEntry.md5, md5String);    
+        //fileSize      //查虚拟文件表的md5码，得到文件的fileSize
+        fileEntry.fileType = 1; //1是文件
+        addFileEntry(&fileEntry);
 
         return;
     }
@@ -43,6 +60,33 @@ void putsCommand(task_t * task) {
         left -= ret;
     }
     close(fd);
+    
+    //将这个新文件插入服务器文件表
+    FileInfo fileInfo;
+    strcpy(fileInfo.md5, md5String);
+    strcpy(fileInfo.fileName, filename);
+    addFileInfo(&fileInfo);
+
+    //插入虚拟文件表
+    FileEntry fileEntry;
+    //parentID
+    char* curdir = getCurrentDirectory(task->user->pwd);
+    int count;
+        //根据fileName和ownerId查询表，并填好结构体
+    FileEntry* fileEntry_parent = selectFileEntryByFileNameAndOwnerId(curdir, task->user->id, &count);
+    fileEntry.parentId = fileEntry_parent->id;
+    
+    strcpy(fileEntry.fileName, filename);
+    fileEntry.ownerId = task->user->id;
+    strcpy(fileEntry.md5, md5String);
+    fileEntry.fileSize = len;
+    fileEntry.fileType = 1;  //0是目录，1是文件
+    ret = addFileEntry(&fileEntry);
+    if(ret != 0){
+        printf("puts.c addFileEntry插入失败\n");
+        exit(1);
+    }
+
     //上传任务执行完毕之后，再加回来
     addEpollReadfd(task->epfd, task->peerfd);
     return;

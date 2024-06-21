@@ -79,7 +79,7 @@ void doTask(task_t * task)
     case CMD_TYPE_RMDIR:
         rmdirCommand(task);  break;
     case CMD_TYPE_PUTS:
-        putsCommand(task);   break;
+        putsCommand(task);   
         //上传任务执行完毕之后，再加回来
         addEpollReadfd(task->peerfd, task->peerfd);
         break;

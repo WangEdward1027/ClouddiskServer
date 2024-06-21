@@ -11,12 +11,12 @@ void putsCommand(int sockfd, train_t * pt)
     
     char filename[20] = {0};
     strcpy(filename, pt->buff);
-
-    //根据文件内容, 生成md5码, 客户端发送 用户名和md5码 给服务器
+    //根据文件内容, 生成md5码, 客户端发送 md5码、用户名、文件名 给服务器
     char md5String[33];  // MD5 字符串长度为 32 个字符，再加上一个结束字符 \0
     generateMD5(filename, md5String);
     send(sockfd, md5String, strlen(md5String) + 1, 0);
-    
+    //还要传输文件名 --
+
     char response[256];
     receive_response(sockfd, response);
     if(strcmp(response, "instantTransfer") == 0){
