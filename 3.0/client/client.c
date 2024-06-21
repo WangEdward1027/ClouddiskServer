@@ -116,7 +116,8 @@ int parseCommand(const char* buff, int len, train_t* pt, User* user){
     //存入参数和辅助数据长度
     for(int i = 1; i<pcount; i++)
     {
-        sprintf(pt->buff,"%s ",tokens[i]);
+        strcat(tokens[i], " ");
+        strcat(pt->buff, tokens[i]);
     }
 
     //存入发送的参数的数据的长度
