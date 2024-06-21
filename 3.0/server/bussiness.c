@@ -32,35 +32,32 @@ void handleMessage(int sockfd, int epfd, task_queue_t * que)
     //1.3 获取用户信息
     //ptask->user
     if(ptask->type!=CMD_TYPE_REGISTER_USERNAME&&ptask->type!=CMD_TYPE_REGISTER_ENCRYTPTEDCODE)
-        {
-            User* user = (User*)calloc(1 ,sizeof(User));
+    {
+        User* user = (User*)calloc(1 ,sizeof(User));
         ret = recvn(sockfd, user, sizeof(User));
         printf("ret:%d\n",ret);
         if(ret == 0)
             goto end;
-        printf("测试信息：用户信息如下：\n");
         printf("User:usrname=%s, salt=%s, cryptpasswd=%s, pwd=%s\n",
                user->userName, user->salt, user->cryptpasswd, user->pwd);
         ptask->user = user;
-        }
+    }
 
 
 
     if(length > 0) {
-        //1.4 获取消息内容
-        //ret = recvn(sockfd, ptask->data, length);
         if(ptask->type==CMD_TYPE_REGISTER_USERNAME||ptask->type==CMD_TYPE_REGISTER_ENCRYTPTEDCODE)
         {
             User* user = (User*)calloc(1 ,sizeof(User));
-        ret = recvn(sockfd, user, sizeof(User));
-        printf("ret:%d\n",ret);
-        if(ret == 0)
-            goto end;
-        printf("测试信息：用户信息如下：\n");
-        printf("User:usrname=%s, salt=%s, cryptpasswd=%s, pwd=%s\n",
-               user->userName, user->salt, user->cryptpasswd, user->pwd);
-        ptask->user = user;
+            ret = recvn(sockfd, user, sizeof(User));
+            printf("ret:%d\n",ret);
+            if(ret == 0)
+                goto end;
+            printf("User:usrname=%s, salt=%s, cryptpasswd=%s, pwd=%s\n",
+                   user->userName, user->salt, user->cryptpasswd, user->pwd);
+            ptask->user = user;
         }else{
+            //1.4 获取参数消息内容
             ret = recvn(sockfd, ptask->data, length);
         }
         if(ret > 0) {
