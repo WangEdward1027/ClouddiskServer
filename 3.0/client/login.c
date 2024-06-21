@@ -18,6 +18,7 @@ int login_client(int sockfd, User* user){
     strncpy(user->userName, username, sizeof(user->userName)); //2填充用户名
     
     snprintf(request, sizeof(request), "CMD_TYPE_REGISTER_USRNAME:%s", username);
+    
     send(sockfd, request,strlen(request),0);
 
     // 接收服务器响应
@@ -43,14 +44,13 @@ int login_client(int sockfd, User* user){
         // 接收服务器最终响应
         receive_response(sockfd, response);
         if(strstr(response, "MSG_TYPE_LOGINOK")) {
-            printf("登录成功\n");
-            return 0;
+            return 1;
         }else {
             printf("登录失败，错误代码：%s\n", response);
-            return 1;
+            return 0;
         }
     }else{
         printf("该用户不存在。\n");
-        return 1;
+        return 0;
     }
 }
