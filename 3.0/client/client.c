@@ -72,8 +72,7 @@ int sendn(int sockfd, const void * buff, int len)
 
 //解析命令
 int parseCommand(const char* buff, int len, train_t* pt, User* user){
-    //填写train结构体
-    pt->len = strlen(buff);
+    //填写train内的User结构体
     pt->user.id = user->id;
     strcpy(pt->user.userName,user->userName);
     strcpy(pt->user.salt,user->salt);
@@ -81,53 +80,50 @@ int parseCommand(const char* buff, int len, train_t* pt, User* user){
     strcpy(pt->user.pwd,user->pwd);
 
     //把buff里的第一个命令分词，然后判断CmdTpe的类型,填入train_t中
-    char* tempbuff =(char *)calloc(len + 1, sizeof(char));
-    strcpy(tempbuff, buff);     //buff是const
-    char * token = strtok(tempbuff, " "); //按照空格进行分词
-    
-    if(token == NULL){
-        free(tempbuff);
-        return -1;  //解析失败
-    }
+    char* tokens[64]; //token字符数组
+    int max_tockens = 10; //最大分词数
+    int pcount; //分词后参数个数
+    char delimiter[8] = " "; //分隔符
 
-    if(token == NULL) return -1;  //解析失败
-    if(strcmp(token, "pwd") == 0){
+    //分词
+    splitString(buff, delimiter, tokens, max_tockens, &pcount);
+
+    //添加对应命令类型
+    if(strcmp(tokens[0], "pwd") == 0){
         pt->type = CMD_TYPE_PWD;
-    }else if(strcmp(token, "ls") == 0){
+    }else if(strcmp(tokens[0], "ls") == 0){
         pt->type = CMD_TYPE_LS;
-    }else if(strcmp(token, "cd") == 0){
+    }else if(strcmp(tokens[0], "cd") == 0){
         pt->type = CMD_TYPE_CD;
-    }else if(strcmp(token, "mkdir") == 0){
+    }else if(strcmp(tokens[0], "mkdir") == 0){
         pt->type = CMD_TYPE_MKDIR;
-    }else if(strcmp(token, "rmdir") == 0){
+    }else if(strcmp(tokens[0], "rmdir") == 0){
         pt->type = CMD_TYPE_RMDIR;
-    }else if(strcmp(token, "puts") == 0){
+    }else if(strcmp(tokens[0], "puts") == 0){
         pt->type = CMD_TYPE_PUTS;
-    }else if(strcmp(token, "gets") == 0){
+    }else if(strcmp(tokens[0], "gets") == 0){
         pt->type = CMD_TYPE_GETS;
-    }else if(strcmp(token,"rm")==0){
+    }else if(strcmp(tokens[0],"rm")==0){
         pt->type=CMD_TYPE_REMOVE;
     }
-    else if(strcmp(token,"touch")==0){
+    else if(strcmp(tokens[0],"touch")==0){
         pt->type=CMD_TYPE_TOUCH;
     }
     else{
         pt->type = CMD_TYPE_NOTCMD;
     }
-    
-    //把剩余的字符串放进train_t 的 buff里
-    token = strtok(NULL, " ");
-    if(token != NULL){
-        strcpy(pt->buff, token);
-        while((token = strtok(NULL, " ")) != NULL) {
-            strcat(pt->buff, " ");
-            strcat(pt->buff, token);
-        }
-    } else {
-        pt->buff[0] = '\0'; // 如果没有剩余字符串，则将buff清空
+   
+    //存入参数和辅助数据长度
+    for(int i = 1; i<pcount; i++)
+    {
+        sprintf(pt->buff,"%s ",tokens[i]);
     }
 
-    free(tempbuff);
+    //存入发送的参数的数据的长度
+    pt->len = strlen(pt->buff);
+
+    //释放tokens空间
+    freeStrs(tokens, pcount);
     return 0;
 }
 
