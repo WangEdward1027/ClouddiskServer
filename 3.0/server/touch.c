@@ -64,11 +64,15 @@ void touchCommand(task_t * task)
             sprintf(buff,"创建文件 '%s' 失败.",fileName);
             sendn(task->peerfd,buff,sizeof(buff));
             close(fd);
+            free(Tempfl);
+            free(Flenry);
             return;
         }
         sprintf(buff,"创建文件 '%s' 成功.",fileName);
         sendn(task->peerfd,buff,sizeof(buff));
         close(fd);
+        free(Tempfl);
+        free(Flenry);
         return;
     }
     else{
