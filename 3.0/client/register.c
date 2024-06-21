@@ -34,7 +34,6 @@ void clearInputBuffer() {
 }
 
 void register_client(int sockfd) {
-    char request[1024];
     char response[BUFFER_SIZE];
     char username[BUFFER_SIZE];
     char password[BUFFER_SIZE];
@@ -47,7 +46,6 @@ void register_client(int sockfd) {
     printf("请输出新的用户名：\n");
     scanf("%s",username);
     username[strcspn(username, "\n")] = 0;
-    printf("测试信息：用户输入的用户名：%s\n",username);
     clearInputBuffer();
     //1.发送消息长度
     length=strlen(username);
@@ -77,16 +75,9 @@ void register_client(int sockfd) {
     strcpy(user->cryptpasswd, "cryptpasswd");
     strcpy(user->pwd, "pwd");
 
-    // 打印结构体成员以验证
-    printf("ID: %d\n", user->id);
-    printf("用户名: %s\n", user->userName);
-    printf("Salt: %s\n", user->salt);
-    printf("加密密码: %s\n", user->cryptpasswd);
-    printf("原始密码: %s\n", user->pwd);
 
     int ret = send(sockfd,user,sizeof(User),0);
     printf("data ret:%d\n", ret);
-    printf("测试信息：用户信息已发送。\n");
     printf("----------------------------------\n");  
     //4.发送消息内容
     //snprintf(request, sizeof(request), "CMD_TYPE_REGISTER_USRNAME:%s", username);
@@ -98,16 +89,13 @@ void register_client(int sockfd) {
     // 盐值检查
     if (strstr(response, "SALT")) {
         sscanf(response, "SALT:%s", salt);
-        printf("盐值：%s\n", salt);
         // 提示用户输入密码
         printf("请输入密码：\n");
         scanf("%s",password);
         password[strcspn(password, "\n")] = 0; // 去除换行符     
-        printf("测试信息:用户输入的密码：\n");
         clearInputBuffer();
         // 盐值加密
         encrypt_password(password, salt, encrypted_password);
-        printf("测试信息：加密后的密码：%s\n",encrypted_password);
 
         //1.发送消息长度
         length=strlen(encrypted_password);
@@ -124,15 +112,9 @@ void register_client(int sockfd) {
         strcpy(user->userName,username); 
         strcpy(user->salt,salt);
         strcpy(user->cryptpasswd,encrypted_password);
-        strcpy(user->pwd,"pwd");
+        strncat(username, "/", sizeof(username) - strlen(username) - 1);
+        strcpy(user->pwd,username);
         send(sockfd,user,sizeof(User),0);
-        printf("测试信息：用户密码已发送。\n");
-         // 打印结构体成员以验证
-        printf("ID: %d\n", user->id);
-        printf("用户名: %s\n", user->userName);
-        printf("Salt: %s\n", user->salt);
-        printf("加密密码: %s\n", user->cryptpasswd);
-        printf("原始密码: %s\n", user->pwd);
 
         // 发送加密后的密码
         //memset(request,0,sizeof(request));
