@@ -27,7 +27,7 @@ int login_client(int sockfd, User* user){
     t.user = *user;
     strcpy(t.buff, request);
     //发送小火车
-    send(sockfd, &t, 4 + 4 + sizeof(user) + t.len, 0);
+    send(sockfd, &t, 4 + 4 + sizeof(t.user) + t.len, 0);
 
     // 接收服务器响应
     receive_response(sockfd, response);
