@@ -18,7 +18,7 @@ void userRegister1(task_t* task){
     
     sscanf(task->data,"CMD_TYPE_REGISTER_USERNAME:%s",username);
     
-    if(selectUserByUserName(username)){
+    if(selectUserByUserName(task->user->userName)){
         snprintf(task->data,sizeof(task->data),"USER_EXISTS");
     }else{
         char salt[SALT_LENGTH*2+1];
