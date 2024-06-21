@@ -40,13 +40,14 @@ void userRegister2(task_t* task){
     
     if(addUser(task->user)==0){
         snprintf(task->data,sizeof(task->data),"MSG_TYPE_REGISTEROK");
-
+        task->user=selectUserByUserName(task->user->userName);
         //添加虚拟文件根目录
        FileEntry rootFileEntry;
        rootFileEntry.id=1;
        rootFileEntry.parentId=0;
        strncpy(rootFileEntry.fileName,"/",sizeof(rootFileEntry.fileName));
        rootFileEntry.ownerId=task->user->id;
+       printf("%d\n",task->user->id);
        rootFileEntry.fileType=1;
 
        addFileEntry(&rootFileEntry);

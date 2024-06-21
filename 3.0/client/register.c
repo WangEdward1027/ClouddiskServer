@@ -121,7 +121,6 @@ void register_client(int sockfd) {
         //3.发送用户信息
         memset(user,0,sizeof(User));
 
-        user->id=1;
         strcpy(user->userName,username); 
         strcpy(user->salt,salt);
         strcpy(user->cryptpasswd,encrypted_password);

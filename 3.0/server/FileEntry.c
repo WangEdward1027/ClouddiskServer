@@ -23,7 +23,7 @@ int addFileEntry(FileEntry* fileEntry) {
         
     // 插入FileEntry
     snprintf(query, sizeof(query),
-             "INSERT INTO fileentry (parentId, fileName, ownerId, md5, fileSize, fileType) VALUES (%d, '%s', %d, '%s', %d, %d)",
+             "INSERT INTO fileentry (parent_id, filename, owner_id, md5, fileSize, type) VALUES (%d, '%s', %d, '%s', %d, %d)",
              fileEntry->parentId, fileEntry->fileName, fileEntry->ownerId, fileEntry->md5, fileEntry->fileSize, fileEntry->fileType);
 
     if (mysql_query(conn, query)) {
@@ -66,7 +66,6 @@ FileEntry* selectFileEntry(int id) {
         fileEntry->fileSize = atoi(row[5]);
         fileEntry->fileType = atoi(row[6]);
     }
-
     mysql_free_result(res);
     mysql_close(conn);
     return fileEntry;
