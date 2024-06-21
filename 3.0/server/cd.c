@@ -137,25 +137,28 @@ void cdCommand(task_t* task) {
             return;
         }
         // 目录存在
-        StringStack* stack = createStringStack();
-        pushString(stack, filename);
+        // StringStack* stack = createStringStack();
+        // pushString(stack, filename);
+        // 
+      //     while (dir != NULL) {
+      //         dir = selectFileEntry(dir->parentId);
+      //         if (dir == NULL) break;
+      //         pushString(stack, dir->fileName);
+      //     }
+      //     
+      //     while (!isStringStackEmpty(stack)) {
+      //         char* str = popString(stack);
+      //         strcat(path, "/");
+      //         strcat(path, str);
+      //     }
         
-        while (dir != NULL) {
-            dir = selectFileEntry(dir->parentId);
-            if (dir == NULL) break;
-            pushString(stack, dir->fileName);
-        }
-        
-        while (!isStringStackEmpty(stack)) {
-            char* str = popString(stack);
-            strcat(path, "/");
-            strcat(path, str);
-        }
-
+        strcat(path, "/");
+        strcat(path, task->data);
         sprintf(buff, ">%s", path);
         sendn(task->peerfd, buff, strlen(buff));
 
         // 更新当前path
+        task->user->id = dir->id;
         strcpy(task->user->pwd, path);
         updateUser(task->user); // 将更改发送到数据库
         
