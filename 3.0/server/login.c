@@ -2,6 +2,14 @@
 #include <openssl/rand.h>
 #define SALT_LENGTH 16
 
+void sendUser(int socket, User *user) {
+    if (send(socket, user, sizeof(User), 0) == -1) {
+        perror("send");
+        exit(EXIT_FAILURE);
+    }
+}
+
+
 //用户登录1: 接收用户名，对比用户表该用户是否存在。存在发盐值，不存在不发。
 void userLoginCheck1(task_t * task)
 {
@@ -59,7 +67,6 @@ void userLoginCheck2(task_t * task)
             printf("userLoginCheck2用户不存在,exit(1)\n");
             exit(1);
         }
-        
         task->user->id = user->id;
         strncpy(task->user->userName, user->userName, sizeof(task->user->userName));
         strncpy(task->user->salt, user->salt, sizeof(task->user->salt));
@@ -74,7 +81,6 @@ void userLoginCheck2(task_t * task)
     /* printf("encrypted_password:%s\n",encrypted_password); */
     if(strcmp(encrypted_password,task->user->cryptpasswd) == 0){
         printf("查表，密码相同\n");
-        sendn(task->peerfd,task->user->pwd,strlen(task->user->pwd));
         snprintf(task->data,sizeof(task->data),"MSG_TYPE_LOGINOK");
         /* strncpy(task->user->cryptpasswd, task->user->cryptpasswd, sizeof(task->user->cryptpasswd)); //4填加密密码 */
         //5填充当前工作目录
@@ -87,5 +93,7 @@ void userLoginCheck2(task_t * task)
         snprintf(task->data,sizeof(task->data),"MSG_TYPE_LOGINERROR");
     }
     send(task->peerfd,task->data,strlen(task->data),0);
+    
+        sendUser(task->peerfd,task->user);
     printf("----------------执行完毕\n");
 }

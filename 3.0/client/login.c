@@ -3,6 +3,12 @@
 #include <stdlib.h>
 
 #define BUFFER_SIZE 256
+void recvUser(int socket, User *user) {
+    if (recv(socket, user, sizeof(User), 0) == -1) {
+        perror("recv");
+        exit(EXIT_FAILURE);
+    }
+}
 
 int login_client(int sockfd, User* user){
     char request[BUFFER_SIZE];
@@ -67,12 +73,10 @@ int login_client(int sockfd, User* user){
         int ret = send(sockfd, &t, 4 + 4 + sizeof(User) + t.len, 0);
         printf("密码send ret = %d\n",ret);
 
-        receive_response(sockfd,response);
-        printf("%s\n",response);
-        strcpy(user->pwd,response);
         // 接收服务器最终响应
         receive_response(sockfd, response);
         if(strstr(response, "MSG_TYPE_LOGINOK")) {
+            recvUser(sockfd,user);
             return 1;
         }else {
             printf("登录失败，错误代码：%s\n", response);
