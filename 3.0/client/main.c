@@ -8,9 +8,11 @@ int main()
     //登录模块
     User user;
     login_view(clientfd, &user);
-    user.id = 1;
-    strcpy(user.userName, "zhm");
-    strcpy(user.pwd, "/zhm");
+    printf("---------------请输入命令-----------------\n");
+    
+    /* user.id = 1; */
+    /* strcpy(user.userName, "zhm"); */
+    /* strcpy(user.pwd, "/zhm"); */
 
     char buf[1024] = {0};
     //4. 使用select进行监听

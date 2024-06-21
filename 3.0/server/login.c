@@ -43,12 +43,15 @@ void userLoginCheck2(task_t * task)
 {
     printf("--------------- userLoginCheck2\n");
     //接收密码
-    char encrypted_password[64];
-    sscanf(task->user->cryptpasswd,"CMD_TYPE_ENCRYPTECODE:%s",encrypted_password);
+    char encrypted_password[65];
+    /* sscanf(task->user->cryptpasswd,"CMD_TYPE_ENCRYPTECODE:%s",encrypted_password); */
+
+    strcpy(encrypted_password , task->user->cryptpasswd);
+    
 
     //去数据库中获取密码,进行对比
         //准备操作:保存用户名，待会用用户名查询用户表
-        char username[64];
+        char username[65];
         /* sscanf(task->data,"CMD_TYPE_REGISTER_USERNAME:%s",username); */ //bug在这里
         sscanf(task->user->userName,"%s",username);
         User* user = selectUserByUserName(username);
@@ -57,7 +60,9 @@ void userLoginCheck2(task_t * task)
             exit(1);
         }
     //若密码相同，则返回登录成功
-    if(encrypted_password == user->cryptpasswd){
+    printf("user->cryptpasswd:%s\n", user->cryptpasswd);
+    printf("encrypted_password:%s\n",encrypted_password);
+    if(strcmp(encrypted_password,user->cryptpasswd) == 0){
         printf("查表，密码相同\n");
 
         snprintf(task->data,sizeof(task->data),"MSG_TYPE_LOGINOK");
