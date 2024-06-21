@@ -54,12 +54,18 @@ void userLoginCheck2(task_t * task)
         char username[65];
         /* sscanf(task->data,"CMD_TYPE_REGISTER_USERNAME:%s",username); */ //bug在这里
         sscanf(task->user->userName,"%s",username);
-        task->user = selectUserByUserName(username);
+        User*user = selectUserByUserName(username);
         if(task->user == NULL){
             printf("userLoginCheck2用户不存在,exit(1)\n");
             exit(1);
         }
         
+        task->user->id = user->id;
+        strncpy(task->user->userName, user->userName, sizeof(task->user->userName));
+        strncpy(task->user->salt, user->salt, sizeof(task->user->salt));
+        strncpy(task->user->cryptpasswd, user->cryptpasswd, sizeof(task->user->cryptpasswd));
+    strncpy(task->user->pwd, user->pwd, sizeof(task->user->pwd));
+
         printf("用户userName:%s,",task->user->userName);
         printf("查表得到pwd: %s\n", task->user->pwd);
 
@@ -68,6 +74,7 @@ void userLoginCheck2(task_t * task)
     /* printf("encrypted_password:%s\n",encrypted_password); */
     if(strcmp(encrypted_password,task->user->cryptpasswd) == 0){
         printf("查表，密码相同\n");
+        sendn(task->peerfd,task->user->pwd,strlen(task->user->pwd));
         snprintf(task->data,sizeof(task->data),"MSG_TYPE_LOGINOK");
         /* strncpy(task->user->cryptpasswd, task->user->cryptpasswd, sizeof(task->user->cryptpasswd)); //4填加密密码 */
         //5填充当前工作目录

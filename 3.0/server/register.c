@@ -35,7 +35,7 @@ void userRegister1(task_t* task){
 
 //用户注册：接收密码
 void userRegister2(task_t* task){
-    char encrypted_password[64];
+    char encrypted_password[65];
     sscanf(task->data,"CMD_TYPE_ENCRYPTECODE:%s",encrypted_password);
     
     if(addUser(task->user)==0){

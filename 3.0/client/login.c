@@ -67,7 +67,9 @@ int login_client(int sockfd, User* user){
         int ret = send(sockfd, &t, 4 + 4 + sizeof(User) + t.len, 0);
         printf("密码send ret = %d\n",ret);
 
-
+        receive_response(sockfd,response);
+        printf("%s\n",response);
+        strcpy(user->pwd,response);
         // 接收服务器最终响应
         receive_response(sockfd, response);
         if(strstr(response, "MSG_TYPE_LOGINOK")) {
