@@ -63,16 +63,16 @@ void userLoginCheck2(task_t * task)
         printf("用户userName:%s,",task->user->userName);
         printf("查表得到pwd: %s\n", task->user->pwd);
 
+    //把新user的salt和pwd传递回客户端
+    send(task->peerfd, task->user->pwd, strlen(task->user->pwd), 0); 
+    
+
     //若密码相同，则返回登录成功
     /* printf("user->cryptpasswd:%s\n", user->cryptpasswd); */
     /* printf("encrypted_password:%s\n",encrypted_password); */
     if(strcmp(encrypted_password,task->user->cryptpasswd) == 0){
         printf("查表，密码相同\n");
         snprintf(task->data,sizeof(task->data),"MSG_TYPE_LOGINOK");
-        /* strncpy(task->user->cryptpasswd, task->user->cryptpasswd, sizeof(task->user->cryptpasswd)); //4填加密密码 */
-        //5填充当前工作目录
-        /* char pwd[100]; */
-        /* strcpy(task->user->pwd, pwd);   //5填充pwd */
     }
     //若密码不同，则返回登录失败
     else{
@@ -80,5 +80,8 @@ void userLoginCheck2(task_t * task)
         snprintf(task->data,sizeof(task->data),"MSG_TYPE_LOGINERROR");
     }
     send(task->peerfd,task->data,strlen(task->data),0);
+
+
+
     printf("----------------执行完毕\n");
 }

@@ -54,7 +54,7 @@ int login_client(int sockfd, User* user){
         encrypt_password(password, salt, encrypted_password);
         // 发送加密后的密码
         /* snprintf(request, sizeof(request), "CMD_TYPE_ENCRYPTECODE:%s", encrypted_password); */
-        strcpy(user->cryptpasswd, encrypted_password);  // 填充加密密码
+        strcpy(user->cryptpasswd, encrypted_password);  // 3填充加密密码
         printf("测试:encrypted_password:%s\n",encrypted_password);
         printf("测试: user->cryptpasswd:%s\n",user->cryptpasswd);
         //填充小火车协议
@@ -66,7 +66,13 @@ int login_client(int sockfd, User* user){
         /* strcpy(t.buff, request); */
         int ret = send(sockfd, &t, 4 + 4 + sizeof(User) + t.len, 0);
         printf("密码send ret = %d\n",ret);
+        
 
+        //登录第二次交互，填充User结构体的salt、pwd
+        recv(sockfd ,response, BUFFER_SIZE-1, 0);
+
+        /* strcpy(user->salt, ); */
+        strcpy(user->pwd, response);
 
         // 接收服务器最终响应
         receive_response(sockfd, response);
