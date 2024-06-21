@@ -5,7 +5,7 @@ int addUser(User* user) {
     MYSQL *conn = create_db_connection();
     char query[256];
     snprintf(query, sizeof(query),
-             "INSERT INTO user (username, salt, cryptpasswd, pwd) VALUES ('%s', '%s', '%s', '%s')",
+             "INSERT INTO user (usrname, salt, cryptpasswd, pwd) VALUES ('%s', '%s', '%s', '%s')",
              user->userName, user->salt, user->cryptpasswd, user->pwd);
 
     if (mysql_query(conn, query)) {
@@ -56,7 +56,7 @@ User* selectUser(int userId) {
 User* selectUserByUserName(const char* userName) {
     MYSQL *conn = create_db_connection();
     char query[256];
-    snprintf(query, sizeof(query), "SELECT * FROM user WHERE username = '%s'", userName);
+    snprintf(query, sizeof(query), "SELECT * FROM user WHERE usrname = '%s'", userName);
 
     if (mysql_query(conn, query)) {
         fprintf(stderr, "selectUserByUserName() failed: %s\n", mysql_error(conn));
@@ -92,7 +92,7 @@ int updateUser(User* user) {
     MYSQL *conn = create_db_connection();
     char query[512];
     snprintf(query, sizeof(query),
-             "UPDATE user SET username = '%s', salt = '%s', cryptpasswd = '%s', pwd = '%s' WHERE id = %d",
+             "UPDATE user SET usrname = '%s', salt = '%s', cryptpasswd = '%s', pwd = '%s' WHERE id = %d",
              user->userName, user->salt, user->cryptpasswd, user->pwd, user->id);
 
     if (mysql_query(conn, query)) {
