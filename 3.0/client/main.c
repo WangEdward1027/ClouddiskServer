@@ -16,7 +16,6 @@ int main()
     //4. 使用select进行监听
     fd_set rdset;
     train_t train;
-    train.user = user;
 
     while(1) {
         FD_ZERO(&rdset);
