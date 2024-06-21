@@ -7,7 +7,7 @@ int main()
     
     //登录模块
     User user;
-    // login_view(clientfd, &user);
+    login_view(clientfd, &user);
     user.id = 1;
     strcpy(user.userName, "zhm");
     strcpy(user.pwd, "/zhm");

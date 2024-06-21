@@ -5,7 +5,7 @@ int addFileEntry(FileEntry* fileEntry) {
     
     // 验证ownerId是否存在
     char query[256];
-    snprintf(query, sizeof(query), "SELECT id FROM users WHERE id = %d", fileEntry->ownerId);
+    snprintf(query, sizeof(query), "SELECT id FROM user WHERE id = %d", fileEntry->ownerId);
     if (mysql_query(conn, query)) {
         fprintf(stderr, "addFileEntry() failed: %s\n", mysql_error(conn));
         mysql_close(conn);

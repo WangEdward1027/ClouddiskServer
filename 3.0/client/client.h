@@ -90,7 +90,7 @@ typedef struct User{
     int id;
     char userName[64];
     char salt[64];
-    char cryptpasswd[64];
+    char cryptpasswd[65];
     char pwd[64];
 }User;
 
