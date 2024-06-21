@@ -1,10 +1,10 @@
 #include"thread_pool.h"
 
 
-#define DB_HOST "127.0.0.1"
+#define DB_HOST "192.168.7.78"
 #define DB_USER "root"
-#define DB_PASS "1234"
-#define DB_NAME "cloudiskserver"
+#define DB_PASS "020213"
+#define DB_NAME "ClouddiskServer"
 
 //创建数据库连接
 MYSQL* create_db_connection(){

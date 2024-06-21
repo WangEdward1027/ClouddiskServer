@@ -31,17 +31,19 @@ void handleMessage(int sockfd, int epfd, task_queue_t * que)
 
     //1.3 获取用户信息
     //ptask->user
-    User* user = (User*)calloc(1 ,sizeof(User));
-    ret = recvn(sockfd, user, sizeof(User));
-    if(ret == 0)
-        goto end;
-    printf("User:usrname=%s, salt=%s, cryptpasswd=%s, pwd=%s",
-           user->userName, user->salt, user->cryptpasswd, user->pwd);
-    ptask->user = user;
 
     if(length > 0) {
         //1.4 获取消息内容
-        ret = recvn(sockfd, ptask->data, length);
+        //ret = recvn(sockfd, ptask->data, length);
+        User* user = (User*)calloc(1 ,sizeof(User));
+        ret = recvn(sockfd, user, sizeof(User));
+        printf("ret:%d\n",ret);
+        if(ret == 0)
+            goto end;
+        printf("测试信息：用户信息如下：\n");
+        printf("User:usrname=%s, salt=%s, cryptpasswd=%s, pwd=%s\n",
+               user->userName, user->salt, user->cryptpasswd, user->pwd);
+        ptask->user = user;
         if(ret > 0) {
             //往线程池中添加任务
             if(ptask->type == CMD_TYPE_PUTS) {
@@ -92,6 +94,7 @@ void doTask(task_t * task)
     case CMD_TYPE_LOGIN_ENCRYTPTEDCODE:
         userLoginCheck2(task); break;
     case CMD_TYPE_REGISTER_USERNAME:
+        printf("测试信息：用户进入注册\n");
         userRegister1(task); break;
     case CMD_TYPE_REGISTER_ENCRYTPTEDCODE:
         userRegister2(task); break;
