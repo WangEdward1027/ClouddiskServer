@@ -29,6 +29,7 @@ void userLoginCheck1(task_t * task)
         t.len = 0;
         t.type = MSG_TYPE_LOGIN_SALT;  //盐值
         t.user = *user;
+        strcpy(t.user.cryptpasswd,"不告诉你密码");
         printf("用小火车发盐值1: cmdType = %d, user信息:id = %d,userName = %s, salt = %s\n, cryptpasswd = %s, pwd = %s\n",
            t.type, t.user.id, t.user.userName, t.user.salt, t.user.cryptpasswd, t.user.pwd);
         send(task->peerfd, &t, 4 + 4 + sizeof(User) + t.len, 0);

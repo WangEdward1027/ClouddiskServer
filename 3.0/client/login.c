@@ -22,7 +22,7 @@ int login_client(int sockfd, User* user){
     t.type = CMD_TYPE_LOGIN_USRNAME;
     t.user = *user;
     send(sockfd, &t, 4 + 4 + sizeof(User) + t.len, 0);
-    printf("发小火车1:发送用户名\n");
+    /* printf("发小火车1:发送用户名\n"); */
 
     // 接收服务器发来回应:有用户名，返回盐值。无用户返回失败
     //接小火车
@@ -31,28 +31,30 @@ int login_client(int sockfd, User* user){
     CmdType cmdType;
     recvn(sockfd, &cmdType, sizeof(cmdType));
     int ret = recvn(sockfd, user, sizeof(User));
-    printf("接小火车1:ret = %d, cmdType = %d, user信息:id = %d,userName = %s, salt = %s\n, cryptpasswd = %s, pwd = %s",
-               ret,cmdType, user->id, user->userName, user->salt, user->cryptpasswd, user->pwd);
+    /* printf("接小火车1:ret = %d, cmdType = %d, user信息:id = %d,userName = %s, salt = %s\n, cryptpasswd = %s, pwd = %s", */
+               /* ret,cmdType, user->id, user->userName, user->salt, user->cryptpasswd, user->pwd); */
     
     //2.若用户名存在,接收盐值,输入密码，发送密码
     if(cmdType == MSG_TYPE_LOGIN_SALT){
         printf("用户存在\n");       
-        printf("收到的user->salt:%s\n", user->salt);
+        /* printf("收到的user->salt:%s\n", user->salt); */
         char password[64] = {0};
         printf("请输入密码: ");
         scanf("%s",password);
         //用盐值加密密码
         char encrypted_password[65] = {0};
-        char salt[64] = {0};
-        encrypt_password(password, salt, encrypted_password);
+        encrypt_password(password, user->salt, encrypted_password);
+        
         //填充小火车协议
         train_t t;
         memset(&t, 0, sizeof(t));
         t.len = 0;
         t.type = CMD_TYPE_LOGIN_ENCRYTPTEDCODE;
         t.user = *user;
+        //把加密后的密码赋给小火车的user加密
+        strcpy(t.user.cryptpasswd, encrypted_password); 
         send(sockfd, &t, 4 + 4 + sizeof(User) + t.len, 0);
-        printf("发小火车2：发送加密后的密码:%s\n",t.user.cryptpasswd);
+        /* printf("发小火车2：发送加密后的密码:%s\n",t.user.cryptpasswd); */
     
         //等待服务器回应:对比加密密码与数据库中的是否一致
         //接小火车
@@ -61,14 +63,14 @@ int login_client(int sockfd, User* user){
         CmdType cmdType;
         recvn(sockfd, &cmdType, sizeof(cmdType));
         ret = recvn(sockfd, user, sizeof(User));
-        printf("接小火车2:ret = %d,cmdType = %d, user信息:id = %d,userName = %s, salt = %s\n, cryptpasswd = %s, pwd = %s",
-               ret, cmdType, user->id, user->userName, user->salt, user->cryptpasswd, user->pwd);
+        /* printf("接小火车2:ret = %d,cmdType = %d, user信息:id = %d,userName = %s, salt = %s\n, cryptpasswd = %s, pwd = %s\n", */
+               /* ret, cmdType, user->id, user->userName, user->salt, user->cryptpasswd, user->pwd); */
         
         if(cmdType == MSG_TYPE_LOGINOK){
-            printf("登录成功\n");
+            printf("密码正确,登录成功\n");
             return 1;
         }else{
-            printf("登录失败\n");
+            printf("密码错误,登录失败\n");
             return 0;
         }
 
