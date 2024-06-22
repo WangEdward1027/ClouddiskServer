@@ -1,68 +1,5 @@
 #include "thread_pool.h"
 
-#define MAX_SIZE 100
-
-typedef struct {
-    char** strings;  // 字符串数组
-    int top;         // 栈顶指针
-} StringStack;
-
-StringStack* createStringStack() {
-    StringStack* stack = (StringStack*)malloc(sizeof(StringStack));
-    stack->strings = (char**)malloc(MAX_SIZE * sizeof(char*));
-    stack->top = -1;
-    return stack;
-}
-
-void destroyStringStack(StringStack* stack) {
-    if (stack == NULL) {
-        return;
-    }
-
-    // 释放栈中的字符串内存
-    for (int i = 0; i <= stack->top; i++) {
-        free(stack->strings[i]);
-    }
-
-    free(stack->strings);
-    free(stack);
-}
-
-int isStringStackEmpty(StringStack* stack) {
-    return stack->top == -1;
-}
-
-int isStringStackFull(StringStack* stack) {
-    return stack->top == MAX_SIZE - 1;
-}
-
-void pushString(StringStack* stack, const char* str) {
-    if (isStringStackFull(stack)) {
-        printf("Error: String stack is full.\n");
-        return;
-    }
-
-    int length = strlen(str);
-    char* newString = (char*)malloc((length + 1) * sizeof(char));
-    strcpy(newString, str);
-
-    stack->top++;
-    stack->strings[stack->top] = newString;
-}
-
-char* popString(StringStack* stack) {
-    if (isStringStackEmpty(stack)) {
-        printf("Error: String stack is empty.\n");
-        return NULL;
-    }
-
-    char* poppedString = stack->strings[stack->top];
-    stack->top--;
-
-    return poppedString;
-}
-
-
 char* getParentPath(const char* path) {
     const char* delimiter = "/";
     char* token;
@@ -211,27 +148,13 @@ void cdCommand(task_t* task) {
         updateUser(user);
         return;
 
-        // filename = getParentDirectory(pwd);
-        // printf("要切换到目录名为:%s", filename);
-        // if (filename == NULL) {
-           //  sprintf(buff, "当前已在根目录!\n");
-           //  sendn(task->peerfd, buff, strlen(buff));
-           //  return;
-
-        // } else {
-           //  bzero(path,sizeof(path));
-           //  strcpy(path, getParentPath(pwd));
-           //  sprintf(buff, "当前路径为>%s", path);
-           //  sendn(task->peerfd, buff, strlen(buff));
-           //  strcpy(user->pwd, path); // 更新当前所在目录
-           //  updateUser(user); // 将更改保存到user表
-           // return;
-        // }
     } else {
         
         // cd 到 mc,mc一定在当前目录下，需要查找当前目录下是否存在对应的文件名
         // 获取当前目录的虚拟文件表
-        FileEntry * curr = selectFileEntryByFileName(getCurrentDirectory(pwd));
+        char temp[64] = {0};
+        strcpy(temp,pwd);
+        FileEntry * curr = selectFileEntryByFileName(getCurrentDirectory(temp));
 
         // 获取要切换的目录名
         filename = getCurrentDirectory(task->data);
@@ -243,21 +166,6 @@ void cdCommand(task_t* task) {
             sendn(task->peerfd, buff, strlen(buff));
             return;
         }
-        // 目录存在
-        // StringStack* stack = createStringStack();
-        // pushString(stack, filename);
-        // 
-      //     while (dir != NULL) {
-      //         dir = selectFileEntry(dir->parentId);
-      //         if (dir == NULL) break;
-      //         pushString(stack, dir->fileName);
-      //     }
-      //     
-      //     while (!isStringStackEmpty(stack)) {
-      //         char* str = popString(stack);
-      //         strcat(path, "/");
-      //         strcat(path, str);
-      //     }
         
         bzero(path,sizeof(path));
         strcat(path, pwd); // 添加当前pwd

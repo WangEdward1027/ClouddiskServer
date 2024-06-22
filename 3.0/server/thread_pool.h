@@ -206,6 +206,7 @@ FileEntry* selectFileEntryByOwnerId(int ownerId, int* entryCount);
 FileEntry* selectFileEntryByparentId(int parentId, int* entryCount);
 FileEntry* selectFileEntryByFileNameAndOwnerId(const char* fileName, int ownerId, int* entryCount);
 FileEntry* selectFileEntryByOwnerIdAndFileType(int ownerId, int fileType, int* entryCount);
+FileEntry* selectFileEntryByFileNameParentIdOwnerId(const char* fileName, int parentId, int ownerId);
 
 //--------甘博---------
 FileEntry *getEntriesInDir(int dirId);
@@ -215,6 +216,8 @@ FileEntry *getEntryByPath(const char *path);
 char* getCurrentDirectory(const char* pwd);
 char* getParentDirectory(const char* pwd);
 
+// 去掉获取的data后面的空格 张子健
+void removeTrailingSpace(char* str);
 
 //对指定文件生成相应的MD5值
 void generateMD5(const char *filename, char *md5String);
