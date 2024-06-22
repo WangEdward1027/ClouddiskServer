@@ -44,6 +44,8 @@ char* getParentDirectory(const char* pwd) {
     return NULL;
 }
 
+
+
 void lsCommand(task_t * task)
 {
     int parent_id; // 保存用户当前父目录id

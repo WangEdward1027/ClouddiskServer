@@ -98,6 +98,41 @@ void removeTrailingSpace(char* str) {
     }
 }
 
+FileEntry* selectFileEntryByFileNameParentIdOwnerId(const char* fileName, int parentId, int ownerId) {
+    MYSQL *conn = create_db_connection();
+    char query[256];
+    snprintf(query, sizeof(query), "SELECT * FROM fileentry WHERE filename = '%s' AND parent_id = %d AND owner_id = %d", fileName, parentId, ownerId);
+
+    if (mysql_query(conn, query)) {
+        fprintf(stderr, "selectFileEntryByFileNameParentIdOwnerId() failed: %s\n", mysql_error(conn));
+        mysql_close(conn);
+        return NULL;
+    }
+
+    MYSQL_RES *res = mysql_store_result(conn);
+    if (res == NULL) {
+        fprintf(stderr, "mysql_store_result() failed: %s\n", mysql_error(conn));
+        mysql_close(conn);
+        return NULL;
+    }
+
+    MYSQL_ROW row;
+    FileEntry *fileEntry = NULL;
+    if ((row = mysql_fetch_row(res))) {
+        fileEntry = (FileEntry *)malloc(sizeof(FileEntry));
+        fileEntry->id = atoi(row[0]);
+        fileEntry->parentId = atoi(row[1]);
+        strcpy(fileEntry->fileName, row[2]);
+        fileEntry->ownerId = atoi(row[3]);
+        strcpy(fileEntry->md5, row[4]);
+        fileEntry->fileSize = atoi(row[5]);
+        fileEntry->fileType = atoi(row[6]);
+    }
+
+    mysql_free_result(res);
+    mysql_close(conn);
+    return fileEntry;
+}
 
 void cdCommand(task_t* task) {
     
@@ -128,12 +163,14 @@ void cdCommand(task_t* task) {
 
     } else if (strcmp(task->data, "../") == 0 || strcmp(task->data, "..") == 0) {
         filename = getParentDirectory(pwd);
+        printf("要切换到目录名为:%s", filename);
         if (filename == NULL) {
             sprintf(buff, "当前已在根目录!\n");
             sendn(task->peerfd, buff, strlen(buff));
             return;
 
         } else {
+            bzero(path,sizeof(path));
             strcpy(path, getParentPath(pwd));
             sprintf(buff, "当前路径为>%s", path);
             sendn(task->peerfd, buff, strlen(buff));
@@ -142,10 +179,15 @@ void cdCommand(task_t* task) {
             return;
         }
     } else {
+        
+        // cd 到 mc,mc一定在当前目录下，需要查找当前目录下是否存在对应的文件名
+        // 获取当前目录的虚拟文件表
+        FileEntry * curr = selectFileEntryByFileName(getCurrentDirectory(pwd));
+
+        // 获取要切换的目录名
         filename = getCurrentDirectory(task->data);
         // 判断切换的目录是否存在
-        int resnum = 1;
-        FileEntry* dir = selectFileEntryByFileNameAndOwnerId(filename, task->user->id, &resnum);
+        FileEntry* dir = selectFileEntryByFileNameParentIdOwnerId(filename, curr->id, curr->ownerId);
         
         if (dir == NULL) {
             sprintf(buff, "要切换的目录不存在!\n");
@@ -168,7 +210,7 @@ void cdCommand(task_t* task) {
       //         strcat(path, str);
       //     }
         
-        strcat(path, "/");
+        bzero(path,sizeof(path));
         strcat(path, pwd); // 添加当前pwd
         strcat(path, "/");
         strcat(path, task->data);
