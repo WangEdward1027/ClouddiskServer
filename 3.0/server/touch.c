@@ -32,7 +32,7 @@ void touchCommand(task_t * task)
     
 
     int fd=open(fileName,O_CREAT| O_WRONLY,MODE);
-    sleep(30);
+    //sleep(30);
     printf("asddasdas:filename:%s\n",fileName);
     printf("----------------------fd:%d\n",fd);
     if(fd!=-1){
