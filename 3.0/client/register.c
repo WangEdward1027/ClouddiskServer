@@ -113,7 +113,6 @@ void register_client(int sockfd) {
         strcpy(user->userName,username); 
         strcpy(user->salt,salt);
         strcpy(user->cryptpasswd,encrypted_password);
-        strncat(username, "/", sizeof(username) - strlen(username) - 1);
         strcpy(user->pwd,username);
         send(sockfd,user,sizeof(User),0);
 
