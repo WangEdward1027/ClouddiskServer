@@ -137,9 +137,8 @@ void cdCommand(task_t* task) {
             strcpy(path, getParentPath(pwd));
             sprintf(buff, "当前路径为>%s", path);
             sendn(task->peerfd, buff, strlen(buff));
-            strcpy(task->user->pwd, path); // 更新当前所在目录
-            task->user->id = user->id;
-            updateUser(task->user); // 将更改保存到user表
+            strcpy(user->pwd, path); // 更新当前所在目录
+            updateUser(user); // 将更改保存到user表
             return;
         }
     } else {
@@ -177,9 +176,8 @@ void cdCommand(task_t* task) {
         sendn(task->peerfd, buff, strlen(buff));
 
         // 更新当前path
-        task->user->id = dir->id;
-        strcpy(task->user->pwd, path);
-        updateUser(task->user); // 将更改发送到数据库
+        strcpy(user->pwd, path);
+        updateUser(user); // 将更改发送到数据库
         
         return;
     }
