@@ -3,16 +3,19 @@
 
 void removeCommand(task_t * task){
     //接收任务中的文件名
+    removeTrailingSpace(task->data);
     if(strlen(task->data)==0){
         const char *msg="输入文件名啊！懒狗！留着我帮你填吗？？！";
         sendn(task->peerfd,msg,strlen(msg));
         return;
     }
-
+    
+    char*pwd=getUserPWD(task->user->userName);
+    printf("----------%s\n",pwd);
 //拼接用户当前工作目录和用户输入文件，用以检查是否存在
     char fullPath[2000];
-    snprintf(fullPath,sizeof(fullPath),"%s/%s",task->user->pwd,task->data);
-    
+    snprintf(fullPath,sizeof(fullPath),"%s/%s",pwd,task->data);
+    printf("--------fullPath:%s\n",fullPath); 
     //获取完整路径对应的条目
     FileEntry*entry=getEntryByPath(fullPath);
     if(entry==NULL){
