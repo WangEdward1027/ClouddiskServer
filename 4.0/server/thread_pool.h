@@ -29,6 +29,8 @@
 #include <sys/sendfile.h>
 #include <mysql/mysql.h>
 #include <openssl/evp.h>
+#include "l8w8jwt/encode.h"
+#include "l8w8jwt/decode.h"
 #define SIZE(a) (sizeof(a)/sizeof(a[0]))
 
 typedef void (*sighandler_t)(int);
@@ -58,6 +60,7 @@ typedef struct User{
     char salt[64];
     char cryptpasswd[65];
     char pwd[64];
+    char JWT[256]; //用于Token验证
 }User;
 
 //2.服务器文件表
@@ -101,6 +104,8 @@ typedef enum {
     MSG_TYPE_REGISTERERROR,
 }CmdType;
 
+//子线程监听端口
+static int port = 8080;
 
 typedef struct 
 {
@@ -183,6 +188,8 @@ void generateSalt(char* salt,size_t length);
 void userLoginCheck1(task_t * task);
 void userLoginCheck2(task_t * task);
 
+//用户token验证
+
 //数据库，返回0成功，返回-1失败，实体返回NULL为失败
 //用户表
 int addUser(User* user);
@@ -206,7 +213,6 @@ FileEntry* selectFileEntryByOwnerId(int ownerId, int* entryCount);
 FileEntry* selectFileEntryByparentId(int parentId, int* entryCount);
 FileEntry* selectFileEntryByFileNameAndOwnerId(const char* fileName, int ownerId, int* entryCount);
 FileEntry* selectFileEntryByOwnerIdAndFileType(int ownerId, int fileType, int* entryCount);
-FileEntry* selectFileEntryByFileNameParentIdOwnerId(const char* fileName, int parentId, int ownerId);
 
 //--------甘博---------
 FileEntry *getEntriesInDir(int dirId);
@@ -216,8 +222,6 @@ FileEntry *getEntryByPath(const char *path);
 char* getCurrentDirectory(const char* pwd);
 char* getParentDirectory(const char* pwd);
 
-// 去掉获取的data后面的空格 张子健
-void removeTrailingSpace(char* str);
 
 //对指定文件生成相应的MD5值
 void generateMD5(const char *filename, char *md5String);
