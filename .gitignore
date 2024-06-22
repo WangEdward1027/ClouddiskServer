@@ -53,3 +53,6 @@ dkms.conf
 3.0/client/client
 3.0/server/server
 3.0/server/databases.c
+3.0/client/client
+3.0/client/client
+3.0/server/server
