@@ -4,14 +4,17 @@
 
 void touchCommand(task_t * task)
 {
+    printf("_______________________开始创建文件\n");
     //获取新建的文件名
     char * fileName=task->data;
+    printf("--------------------文件名%s\n",fileName);
     User user={0};
     //获取用户userid
     user.id=selectUserByUserName(task->user->userName)->id;
+    printf("--------------------用户的id：%d\n",user.id);
     //当前用户路径
     strcpy(user.pwd,task->user->pwd);
-
+    printf("-------------------当前工作路径%s\n",user.pwd);
     //发送缓冲区
     char buff[128];
     bzero(buff,sizeof(buff));
@@ -19,18 +22,21 @@ void touchCommand(task_t * task)
     //全路径
     char fullPath[1024];
     strcpy(fullPath,user.pwd);
-    strcpy(fullPath,fileName);
+    strcat(fullPath,fileName);
+    printf("----------------工作路径：%s\n",fullPath);
     //snprintf(fullPath,sizeof(fullPath),"%s%s",user.pwd,task->data);
     //FileEntry *entry=getEntryByPath(fullPath);
     
 
     int fd=open(fileName,O_CREAT,MODE);
+    printf("----------------------fd:%d\n",fd);
     if(fd!=-1){
         //获取MD5
         FileEntry *Flenry=(FileEntry *)calloc(1,sizeof(FileEntry));
         char md5sum[MD5_DIGEST_LENGTH];
-        generateMD5(fullPath,md5sum);
+        generateMD5(fileName,md5sum);
         strcpy(Flenry->md5,md5sum);
+        printf("------------------md5:%s\n",md5sum);
 
         //获取文件大小
         struct stat fileStats;
@@ -39,6 +45,7 @@ void touchCommand(task_t * task)
             return;
         }
         else {
+            printf("文件大小：%d",Flenry->fileSize);
             Flenry->fileSize=fileStats.st_size;
         }
         //文件类型
@@ -55,6 +62,7 @@ void touchCommand(task_t * task)
         Flenry->parentId=Tempfl->parentId;
         //获取文件名
         strcpy(Flenry->fileName,user.userName);
+        printf("用户名：%s\n",Flenry->fileName);
         //用户名
         Flenry->ownerId=user.id;
 
