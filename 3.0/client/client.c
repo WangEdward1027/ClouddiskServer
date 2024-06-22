@@ -74,6 +74,7 @@ int sendn(int sockfd, const void * buff, int len)
 int parseCommand(const char* buff, int len, train_t* pt, User* user){
     //填写train内的User结构体
     pt->user.id = user->id;
+    printf("username: %s\n", user->userName);
     strcpy(pt->user.userName,user->userName);
     strcpy(pt->user.salt,user->salt);
     strcpy(pt->user.cryptpasswd,user->cryptpasswd);

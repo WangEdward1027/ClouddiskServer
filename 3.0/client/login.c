@@ -4,19 +4,19 @@
 
 #define BUFFER_SIZE 256
 void recvUser(int socket, User *user) {
-    if (recv(socket, user, sizeof(User), 0) == -1) {
+    if (recvn(socket, user, sizeof(User)) == -1) {
         perror("recv");
         exit(EXIT_FAILURE);
     }
 }
 
 int login_client(int sockfd, User* user){
-    char request[BUFFER_SIZE];
-    char response[BUFFER_SIZE];
-    char username[BUFFER_SIZE];
-    char password[BUFFER_SIZE];
-    char salt[256];
-    char encrypted_password[BUFFER_SIZE];
+    char request[BUFFER_SIZE] = {0};
+    char response[BUFFER_SIZE] = {0};
+    char username[BUFFER_SIZE] = {0};
+    char password[BUFFER_SIZE] = {0};
+    char salt[256] = {0};
+    char encrypted_password[BUFFER_SIZE] = {0};
     
     printf("请输入用户名：\n");
     scanf("%s",username);
@@ -65,6 +65,7 @@ int login_client(int sockfd, User* user){
         printf("测试: user->cryptpasswd:%s\n",user->cryptpasswd);
         //填充小火车协议
         train_t t;
+        memset(&t, 0, sizeof(t));
         t.len = 1;
         /* t.len = strlen(request); */
         t.type = CMD_TYPE_LOGIN_ENCRYTPTEDCODE;
@@ -76,7 +77,10 @@ int login_client(int sockfd, User* user){
         // 接收服务器最终响应
         receive_response(sockfd, response);
         if(strstr(response, "MSG_TYPE_LOGINOK")) {
+            memset(user, 0, sizeof(*user));
+            printf("333\n");
             recvUser(sockfd,user);
+            printf("444\n");
             return 1;
         }else {
             printf("登录失败，错误代码：%s\n", response);

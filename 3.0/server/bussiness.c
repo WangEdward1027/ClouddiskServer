@@ -35,7 +35,7 @@ void handleMessage(int sockfd, int epfd, task_queue_t * que)
     {
         User* user = (User*)calloc(1 ,sizeof(User));
         ret = recvn(sockfd, user, sizeof(User));
-        printf("ret:%d\n",ret);
+        printf("1 ret:%d\n",ret);
         if(ret == 0)
             goto end;
         printf("User:usrname=%s, salt=%s, cryptpasswd=%s, pwd=%s\n",
@@ -50,7 +50,7 @@ void handleMessage(int sockfd, int epfd, task_queue_t * que)
         {
             User* user = (User*)calloc(1 ,sizeof(User));
             ret = recvn(sockfd, user, sizeof(User));
-            printf("ret:%d\n",ret);
+            printf("2 ret:%d\n",ret);
             if(ret == 0)
                 goto end;
             printf("User:usrname=%s, salt=%s, cryptpasswd=%s, pwd=%s\n",

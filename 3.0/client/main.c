@@ -59,7 +59,10 @@ int main()
             //执行普通命令
             else{
                 memset(&buff1,0,sizeof(buff1));
-                recv(clientfd,&buff1,sizeof(buff1),0);
+                int ret = recv(clientfd,&buff1,sizeof(buff1),0);
+                if(ret == 0){
+                    break;
+                }
                 printf("%s\n",buff1);//接收命令执行结果
             }
 

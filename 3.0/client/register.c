@@ -6,6 +6,7 @@
 
 void receive_response(int sockfd, char *response) {
     int len = recv(sockfd, response, BUFFER_SIZE - 1, 0); // 0 表示默认标志位
+    printf("response len: %d\n", len);
     if (len > 0) {
         response[len] = '\0';
     }

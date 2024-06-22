@@ -3,7 +3,8 @@
 #define SALT_LENGTH 16
 
 void sendUser(int socket, User *user) {
-    if (send(socket, user, sizeof(User), 0) == -1) {
+    printf("sendUser usename: %s\n", user->userName);
+    if (sendn(socket, user, sizeof(User)) == -1) {
         perror("send");
         exit(EXIT_FAILURE);
     }
