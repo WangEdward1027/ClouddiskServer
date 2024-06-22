@@ -3,7 +3,9 @@
 #define MODE 0644
 
 void touchCommand(task_t * task)
-{
+{   
+    removeTrailingSpace(task->data); 
+
     printf("_______________________开始创建文件\n");
     //获取新建的文件名
     char * fileName=task->data;
