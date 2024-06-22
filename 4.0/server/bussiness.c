@@ -1,8 +1,106 @@
-/* #include "linked_list.h" */
 #include "thread_pool.h"
+#define EPOLL_ARR_SIZE 100
 
-//外部变量(userList是在main.c文件中定义的)
-/* extern ListNode * userList; */
+//注意：此函数可以根据实际的业务逻辑，进行相应的扩展
+//主线程调用
+void mainDoTask(task_t * task)
+{
+    assert(task);
+    switch(task->type) {
+    case CMD_TYPE_PWD:  
+        pwdCommand(task);   break;
+    case CMD_TYPE_CD:
+        cdCommand(task);    break;
+    case CMD_TYPE_LS:
+        lsCommand(task);    break;
+    case CMD_TYPE_MKDIR:
+        mkdirCommand(task);  break;
+    case CMD_TYPE_RMDIR:
+        rmdirCommand(task);  break;
+    case CMD_TYPE_NOTCMD:
+        notCommand(task);   break;
+    case CMD_TYPE_LOGIN_USRNAME:
+        userLoginCheck1(task); break;
+    case CMD_TYPE_LOGIN_ENCRYTPTEDCODE:
+        userLoginCheck2(task); break;
+    case CMD_TYPE_REGISTER_USERNAME:
+        userRegister1(task); break;
+    case CMD_TYPE_REGISTER_ENCRYTPTEDCODE:
+        userRegister2(task); break;
+    case CMD_TYPE_PUTS:
+    case CMD_TYPE_GETS:
+    case MSG_TYPE_LOGIN_SALT:
+    case MSG_TYPE_LOGINOK:
+    case MSG_TYPE_LOGINERROR:
+    case MSG_TYPE_REGISTEROK:
+    case MSG_TYPE_REGISTERERROR:
+        break;
+    case CMD_TYPE_TOUCH:
+        touchCommand(task);   break;
+    case CMD_TYPE_REMOVE:
+        removeCommand(task);  break;
+    default:
+        break;
+    }
+}
+
+
+//子线程调用，专门处理长命令
+void doTask(task_t * task)
+{
+    //先建立建立自动递增的静态监听端口
+    ++port;
+    char PORT[8];
+    sprintf(PORT, "%d", port);
+    //创建监听套接字
+    int listenfd = tcpInit("127.0.0.1", PORT);
+
+    //创建epoll实例
+    int epfd = epoll_create1(0);
+
+    //对listenfd进行监听
+    //再将连接加入监听
+    addEpollReadfd(epfd, listenfd);
+    //存储已经连接的任务端口
+    struct epoll_event * pEventArr = (struct epoll_event*)calloc(EPOLL_ARR_SIZE, sizeof(struct epoll_event));
+
+    while(1) {
+        int nready = epoll_wait(task->epfd, pEventArr, EPOLL_ARR_SIZE, -1);
+        if(nready == -1 && errno == EINTR) {
+            continue;
+        } else if(nready == -1) {
+            printf("epoll_wait fiale!\n");
+            exit(-1);
+        } else {
+            //大于0
+            for(int i = 0; i < nready; ++i) {
+                int fd = pEventArr[i].data.fd;
+                if(fd == listenfd) {//对新连接进行处理
+                    int peerfd = accept(listenfd, NULL, NULL);
+                    printf("\n conn %d has conneted.\n", peerfd);
+                    //将新连接添加到epoll的监听红黑树上
+                    addEpollReadfd(epfd, peerfd);
+                }else{
+                    //接收客户端发来的Token
+
+                    //TODO 验证Token
+
+                    //执行对应的任务
+                    if(task->type == CMD_TYPE_PUTS)
+                    {
+                        //上传任务执行前先将监听移除
+                        delEpollReadfd(epfd, listenfd);
+                        putsCommand(task);   
+                        //上传任务执行完毕之后，再加回来
+                        addEpollReadfd(epfd, listenfd);
+                        break;
+                    }else if(task->type == CMD_TYPE_GETS)
+                        getsCommand(task);            
+                }
+            }
+        }
+    }
+}
 
 //主线程调用:处理客户端发过来的消息
 void handleMessage(int sockfd, int epfd, task_queue_t * que)
@@ -14,7 +112,7 @@ void handleMessage(int sockfd, int epfd, task_queue_t * que)
     if(ret == 0) {
         goto end;
     }
-    printf("\nrecv length: %d\n", length);
+    printf("\n\nrecv length: %d\n", length);
 
     //1.2 获取消息类型
     CmdType cmdType;
@@ -35,7 +133,7 @@ void handleMessage(int sockfd, int epfd, task_queue_t * que)
     {
         User* user = (User*)calloc(1 ,sizeof(User));
         ret = recvn(sockfd, user, sizeof(User));
-        printf("1 ret:%d\n",ret);
+        printf("ret:%d\n",ret);
         if(ret == 0)
             goto end;
         printf("User:usrname=%s, salt=%s, cryptpasswd=%s, pwd=%s\n",
@@ -48,7 +146,7 @@ void handleMessage(int sockfd, int epfd, task_queue_t * que)
         {
             User* user = (User*)calloc(1 ,sizeof(User));
             ret = recvn(sockfd, user, sizeof(User));
-            printf("2 ret:%d\n",ret);
+            printf("ret:%d\n",ret);
             if(ret == 0)
                 goto end;
             printf("User:usrname=%s, salt=%s, cryptpasswd=%s, pwd=%s\n",
@@ -58,73 +156,26 @@ void handleMessage(int sockfd, int epfd, task_queue_t * que)
             //1.4 获取参数消息内容
             ret = recvn(sockfd, ptask->data, length);
         }
+
         if(ret > 0) {
-            //往线程池中添加任务
-            if(ptask->type == CMD_TYPE_PUTS) {
-                //是上传文件任务，就暂时先从epoll中删除监听
-                delEpollReadfd(epfd, sockfd);
-            }
-            taskEnque(que, ptask);
+            //若为puts和gets命令就往线程池中添加任务
+            if(ptask->type == CMD_TYPE_PUTS || ptask->type == CMD_TYPE_GETS)
+                taskEnque(que, ptask);
+            else //直接调用mainDotask
+                mainDoTask(ptask);
         }
-    } else if(length == 0){
-        taskEnque(que, ptask);
+    }else if (length == 0){
+        //短命令，直接调用mainDoTask
+        mainDoTask(ptask);
     }
+
+
 end:
     if(ret == 0) {//连接断开的情况
         printf("\nconn %d is closed.\n", sockfd);
         delEpollReadfd(epfd, sockfd);
         close(sockfd);
         /* deleteNode2(&userList, sockfd);//删除用户信息 */
-    }
-}
-
-//注意：此函数可以根据实际的业务逻辑，进行相应的扩展
-//子线程调用
-void doTask(task_t * task)
-{
-    assert(task);
-    switch(task->type) {
-    case CMD_TYPE_PWD:  
-        pwdCommand(task);   break;
-    case CMD_TYPE_CD:
-        cdCommand(task);    break;
-    case CMD_TYPE_LS:
-        lsCommand(task);    break;
-    case CMD_TYPE_MKDIR:
-        mkdirCommand(task);  break;
-    case CMD_TYPE_RMDIR:
-        rmdirCommand(task);  break;
-    case CMD_TYPE_PUTS:
-        putsCommand(task);   
-        //上传任务执行完毕之后，再加回来
-        addEpollReadfd(task->epfd, task->peerfd);
-        break;
-    case CMD_TYPE_GETS:
-        getsCommand(task);   break;
-    case CMD_TYPE_NOTCMD:
-        notCommand(task);   break;
-    case CMD_TYPE_LOGIN_USRNAME:
-        userLoginCheck1(task); break;
-    case CMD_TYPE_LOGIN_ENCRYTPTEDCODE:
-        userLoginCheck2(task); break;
-    case CMD_TYPE_REGISTER_USERNAME:
-        printf("测试信息：用户进入注册\n");
-        userRegister1(task); break;
-    case CMD_TYPE_REGISTER_ENCRYTPTEDCODE:
-        userRegister2(task); break;
-    case MSG_TYPE_LOGIN_SALT:
-    case MSG_TYPE_LOGINOK:
-    case MSG_TYPE_LOGINERROR:
-    case MSG_TYPE_REGISTEROK:
-    case MSG_TYPE_REGISTERERROR:
-        break;
-    case CMD_TYPE_TOUCH:
-        touchCommand(task);   break;
-    case CMD_TYPE_REMOVE:
-        removeCommand(task);  break;
-
-    default:
-        break;
     }
 }
 

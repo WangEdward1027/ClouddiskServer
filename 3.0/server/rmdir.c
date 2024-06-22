@@ -4,9 +4,11 @@
 void recRemoveDir(int dirId){
     //获取指定目录ID下的所有文件和子目录
     FileEntry *entries =getEntriesInDir(dirId);
-    if(entries==NULL)
+    if(entries==NULL){
+        printf("目录为空，删除目录：%d\n", dirId);
+        deleteFileEntry(dirId);
         return;
-
+    }
     //遍历目录下所有条目
     for(int i=0;entries[i].id!=0;i++){
         if(entries[i].fileType==1){
@@ -25,15 +27,17 @@ void recRemoveDir(int dirId){
 
 void rmdirCommand(task_t *task){
     //接收任务中的目录
+    removeTrailingSpace(task->data);
     if(strlen(task->data)==0){
         const char *msg="你要删目录，你倒是告诉我目录啊！！哥！";
         sendn(task->peerfd,msg,strlen(msg));
         return;
     }
 
+    char*pwd=getUserPWD(task->user->userName);
     //拼接用户当前工作目录和用户输入目录，用以检查是否存在
     char fullPath[2000];
-    snprintf(fullPath,sizeof(fullPath),"%s/%s",task->user->pwd,task->data);
+    snprintf(fullPath,sizeof(fullPath),"%s/%s",pwd,task->data);
     
     //获取完整路径对应的条目
     FileEntry*entry=getEntryByPath(fullPath);
@@ -49,7 +53,7 @@ void rmdirCommand(task_t *task){
         sendn(task->peerfd,msg,strlen(msg));
         return;
     }
-
+printf("id=%d\n",entry->id);
     //递归删除目录及内容
     recRemoveDir(entry->id);
 
