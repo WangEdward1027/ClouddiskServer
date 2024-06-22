@@ -22,13 +22,16 @@ void touchCommand(task_t * task)
     //全路径
     char fullPath[1024];
     strcpy(fullPath,user.pwd);
+    strcat(fullPath,"/");
     strcat(fullPath,fileName);
     printf("----------------工作路径：%s\n",fullPath);
     //snprintf(fullPath,sizeof(fullPath),"%s%s",user.pwd,task->data);
     //FileEntry *entry=getEntryByPath(fullPath);
     
 
-    int fd=open(fileName,O_CREAT,MODE);
+    int fd=open(fileName,O_CREAT| O_WRONLY,MODE);
+    sleep(30);
+    printf("asddasdas:filename:%s\n",fileName);
     printf("----------------------fd:%d\n",fd);
     if(fd!=-1){
         //获取MD5
@@ -40,28 +43,31 @@ void touchCommand(task_t * task)
 
         //获取文件大小
         struct stat fileStats;
-        if (stat(fullPath, &fileStats) == -1) {
+        if (stat(fileName, &fileStats) == -1) {
             perror("Error getting file stats");
             return;
         }
         else {
-            printf("文件大小：%d",Flenry->fileSize);
+            printf("文件大小：%d\n",Flenry->fileSize);
             Flenry->fileSize=fileStats.st_size;
         }
         //文件类型
         Flenry->fileType=1;
         
         //获取parent_id
-        char Temp[128];
-        strcpy(Temp,getCurrentDirectory(task->user->pwd));
+        //char Temp[128];
+        //strcpy(Temp,getCurrentDirectory(task->user->pwd));
 
-        int entryCount[7]={0};
-        FileEntry *Tempfl=(FileEntry *)calloc(1,sizeof(FileEntry));
-
-        Tempfl=selectFileEntryByFileNameAndOwnerId(Temp,user.id,entryCount);
-        Flenry->parentId=Tempfl->parentId;
+        //int entryCount[7]={0};
+        //FileEntry *Tempfl=(FileEntry *)calloc(1,sizeof(FileEntry));
+        printf("用户pwd：%s\n",user.pwd);
+        FileEntry*Tempfl=getEntryByPath(user.pwd);
+        printf("id：%d\n",Tempfl->id);
+        //Tempfl=selectFileEntryByFileNameAndOwnerId(Temp,user.id,entryCount);
+        Flenry->parentId=Tempfl->id;
         //获取文件名
-        strcpy(Flenry->fileName,user.userName);
+        strcpy(Flenry->fileName,fileName);
+
         printf("用户名：%s\n",Flenry->fileName);
         //用户名
         Flenry->ownerId=user.id;
