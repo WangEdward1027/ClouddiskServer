@@ -134,17 +134,38 @@ FileEntry* selectFileEntryByFileNameParentIdOwnerId(const char* fileName, int pa
     return fileEntry;
 }
 
+char* removeLastPathComponent(const char* path) {
+    if (path == NULL || strlen(path) == 0)
+        return NULL;
+
+    char* copy = strdup(path); // 复制输入路径以避免修改原始字符串
+    char* lastSlash = strrchr(copy, '/'); // 查找最后一个斜杠字符
+
+    if (lastSlash == NULL) {
+        free(copy);
+        return NULL;
+    }
+
+    *lastSlash = '\0'; // 将最后一个斜杠替换为字符串结束符
+
+    char* parentPath = strdup(copy); // 复制前面的内容
+    free(copy); // 释放复制的字符串内存
+
+    return parentPath;
+}
+
+
 void cdCommand(task_t* task) {
     
-    char buff[512];
+    char buff[512] = {0};
     char* filename;
-    char path[128];
+    char path[128] = {0};
     
     // 根据username查表获取user表信息，再通过user表信息获取pwd
     char * username = task->user->userName;
     User * user = selectUserByUserName(username);
     char * pwd = user->pwd;
-
+    // printf("初始进入cd命令时，此时的pwd为%s\n", pwd);
 
     // 移除指令后的空格
     removeTrailingSpace(task->data);
@@ -162,22 +183,50 @@ void cdCommand(task_t* task) {
         return;
 
     } else if (strcmp(task->data, "../") == 0 || strcmp(task->data, "..") == 0) {
-        filename = getParentDirectory(pwd);
-        printf("要切换到目录名为:%s", filename);
-        if (filename == NULL) {
+        printf("进入../\n");
+       //  printf("1.此时pwd的值为：%s\n",pwd);
+        // 1. 先获取当前目录的虚拟文件表信息
+        char tmp[64] = {0};
+        strcpy(tmp, pwd); // 用tmp暂存当前的pwd,防止被更改
+        FileEntry * curr = selectFileEntryByFileName(getCurrentDirectory(tmp));
+        // 1.1 判断当前的目录虚拟文件表的parent_id是否是0
+        if (curr->parentId == 0) {
+            // 当前已经是根目录，返回提示
             sprintf(buff, "当前已在根目录!\n");
             sendn(task->peerfd, buff, strlen(buff));
             return;
-
-        } else {
-            bzero(path,sizeof(path));
-            strcpy(path, getParentPath(pwd));
-            sprintf(buff, "当前路径为>%s", path);
-            sendn(task->peerfd, buff, strlen(buff));
-            strcpy(user->pwd, path); // 更新当前所在目录
-            updateUser(user); // 将更改保存到user表
-            return;
         }
+        // 1.2 当前目录虚拟文件表的parent_id不是0，代表还有上层目录
+        // 获取要切换的目录
+        // printf("获取父目录前的pwd为:%s\n", pwd);
+        char * res = removeLastPathComponent(pwd);
+        // printf("获取父目录的结果为:%s\n", res);
+        strcpy(path, res);
+        printf("当前的目录为%s\n", path);
+        sprintf(buff, "当前路径为>%s\n", path);
+        // 发送给客户端
+        sendn(task->peerfd, buff, strlen(buff));
+        // 更新user表的pwd信息
+        strcpy(user->pwd, path);
+        updateUser(user);
+        return;
+
+        // filename = getParentDirectory(pwd);
+        // printf("要切换到目录名为:%s", filename);
+        // if (filename == NULL) {
+           //  sprintf(buff, "当前已在根目录!\n");
+           //  sendn(task->peerfd, buff, strlen(buff));
+           //  return;
+
+        // } else {
+           //  bzero(path,sizeof(path));
+           //  strcpy(path, getParentPath(pwd));
+           //  sprintf(buff, "当前路径为>%s", path);
+           //  sendn(task->peerfd, buff, strlen(buff));
+           //  strcpy(user->pwd, path); // 更新当前所在目录
+           //  updateUser(user); // 将更改保存到user表
+           // return;
+        // }
     } else {
         
         // cd 到 mc,mc一定在当前目录下，需要查找当前目录下是否存在对应的文件名
