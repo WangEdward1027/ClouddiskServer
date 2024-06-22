@@ -132,4 +132,7 @@ int transferFile(int sockfd);
 //登录模块
 void login_view(int sockfd, User* user);
 
+// 去除空格
+void removeTrailingSpace(char* str);
+
 #endif

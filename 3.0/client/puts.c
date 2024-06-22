@@ -10,6 +10,7 @@ void putsCommand(int sockfd, train_t * pt)
     //若用户名对应的md5值不存在,则开启普通传输
     
     char filename[20] = {0};
+    removeTrailingSpace(pt->buff);
     strcpy(filename, pt->buff);
     //根据文件内容, 生成md5码, 客户端发送 md5码、用户名、文件名 给服务器
     char md5String[33];  // MD5 字符串长度为 32 个字符，再加上一个结束字符 \0

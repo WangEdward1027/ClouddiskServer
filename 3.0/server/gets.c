@@ -7,6 +7,7 @@ void getsCommand(task_t* task) {
     // 2. 接收客户端发送的offset
     // 3. 向客户端发送文件
     
+    removeTrailingSpace(task->data);
     char * filename = task->data;
     // 1. 查询文件是否存在
     int num = 1;

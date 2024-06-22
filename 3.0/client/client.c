@@ -230,3 +230,11 @@ void generateMD5(const char *filename, char *md5String) {
     }
     md5String[md_len * 2] = '\0';
 }
+
+void removeTrailingSpace(char* str) {
+    int length = strlen(str);
+    if (length > 0 && str[length - 1] == ' ') {
+        str[length - 1] = '\0';
+    }
+}
+

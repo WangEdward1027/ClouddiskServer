@@ -6,7 +6,8 @@ void getsCommand(int sockfd, train_t * pt) {
     // 1. 接受客户端发送的内容，查看是否存在
     // 2. 文件存在，查询本地是否存在文件，发送offset
     // 3. 接收客户端发送的内容
-    
+    removeTrailingSpace(pt->buff);
+
     char* filename = pt->buff;  
     int fd; // 文件描述符
     // 1. 接受服务器发送的文件是否存在的标记

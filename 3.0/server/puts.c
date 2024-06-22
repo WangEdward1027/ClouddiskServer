@@ -1,6 +1,8 @@
 #include "thread_pool.h"
 
 void putsCommand(task_t * task) {
+    
+    removeTrailingSpace(task->data);
     //秒传功能:
     //服务器先接收md5码, 对比文件表中是否存在
     char md5String[33];
