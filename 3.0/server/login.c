@@ -10,91 +10,76 @@ void sendUser(int socket, User *user) {
     }
 }
 
-
 //用户登录1: 接收用户名，对比用户表该用户是否存在。存在发盐值，不存在不发。
 void userLoginCheck1(task_t * task)
 {
-    //检查task中有什么？
-    /* printf("task->User->username:%s\n",task->user->userName); */
-
+    printf("--------------- userLoginCheck1\n");
     char username[64];
-    /* sscanf(task->data,"%s",username); */
-    sscanf(task->user->userName,"%s",username);
-    printf("测试userLoginCheck1: username:%s\n",username);
+    sscanf(task->user->userName,"%s",username);//handleMessage中用小火车接收
+    printf("userLoginCheck1()收到username = %s\n",username);
 
     //若用户名存在,发送该用户对应的盐值
     User* user = selectUserByUserName(username);
     if(user != NULL){
-        printf("用户名存在,");
-        printf("用户id:%d,",user->id);
-        printf("用户userName:%s,",user->userName);
-        printf("查表得到的用户盐值 salt = %s\n", user->salt);
-
-        task->user->id = user->id; //1填用户id
-        strncpy(task->user->salt, user->salt, sizeof(task->user->salt)); //3填盐值
-        
-        snprintf(task->data,sizeof(task->data),"SALT:%s",user->salt);
-        
-        printf("salt = %s\n",task->data);
-
-        send(task->peerfd, task->data, strlen(task->data), 0);
+        printf("用户名存在,用户id = %d,盐值 = %s\n",user->id, user->salt);
+        task->user = user;  //赋给服务器的user
+        //小火车
+        train_t t;
+        memset(&t, 0, sizeof(t));
+        t.len = 0;
+        t.type = MSG_TYPE_LOGIN_SALT;  //盐值
+        t.user = *user;
+        printf("用小火车发盐值1: cmdType = %d, user信息:id = %d,userName = %s, salt = %s\n, cryptpasswd = %s, pwd = %s\n",
+           t.type, t.user.id, t.user.userName, t.user.salt, t.user.cryptpasswd, t.user.pwd);
+        send(task->peerfd, &t, 4 + 4 + sizeof(User) + t.len, 0);
     }
     //若用户名不存在,返回用户名不存在,不发送盐值
     else{
         printf("用户名不存在\n");
-        snprintf(task->data,sizeof(task->data),"用户名不存在");
-        send(task->peerfd, task->data, strlen(task->data), 0);
+        //TO DO 思考，用户不存在，两边怎么安全结束
+        //小火车
+        train_t t;
+        memset(&t, 0, sizeof(t));
+        t.len = 0;
+        t.type = MSG_TYPE_LOGINERROR;  //登录错误
+        t.user = *user;
+        send(task->peerfd, &t, 4 + 4 + sizeof(User) + t.len, 0);
     }
+    printf("---------------- userLoginCheck1执行完毕\n");
 }
 
 //用户登录2:验证密码
 void userLoginCheck2(task_t * task)
 {
-    printf("--------------- userLoginCheck2\n");
-    //接收密码
-    char encrypted_password[65];
-    /* sscanf(task->user->cryptpasswd,"CMD_TYPE_ENCRYPTECODE:%s",encrypted_password); */
-
-    strcpy(encrypted_password , task->user->cryptpasswd);
-    
-
+    printf("---------------- userLoginCheck2\n");
+    //handleMessage中用小火车接收
+    //接收用户发来的登录密码
     //去数据库中获取密码,进行对比
-        //准备操作:保存用户名，待会用用户名查询用户表
-        char username[65];
-        /* sscanf(task->data,"CMD_TYPE_REGISTER_USERNAME:%s",username); */ //bug在这里
-        sscanf(task->user->userName,"%s",username);
-        User*user = selectUserByUserName(username);
-        if(task->user == NULL){
-            printf("userLoginCheck2用户不存在,exit(1)\n");
-            exit(1);
-        }
-        task->user->id = user->id;
-        strncpy(task->user->userName, user->userName, sizeof(task->user->userName));
-        strncpy(task->user->salt, user->salt, sizeof(task->user->salt));
-        strncpy(task->user->cryptpasswd, user->cryptpasswd, sizeof(task->user->cryptpasswd));
-    strncpy(task->user->pwd, user->pwd, sizeof(task->user->pwd));
-
-        printf("用户userName:%s,",task->user->userName);
-        printf("查表得到pwd: %s\n", task->user->pwd);
-
-    //若密码相同，则返回登录成功
-    /* printf("user->cryptpasswd:%s\n", user->cryptpasswd); */
-    /* printf("encrypted_password:%s\n",encrypted_password); */
-    if(strcmp(encrypted_password,task->user->cryptpasswd) == 0){
-        printf("查表，密码相同\n");
-        snprintf(task->data,sizeof(task->data),"MSG_TYPE_LOGINOK");
-        /* strncpy(task->user->cryptpasswd, task->user->cryptpasswd, sizeof(task->user->cryptpasswd)); //4填加密密码 */
-        //5填充当前工作目录
-        /* char pwd[100]; */
-        /* strcpy(task->user->pwd, pwd);   //5填充pwd */
-    }
-    //若密码不同，则返回登录失败
-    else{
-        printf("查表，密码不同\n");
-        snprintf(task->data,sizeof(task->data),"MSG_TYPE_LOGINERROR");
-    }
-    send(task->peerfd,task->data,strlen(task->data),0);
+    printf("接收的密码 task->user->cryptpasswd:%s\n",task->user->cryptpasswd);
+    User* user =  selectUserByUserName(task->user->userName);
+    printf("查表的密码 user->cryptpasswd:%s\n",user->cryptpasswd);
     
-        sendUser(task->peerfd,task->user);
-    printf("----------------执行完毕\n");
+    if(strcmp(user->cryptpasswd, task->user->cryptpasswd) == 0){
+        printf("加密密码对比正确\n");
+        task->user = user;
+        //发送小火车，通知用户登录成功
+        train_t t;
+        memset(&t, 0, sizeof(t));
+        t.len = 0;
+        t.type = MSG_TYPE_LOGINOK;  //登录成功
+        t.user = *user;
+        send(task->peerfd, &t, 4 + 4 + sizeof(User) + t.len, 0);
+        printf("发小火车2: 通知用户登录成功\n");
+    }else{
+        printf("加密密码对比失败\n");
+        //发送小火车，通知用户登录失败
+        train_t t;
+        memset(&t, 0, sizeof(t));
+        t.len = 0;
+        t.type = MSG_TYPE_LOGINERROR;  //登录失败
+        t.user = *user;
+        send(task->peerfd, &t, 4 + 4 + sizeof(User) + t.len, 0);
+        printf("发小火车2: 通知用户登录失败\n");
+    }
+    printf("---------------- userLoginCheck2执行完毕\n");
 }
