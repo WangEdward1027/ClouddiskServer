@@ -47,19 +47,24 @@ char* getParentDirectory(const char* pwd) {
 void lsCommand(task_t * task)
 {
     int parent_id; // 保存用户当前父目录id
-    char buff[2048] = {0};
+    char buff[1024] = {0};
     char* filename;
+
+    // 根据当前的username 找到对应的use表信息从而得到对应的pwd,保存到path里
+    char * username = task->user->userName;
+    User * user = selectUserByUserName(username);
+    char * path = user->pwd;
 
     // 1. 判断ls后是否有参数
     if (strcmp(task->data, "") == 0) {
         // 当前ls后面无参数
-        filename = getCurrentDirectory(task->user->pwd);
+        filename = getCurrentDirectory(path);
     } else if (strcmp(task->data, "./") == 0 || strcmp(task->data, ".") == 0){
-        filename = getCurrentDirectory(task->user->pwd); 
-    } else if (strcmp(task->user->pwd, "../") == 0 || strcmp(task->data, "..") == 0) {
-        filename = getParentDirectory(task->user->pwd);
+        filename = getCurrentDirectory(path); 
+    } else if (strcmp(task->data, "../") == 0 || strcmp(task->data, "..") == 0) {
+        filename = getParentDirectory(path);
         if (filename == NULL) {
-            strcpy(buff, "无效命令，重新输入。\n");
+            strcpy(buff, "当前已在根目录，重新输入。\n");
             strcat(buff, "\0");
             sendn(task->peerfd, buff, strlen(buff));
             return;
@@ -71,7 +76,7 @@ void lsCommand(task_t * task)
     // 2. 获取filename 对应的id
     FileEntry* dir = selectFileEntryByFileName(filename);
     if (dir == NULL) {
-        strcpy(buff, "无效命令，重新输入。\n");
+        strcpy(buff, "数据库找不到对应的目录，重新输入。\n");
         strcat(buff, "\0");
         sendn(task->peerfd, buff, strlen(buff));
         return;
@@ -90,10 +95,10 @@ void lsCommand(task_t * task)
         sprintf(buff, " ");     
     }
     else {
-        for (int i = 0; i < num; i++) {
-            sprintf(filename, "%-15s\t", reslist[i].fileName);
+        for (int i = 1; i <= num; i++) {
+            sprintf(filename, "%-12s\t", reslist[i-1].fileName);
             strcat(buff, filename);
-            if (i % 4 == 0) {
+            if (i % 5 == 0) {
                 strcat(buff, "\n");
             }
     

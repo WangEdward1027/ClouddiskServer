@@ -91,12 +91,28 @@ char* getParentPath(const char* path) {
     return result;
 }
 
+void removeTrailingSpace(char* str) {
+    int length = strlen(str);
+    if (length > 0 && str[length - 1] == ' ') {
+        str[length - 1] = '\0';
+    }
+}
+
 
 void cdCommand(task_t* task) {
     
     char buff[512];
     char* filename;
     char path[128];
+    
+    // 根据username查表获取user表信息，再通过user表信息获取pwd
+    char * username = task->user->userName;
+    User * user = selectUserByUserName(username);
+    char * pwd = user->pwd;
+
+
+    // 移除指令后的空格
+    removeTrailingSpace(task->data);
 
     // 1. 判断cd 参数是否合法
     if (strcmp(task->data, "") == 0) {
@@ -106,22 +122,23 @@ void cdCommand(task_t* task) {
         return;
 
     } else if (strcmp(task->data, ".") == 0 || strcmp(task->data, "./") == 0) {
-        sprintf(buff, ">%s", task->user->pwd);
+        sprintf(buff, "当前路径为>%s", pwd);
         sendn(task->peerfd, buff, strlen(buff));
         return;
 
     } else if (strcmp(task->data, "../") == 0 || strcmp(task->data, "..") == 0) {
-        filename = getParentDirectory(task->user->pwd);
+        filename = getParentDirectory(pwd);
         if (filename == NULL) {
             sprintf(buff, "当前已在根目录!\n");
             sendn(task->peerfd, buff, strlen(buff));
             return;
 
         } else {
-            strcpy(path, getParentPath(task->user->pwd));
-            sprintf(buff, ">%s", path);
+            strcpy(path, getParentPath(pwd));
+            sprintf(buff, "当前路径为>%s", path);
             sendn(task->peerfd, buff, strlen(buff));
             strcpy(task->user->pwd, path); // 更新当前所在目录
+            task->user->id = user->id;
             updateUser(task->user); // 将更改保存到user表
             return;
         }
@@ -153,8 +170,10 @@ void cdCommand(task_t* task) {
       //     }
         
         strcat(path, "/");
+        strcat(path, pwd); // 添加当前pwd
+        strcat(path, "/");
         strcat(path, task->data);
-        sprintf(buff, ">%s", path);
+        sprintf(buff, "当前路径为>%s", path);
         sendn(task->peerfd, buff, strlen(buff));
 
         // 更新当前path
