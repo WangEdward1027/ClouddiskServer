@@ -78,7 +78,7 @@ int main(int argc, char ** argv)
                 int fd = pEventArr[i].data.fd;
                 if(fd == listenfd) {//对新连接进行处理
                     int peerfd = accept(listenfd, NULL, NULL);
-                    printf("\n conn %d has conneted.\n", peerfd);
+                    printf("\nconn %d has conneted.\n", peerfd);
                     //userCheck();
                     //将新连接添加到epoll的监听红黑树上
                     addEpollReadfd(epfd, peerfd);

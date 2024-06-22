@@ -43,7 +43,8 @@ void userLoginCheck1(task_t * task)
         memset(&t, 0, sizeof(t));
         t.len = 0;
         t.type = MSG_TYPE_LOGINERROR;  //登录错误
-        t.user = *user;
+        //t.user = *user;  //user == NULL, *user可能程序崩溃
+
         send(task->peerfd, &t, 4 + 4 + sizeof(User) + t.len, 0);
     }
     printf("---------------- userLoginCheck1执行完毕\n");

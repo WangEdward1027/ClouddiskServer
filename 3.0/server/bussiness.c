@@ -14,7 +14,7 @@ void handleMessage(int sockfd, int epfd, task_queue_t * que)
     if(ret == 0) {
         goto end;
     }
-    printf("\n\nrecv length: %d\n", length);
+    printf("\nrecv length: %d\n", length);
 
     //1.2 获取消息类型
     CmdType cmdType;
@@ -42,8 +42,6 @@ void handleMessage(int sockfd, int epfd, task_queue_t * que)
                user->userName, user->salt, user->cryptpasswd, user->pwd);
         ptask->user = user;
     }
-
-
 
     if(length > 0) {
         if(ptask->type==CMD_TYPE_REGISTER_USERNAME||ptask->type==CMD_TYPE_REGISTER_ENCRYTPTEDCODE)
