@@ -15,7 +15,8 @@ void touchCommand(task_t * task)
     user.id=selectUserByUserName(task->user->userName)->id;
     printf("--------------------用户的id：%d\n",user.id);
     //当前用户路径
-    strcpy(user.pwd,task->user->pwd);
+    char*pwd=getUserPWD(task->user->userName);
+    strcpy(user.pwd,pwd);
     printf("-------------------当前工作路径%s\n",user.pwd);
     //发送缓冲区
     char buff[128];

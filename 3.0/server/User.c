@@ -104,3 +104,45 @@ int updateUser(User* user) {
     mysql_close(conn);
     return 0;
 }
+
+// 根据用户名获取用户密码的函数
+char* getUserPWD(const char* username) {
+    // 获取数据库连接
+    MYSQL *conn =create_db_connection();
+    if (conn == NULL) {
+        fprintf(stderr, "数据库连接失败\n");
+        return NULL;
+    }
+
+    // 查询语句
+    char query[256];
+    snprintf(query, sizeof(query), "SELECT pwd FROM user WHERE userName = '%s'", username);
+
+    // 执行查询
+    if (mysql_query(conn, query)) {
+        fprintf(stderr, "查询失败: %s\n", mysql_error(conn));
+        mysql_close(conn);
+        return NULL;
+    }
+
+    // 获取查询结果
+    MYSQL_RES *result = mysql_store_result(conn);
+    if (result == NULL) {
+        fprintf(stderr, "获取查询结果失败: %s\n", mysql_error(conn));
+        mysql_close(conn);
+        return NULL;
+    }
+
+    // 检查是否有结果
+    MYSQL_ROW row;
+    char* password = NULL;
+    if ((row = mysql_fetch_row(result))) {
+        password = strdup(row[0]); // 复制密码字符串
+    }
+
+    // 释放结果集并关闭数据库连接
+    mysql_free_result(result);
+    mysql_close(conn);
+
+    return password; // 返回密码
+}
