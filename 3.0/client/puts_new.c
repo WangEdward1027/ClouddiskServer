@@ -17,12 +17,12 @@ void putsCommand(int sockfd, train_t * pt) {
     
     // 1.3 发送给服务端md5值
     sendn(sockfd, md5String, sizeof(md5String));
-    printf("md5码值为：%s\n",md5String);
+    // printf("md5码值为：%s\n",md5String);
     
     // 2. 接受客户端返回的结果
     int ret = -1;
     recvn(sockfd, &ret, sizeof(int));
-    printf("客户端收到的结果是%d\n", ret);
+    // printf("客户端收到的结果是%d\n", ret);
 
     // 2.1 文件存在ret = 1，实现文件秒传;
     if (ret == 1) {
@@ -48,7 +48,7 @@ void putsCommand(int sockfd, train_t * pt) {
         memset(&st, 0, sizeof(st));
         fstat(fd, &st);
         long int filelength = st.st_size;
-        printf("file length: %ld\n", filelength);
+       //  printf("file length: %ld\n", filelength);
         // 3.1.2 发送文件大小
         sendn(sockfd, &filelength, sizeof(filelength));
         

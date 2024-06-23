@@ -13,7 +13,7 @@ void getsCommand(int sockfd, train_t * pt) {
     // 1. 接受服务器发送的文件是否存在的标记
     int flag;
     recvn(sockfd, &flag, sizeof(flag));
-    printf("客户端收到的标志位是:%d", flag);
+    // printf("客户端收到的标志位是:%d", flag);
 
     // 1.1 flag = 0 文件不存在
     if (flag == 0) {
