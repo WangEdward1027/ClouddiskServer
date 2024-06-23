@@ -230,7 +230,8 @@ void generateMD5(const char *filename, char *md5String) {
     md5String[md_len * 2] = '\0';
 }
 
-//注意：此函数可以根据实际的业务逻辑，进行相应的扩展
+
+//长短命令分离:长命令 puts、gets
 //子线程调用
 void doTask(task_t * task)
 {
@@ -259,3 +260,12 @@ void doTask(task_t * task)
         putsCommand(clientfd, &task->train);
 
 }
+
+
+void removeTrailingSpace(char* str) {
+    int length = strlen(str);
+    if (length > 0 && str[length - 1] == ' ') {
+        str[length - 1] = '\0';
+    }
+}
+
