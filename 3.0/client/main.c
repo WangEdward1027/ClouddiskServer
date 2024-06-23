@@ -38,6 +38,7 @@ int main()
             sendn(clientfd, &train, 4 + 4 + sizeof(User) + train.len);
             if(train.type == CMD_TYPE_PUTS) {
                 putsCommand(clientfd, &train);
+                printf("\033[1;94m---------------命令执行完毕-----------------\033[0m\n");
             }
         }//接受服务器返回数据并打印 
         else if(FD_ISSET(clientfd, &rdset)) {
