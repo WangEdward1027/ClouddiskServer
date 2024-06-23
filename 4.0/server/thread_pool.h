@@ -232,9 +232,12 @@ FileEntry *getEntryByPath(const char *path);
 char* getCurrentDirectory(const char* pwd);
 char* getParentDirectory(const char* pwd);
 
+// 去掉获取的data后面的空格 张子健
+void removeTrailingSpace(char* str);
+
 
 //对指定文件生成相应的MD5值
 void generateMD5(const char *filename, char *md5String);
-
+char* getUserPWD(const char* username);
 MYSQL* create_db_connection();
 #endif
