@@ -1,6 +1,6 @@
 #include "thread_pool.h"
 
-void putsCommand(task_t * task) {
+void putsCommand_old(task_t * task) {
     
     removeTrailingSpace(task->data);
     //秒传功能:

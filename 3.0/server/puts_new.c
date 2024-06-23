@@ -1,7 +1,7 @@
  #include "thread_pool.h"
 
 // 服务端
-void putsCommand_new(task_t * task) {
+void putsCommand(task_t * task) {
     
     char response[64] = {0};
 

@@ -1,7 +1,7 @@
 /*王绪飞 2024.6.20*/
 #include "client.h"
 
-void putsCommand(int sockfd, train_t * pt)
+void putsCommand_old(int sockfd, train_t * pt)
 {
     //上传文件，附加秒传功能:
     //先根据文件内容, 生成md5码, 客户端发送 用户名和md5码 给服务器

@@ -1,7 +1,7 @@
 #include "client.h"
 
 // 客户端
-void putsCommand_new(int sockfd, train_t * pt) {
+void putsCommand(int sockfd, train_t * pt) {
     
     char response[64] = {0};
     // 1. 客户端先发送md5的值给服务端
@@ -39,6 +39,11 @@ void putsCommand_new(int sockfd, train_t * pt) {
         // 3.1 向服务器发送文件长度
         // 3.1.1 获取文件大小
         int fd = open(filename, O_RDWR);
+        if (fd == -1) {
+            printf("文件不存在，请确认后再上传!\n");
+            return;
+        }
+
         struct stat st;
         memset(&st, 0, sizeof(st));
         fstat(fd, &st);
