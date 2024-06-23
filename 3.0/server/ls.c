@@ -99,9 +99,9 @@ void lsCommand(task_t * task)
     else {
         for (int i = 1; i <= num; i++) {
     if (reslist[i-1].fileType == 0) { // 目录
-        sprintf(filename, "\033[0;34m%-12s\033[0m\t", reslist[i-1].fileName); // 蓝色
+        sprintf(filename, "\033[1;92m%-8s\033[0m\t", reslist[i-1].fileName); // 蓝色
     } else if (reslist[i-1].fileType == 1) { // 文件
-        sprintf(filename, "\033[0;32m%-12s\033[0m\t", reslist[i-1].fileName); // 绿色
+        sprintf(filename, "\033[0;93m%-8s\033[0m\t", reslist[i-1].fileName); // 绿色
     }
     strcat(buff, filename);
     if (i % 5 == 0) {

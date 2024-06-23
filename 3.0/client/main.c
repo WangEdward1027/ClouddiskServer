@@ -3,14 +3,13 @@
 int main()
 {
     int clientfd = tcpConnect("127.0.0.1", 8080);
-    printf("欢迎使用“Linux网络云盘”\n");
-    
+    printf("\033[1;91;47m欢迎使用“Linux网络云盘\033[0m\n");
     //注册登录模块
     User user;
     login_view(clientfd, &user);
     
     //执行指令模块
-    printf("\n---------------请输入命令-----------------\n");
+    printf("\033[1;94m---------------请输入命令-----------------\033[0m\n");
     char buf[1024] = {0};
     //4. 使用select进行监听
     fd_set rdset;
@@ -56,9 +55,8 @@ int main()
                 }
                 printf("%s\n",buff1);//接收命令执行结果
             }
-
+        printf("\033[1;94m---------------命令执行完毕-----------------\033[0m\n");
         }
-        printf("---------------命令执行完毕------------------\n");
     }
     close(clientfd);
     return 0;

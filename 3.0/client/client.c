@@ -133,18 +133,18 @@ void login_view(int sockfd, User* user){
     int user_choice;
 
     while(1){
-        printf("\n————————登录界面——————————\n");
-        printf("请输入选项序号：\n");
-        printf("1.注册\n");
-        printf("2.登录\n");
-        printf("3.退出\n");
-        printf("请输入您的选择：");
+        printf("\n\033[1;91;47m        登录界面       \033[0m \n");
+        printf("\033[1;97;100m请输入选项序号：\033[0m\n");
+        printf("\033[1;97;100m1.注册\033[0m\n");
+        printf("\033[1;97;100m2.登录\033[0m\n");
+        printf("\033[1;97;100m3.退出\033[0m\n");
+        printf("\033[1;97;100m请输入您的选择：\033[0m");
 
         if(scanf("%d", &user_choice) != 1) {
             // 清除输入缓冲区
             while(getchar() != '\n');
             printf("--------------------------\n");
-            printf("无效输入，请输入数字。\n");
+            printf("\033[1;107;41m无效输入，请输入数字。\033[0m\n");
             continue;
         }
 

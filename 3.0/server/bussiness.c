@@ -108,7 +108,6 @@ void doTask(task_t * task)
     case CMD_TYPE_LOGIN_ENCRYTPTEDCODE:
         userLoginCheck2(task); break;
     case CMD_TYPE_REGISTER_USERNAME:
-        printf("测试信息：用户进入注册\n");
         userRegister1(task); break;
     case CMD_TYPE_REGISTER_ENCRYTPTEDCODE:
         userRegister2(task); break;
