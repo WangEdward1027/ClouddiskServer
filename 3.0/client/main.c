@@ -3,7 +3,7 @@
 int main()
 {
     int clientfd = tcpConnect("127.0.0.1", 8080);
-    printf("\033[1;91;47m欢迎使用“Linux网络云盘\033[0m\n");
+    printf("\033[1;5;91;47m欢迎使用“Linux网络云盘\033[0m\n");
     //注册登录模块
     User user;
     login_view(clientfd, &user);
@@ -50,7 +50,7 @@ int main()
             }//执行普通命令
             else{
                 memset(&buff1,0,sizeof(buff1));
-                int ret = recv(clientfd,&buff1,sizeof(buff1),0);
+int ret = recv(clientfd,&buff1,sizeof(buff1),0);
                 if(ret == 0){
                     break;
                 }
