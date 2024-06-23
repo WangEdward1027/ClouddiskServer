@@ -6,13 +6,21 @@ void getsCommand(task_t* task) {
     // 1. 查询文件是否存在，向客户端发送信息是否存在的响应
     // 2. 接收客户端发送的offset
     // 3. 向客户端发送文件
-    
     removeTrailingSpace(task->data);
+    
     char * filename = task->data;
+    
     // 1. 查询文件是否存在
+    
+    // 1.1 根据用户名找到用户对应的user表的信息
+    char * username = task->user->userName;
+    User * user = selectUserByUserName(username);
+    // char * pwd = user->pwd;
+
+    // 1.2 根据用户id和文件名查找文件是否存在
     int num = 1;
     int flag = 0; // 标志位，标记文件是否存在 0不存在，1存在
-    FileEntry* file = selectFileEntryByFileNameAndOwnerId(filename, task->user->id, &num);
+    FileEntry* file = selectFileEntryByFileNameAndOwnerId(filename, user->id, &num);
     if (file == NULL) {
         // 文件不存在，向客户端发送flag = 0
         flag = 0;
@@ -24,42 +32,37 @@ void getsCommand(task_t* task) {
         sendn(task->peerfd, &flag, sizeof(flag));
     }
 
-    // 2. 接收客户端发来的文件长度
-    off_t offset;
-    recvn(task->peerfd, &offset, sizeof(offset));
-    
-    // 
-    FileInfo* fileinfo = selectFileInfo(file->md5, strlen(file->md5));
-    filename = fileinfo->fileName;
+    // 1.3 因为使用了文件秒传，使用MD5标记文件的信息，
+    // 需要根据虚拟文件表MD5的信息查询真正的文件名。
+    FileInfo * real_file = selectFileInfo(file->md5, 32);
+    filename = real_file->fileName;
 
-    // 3. 获取本地文件的长度
+    // 2. 获取文件长度
     int fd = open(filename, O_RDWR);
     struct stat st;
     bzero(&st, sizeof(st));
     fstat(fd, &st);
     
-    int fileLength = st.st_size - offset;
+    int fileLength = st.st_size;
     
-    lseek(fd, offset, SEEK_SET);
-
-    // 4.1 发送文件长度
+    // 2.1 发送文件长度
     sendn(task->peerfd, &fileLength, sizeof(fileLength));
 
-    // 4.2 发送文件内容
-    // int ret = sendfile(task->peerfd, fd, &offset, fileLength);
-    // printf("send %d bytes.\n", ret);
-      
-    train_t send_train;
-
-    // 3. 向服务器发送文件
-    while(1) {
-        memset(&send_train, 0, sizeof(send_train));
-        int ret = read(fd, send_train.buff, sizeof(send_train.buff));
-        send_train.len = ret;
-        sendn(task->peerfd, &send_train.len, sizeof(send_train.len));
-        sendn(task->peerfd, send_train.buff, send_train.len);
-        if(ret == 0){
+    
+    // 3. 向服务器发送文件内容
+    char buff[1000];
+    int curr = 0;
+    int ret = 0;
+    while(curr < fileLength) {
+        bzero(buff, sizeof(buff));
+        ret = read(fd, buff, sizeof(buff));
+        if (ret == 0) {
             break;
         }
+        ret = sendn(task->peerfd, buff, ret);
+        curr += ret;
     }
+    close(fd);
+    printf("发送完毕!\n");
+    return;
 }   
