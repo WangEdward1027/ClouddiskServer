@@ -36,7 +36,7 @@ int login_client(int sockfd, User* user){
     
     //2.若用户名存在,接收盐值,输入密码，发送密码
     if(cmdType == MSG_TYPE_LOGIN_SALT){
-        printf("用户存在\n");       
+        /* printf("用户存在\n"); */       
         /* printf("收到的user->salt:%s\n", user->salt); */
         char password[64] = {0};
         printf("请输入密码: ");
@@ -67,14 +67,16 @@ int login_client(int sockfd, User* user){
                /* ret, cmdType, user->id, user->userName, user->salt, user->cryptpasswd, user->pwd); */
         
         if(cmdType == MSG_TYPE_LOGINOK){
-            printf("密码正确,登录成功\n");
+            printf("--------------------------\n");
+            printf("密码正确。\n");
             return 1;
         }else{
-            printf("密码错误,登录失败\n");
+            printf("--------------------------\n");
+            printf("密码错误。\n");
             return 0;
         }
-
     }else{
+        printf("--------------------------\n");
         printf("该用户名不存在。\n");
         return 0;
     }

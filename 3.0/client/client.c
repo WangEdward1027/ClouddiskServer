@@ -133,7 +133,7 @@ void login_view(int sockfd, User* user){
     int user_choice;
 
     while(1){
-        printf("————————登录界面——————————\n");
+        printf("\n————————登录界面——————————\n");
         printf("请输入选项序号：\n");
         printf("1.注册\n");
         printf("2.登录\n");
@@ -143,6 +143,7 @@ void login_view(int sockfd, User* user){
         if(scanf("%d", &user_choice) != 1) {
             // 清除输入缓冲区
             while(getchar() != '\n');
+            printf("--------------------------\n");
             printf("无效输入，请输入数字。\n");
             continue;
         }
@@ -153,14 +154,14 @@ void login_view(int sockfd, User* user){
             break;
         case 2:
             if (login_client(sockfd, user)) {
-                printf("登录成功\n");
+                printf("登录成功。\n");
                 return; // 退出函数，结束循环
             } else {
                 printf("登录失败，请重试。\n");
             }
             break;
         case 3:
-            printf("正在退出...\n");
+            printf("用户已登出,再见。\n");
             exit(0); // 退出程序
         default:
             printf("输入错误，重新输入！\n");

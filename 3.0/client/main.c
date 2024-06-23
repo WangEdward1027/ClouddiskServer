@@ -3,13 +3,14 @@
 int main()
 {
     int clientfd = tcpConnect("127.0.0.1", 8080);
-    printf("欢迎使用“龟速网盘”\n");
+    printf("欢迎使用“Linux网络云盘”\n");
     
-    //登录模块
+    //注册登录模块
     User user;
     login_view(clientfd, &user);
-    printf("---------------请输入命令-----------------\n");
-
+    
+    //执行指令模块
+    printf("\n---------------请输入命令-----------------\n");
     char buf[1024] = {0};
     //4. 使用select进行监听
     fd_set rdset;
@@ -21,7 +22,7 @@ int main()
         FD_SET(clientfd, &rdset);
         
         int nready = select(clientfd + 1, &rdset, NULL, NULL, NULL);
-        printf("nready:%d\n", nready);
+        /* printf("nready:%d\n", nready); */
         if(FD_ISSET(STDIN_FILENO, &rdset)) {
             //读取标准输入中的数据
             memset(buf, 0, sizeof(buf));

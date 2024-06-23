@@ -6,7 +6,7 @@
 
 void receive_response(int sockfd, char *response) {
     int len = recv(sockfd, response, BUFFER_SIZE - 1, 0); // 0 表示默认标志位
-    printf("response len: %d\n", len);
+    /* printf("response len: %d\n", len); */
     if (len > 0) {
         response[len] = '\0';
     }
@@ -44,7 +44,7 @@ void register_client(int sockfd) {
     CmdType cmdType;
 
 
-    printf("请输出新的用户名：\n");
+    printf("请输入新的用户名: ");
     scanf("%s",username);
     username[strcspn(username, "\n")] = 0;
     clearInputBuffer();
@@ -78,8 +78,8 @@ void register_client(int sockfd) {
 
 
     int ret = send(sockfd,user,sizeof(User),0);
-    printf("data ret:%d\n", ret);
-    printf("----------------------------------\n");  
+    /* printf("data ret:%d\n", ret); */
+    printf("--------------------------\n");  
     //4.发送消息内容
     //snprintf(request, sizeof(request), "CMD_TYPE_REGISTER_USRNAME:%s", username);
     //send(sockfd, request,strlen(request),0);
@@ -100,7 +100,7 @@ void register_client(int sockfd) {
 
         //1.发送消息长度
         length=strlen(encrypted_password);
-        printf("2 length: %d\n", length);
+        /* printf("2 length: %d\n", length); */
         send(sockfd,&length,sizeof(length),0);
 
         //2.发送消息类型
@@ -116,6 +116,7 @@ void register_client(int sockfd) {
         strcpy(user->pwd,username);
         send(sockfd,user,sizeof(User),0);
 
+        printf("--------------------------\n");
         // 发送加密后的密码
         //memset(request,0,sizeof(request));
         //snprintf(request, sizeof(request), "CMD_TYPE_ENCRYPTECODE:%s", encrypted_password);
@@ -131,7 +132,7 @@ void register_client(int sockfd) {
             free(user);
         }
     } else {
-        printf("用户已存在。\n");
+        printf("用户名已存在，注册失败，请重试。\n");
         free(user);
     }
 }
