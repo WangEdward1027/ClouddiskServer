@@ -29,7 +29,7 @@ void putsCommand(int sockfd, train_t * pt) {
         // 接受客户端发送的响应信息
         int reslength;
         recvn(sockfd, &reslength, sizeof(int));
-        printf("%d\n", reslength);
+        // printf("%d\n", reslength);
         recvn(sockfd, response, reslength);
         printf("%s\n", response);
         return;
