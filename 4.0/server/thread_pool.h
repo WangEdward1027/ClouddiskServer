@@ -29,8 +29,6 @@
 #include <sys/sendfile.h>
 #include <mysql/mysql.h>
 #include <openssl/evp.h>
-#include "l8w8jwt/encode.h"
-#include "l8w8jwt/decode.h"
 #define SIZE(a) (sizeof(a)/sizeof(a[0]))
 
 typedef void (*sighandler_t)(int);
@@ -79,6 +77,12 @@ typedef struct FileEntry{
     int fileSize;
     int fileType;
 }FileEntry;
+
+//4.Tokens实体
+typedef struct Token_s{
+    char userName[64];
+    char Token[128];
+}Token_t;
 
 typedef enum {
     CMD_TYPE_PWD=1,
@@ -132,7 +136,6 @@ typedef struct task_queue_s
     pthread_mutex_t mutex; 
     pthread_cond_t cond;
     int flag;//0 表示要退出，1 表示不退出
-
 }task_queue_t;
 
 typedef struct threadpool_s {
@@ -188,8 +191,6 @@ void generateSalt(char* salt,size_t length);
 void userLoginCheck1(task_t * task);
 void userLoginCheck2(task_t * task);
 
-//用户token验证
-
 //数据库，返回0成功，返回-1失败，实体返回NULL为失败
 //用户表
 int addUser(User* user);
@@ -197,6 +198,15 @@ int addUser(User* user);
 User* selectUser(int userId);
 int updateUser(User* user);
 User* selectUserByUserName(const char* userName);
+
+//Token验证
+Token_t* selectTokenByUserName(char* userName);
+int addToken(Token_t *token);
+int updateTokenByUserName(char* userName, char* newToken);
+int deleteTokenByUserName(char* userName);
+void generateToken(char* token, size_t length); //生成随机Token
+//用户登录成功后调用用于生成随机Token并写入数据库
+Token_t* authenticateUser(char* userName, char* password); 
 
 //文件表
 int addFileInfo(FileInfo* fileInfo);

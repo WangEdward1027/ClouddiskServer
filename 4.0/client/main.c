@@ -17,7 +17,7 @@ int main()
     threadpool_t threadpool;
     memset(&threadpool, 0, sizeof(threadpool));
     //初始化线程池
-    threadpoolInit(&threadpool, 3);
+    threadpoolInit(&threadpool, 1);
     //启动线程池
     threadpoolStart(&threadpool);
 
@@ -75,8 +75,7 @@ int main()
                         ptask->train = train;
                         taskEnque(&threadpool.que, ptask);
                     }
-                }
-                //接受短命令执行后服务器返回数据并打印 
+                }//接受短命令执行后服务器返回数据并打印 
                 else if(fd == clientfd) {
                     //先接受返回内容长度
                     int length = -1;

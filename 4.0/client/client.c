@@ -242,7 +242,16 @@ void doTask(task_t * task)
     int length = strlen(task->Token);
     sendn(clientfd, &length, sizeof(length));
     sendn(clientfd, task->Token, length);
+
+    //接收校验结果选择是否执行命令
+    recvn(clientfd, &length, sizeof(length));
     
+    //验证失败
+    if(length == -1){
+        printf("验证失败\n");
+        return ;
+    }
+
     //获取任务命令类型执行相应的任务
     if(task->type == CMD_TYPE_GETS)
         getsCommand(clientfd, &task->train);

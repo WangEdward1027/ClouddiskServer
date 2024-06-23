@@ -82,8 +82,28 @@ void doTask(task_t * task)
                     addEpollReadfd(epfd, peerfd);
                 }else{
                     //接收客户端发来的Token
+                    int length = -1;
+                    recvn(listenfd, &length, sizeof(length));
+                    char userToken[128];
+                    recvn(listenfd, userToken, length);
+                    
+                    //验证Token
+                    Token_t* checkToken = selectTokenByUserName(task->user->userName);
+                    
+                    char checkInfo[128];
+                    //验证失败
+                    if(strcmp(userToken, checkToken->Token) != 0){
+                        printf("验证失败！");
+                        length = -1;
+                        //先发长度再发内容
+                        sendn(listenfd, &length, sizeof(length));
+                        return ;
+                    }
 
-                    //TODO 验证Token
+                    //验证成功
+                    length = 1;
+                    printf("验证成功！");
+                    sendn(listenfd, checkInfo, strlen(checkInfo));
 
                     //执行对应的任务
                     if(task->type == CMD_TYPE_PUTS)
