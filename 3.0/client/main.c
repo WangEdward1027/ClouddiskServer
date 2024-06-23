@@ -9,10 +9,6 @@ int main()
     User user;
     login_view(clientfd, &user);
     printf("---------------请输入命令-----------------\n");
-    
-    /* user.id = 1; */
-    /* strcpy(user.userName, "zhm"); */
-    /* strcpy(user.pwd, "/zhm"); */
 
     char buf[1024] = {0};
     //4. 使用select进行监听
@@ -46,17 +42,11 @@ int main()
         }//接受服务器返回数据并打印 
         else if(FD_ISSET(clientfd, &rdset)) {
             int recvCmdType=train.type;
-
             char buff1[4096];
             //接收文件是接收文件命令
             if(recvCmdType==CMD_TYPE_GETS){
                 getsCommand(clientfd, &train);
-            }else if(recvCmdType==CMD_TYPE_PUTS){
-                printf("开始发送文件\n");
-                putsCommand(clientfd, &train);
-            }
-
-            //执行普通命令
+            }//执行普通命令
             else{
                 memset(&buff1,0,sizeof(buff1));
                 int ret = recv(clientfd,&buff1,sizeof(buff1),0);
