@@ -98,12 +98,15 @@ void lsCommand(task_t * task)
     }
     else {
         for (int i = 1; i <= num; i++) {
-            sprintf(filename, "%-12s\t", reslist[i-1].fileName);
-            strcat(buff, filename);
-            if (i % 5 == 0) {
-                strcat(buff, "\n");
-            }
-    
+    if (reslist[i-1].fileType == 0) { // 目录
+        sprintf(filename, "\033[0;34m%-12s\033[0m\t", reslist[i-1].fileName); // 蓝色
+    } else if (reslist[i-1].fileType == 1) { // 文件
+        sprintf(filename, "\033[0;32m%-12s\033[0m\t", reslist[i-1].fileName); // 绿色
+    }
+    strcat(buff, filename);
+    if (i % 5 == 0) {
+        strcat(buff, "\n");
+    }
         }
         strcat(buff, "\0");
     }
