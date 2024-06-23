@@ -9,36 +9,21 @@ void getsCommand(int sockfd, train_t * pt) {
     removeTrailingSpace(pt->buff);
 
     char* filename = pt->buff;  
-    int fd; // 文件描述符
+    
     // 1. 接受服务器发送的文件是否存在的标记
     int flag;
     recvn(sockfd, &flag, sizeof(flag));
+    printf("客户端收到的标志位是:%d", flag);
 
-    // 1.1 文件不存在
+    // 1.1 flag = 0 文件不存在
     if (flag == 0) {
         printf("目标文件不存在!\n");
         return;
     } 
     
-    // 服务器端文件存在
-    // 2. 查看本地文件是否存在文件
-    int offset;
-    if (access(filename, F_OK) != 0) {
-        // 本地文件不存在
-        offset = 0;
-        fd = open(filename, O_RDWR | O_CREAT, 0664);
-    } else {
-        // 本地文件存在，读取文件大小
-        struct stat st;
-        bzero(&st, sizeof(st));
-        fd = open(filename, O_RDWR | O_APPEND);
-        fstat(fd, &st);
-        offset = st.st_size;
-    }
-    // 2.1 向服务器发送文件的大小
-    sendn(sockfd, &offset, sizeof(offset));
+    // flag = 1 服务器端文件存在
     
-    // 3. 接受客户端发送的文件长度
+    // 2. 接受客户端发送的文件长度
     int fileLength;
     recvn(sockfd, &fileLength, sizeof(fileLength));
 
@@ -47,20 +32,26 @@ void getsCommand(int sockfd, train_t * pt) {
     // off_t currSize = 0;
     // off_t lastSize = 0;
     
-    // 3.2 接收文件内容
+    // 2.1 打开文件
+    int fd = open(filename, O_RDWR | O_TRUNC | O_CREAT, 0664);
+
+    // 3 接收文件内容
     char buff[1000] = {0};
-    while (1) {
-        int len;
-        int ret = recvn(sockfd, &len, sizeof(len));
-        if(len == 0) {
+    int ret = 0;
+    int left = fileLength;
+    while (left > 0) {
+        if (left < 1000) {
+            ret = recvn(sockfd, buff, left);
+        } else {
+            ret = recvn(sockfd, buff, sizeof(buff));
+        }
+        if (ret < 0) {
             break;
         }
-        memset(buff, 0, sizeof(buff));
-        ret = recvn(sockfd, buff, len);
-        if(ret != sizeof(buff)) {
-            printf("ret: %d\n", ret);
-        }
-        // printf("接收到的文件内容是：%s", buff);
-        write(sockfd, buff, len);
+        ret = write(fd, buff, ret);
+        left -= ret;
     }
+    close(fd);
+
+    printf("接收完毕！\n");
 }
