@@ -90,7 +90,7 @@ void register_client(int sockfd) {
     if (strstr(response, "SALT")) {
         sscanf(response, "SALT:%s", salt);
         // 提示用户输入密码
-        printf("\033[1;97m输入密码，主人：\033[0m\n");
+        printf("\033[1;97m输入密码，主人：\033[0m");
         scanf("%s",password);
         password[strcspn(password, "\n")] = 0; // 去除换行符     
         clearInputBuffer();
@@ -114,8 +114,7 @@ void register_client(int sockfd) {
         strcpy(user->cryptpasswd,encrypted_password);
         strcpy(user->pwd,username);
         send(sockfd,user,sizeof(User),0);
-
-        printf("--------------------------\n");
+        printf("\033[1;94m---------------请输入命令-----------------\033[0m\n");
         // 发送加密后的密码
         //memset(request,0,sizeof(request));
         //snprintf(request, sizeof(request), "CMD_TYPE_ENCRYPTECODE:%s", encrypted_password);
@@ -124,14 +123,14 @@ void register_client(int sockfd) {
         // 接收服务器最终响应
         receive_response(sockfd, response);
         if (strstr(response, "MSG_TYPE_REGISTEROK")) {
-            printf("注册成功\n");
+            printf("\033[1;97;46m注册成功\033[0m\n");
             free(user);
         } else {
             printf("注册失败，错误代码：%s\n", response);
             free(user);
         }
     } else {
-        printf("用户名已存在，注册失败，请重试。\n");
+        printf("\033[1;5;97;41m用户名已存在，注册失败，请重试。\033[0m\n");
         free(user);
     }
 }
