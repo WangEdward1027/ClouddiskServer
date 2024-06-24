@@ -176,8 +176,9 @@ void login_view(int sockfd, User* user){
         printf("\033[1;97m1.注册\033[0m\n");
         printf("\033[1;97m2.登录\033[0m\n");
         printf("\033[1;97m3.退出\033[0m\n");
+        printf("\n");
         printf("\033[1;5;97;41m千万不要输入4！！！！\033[0m\n");
-        printf("\033[1;5;92;43m5.查看代码仓库二维码\033[0m\n");
+        printf("\033[1;5;90;43m5.查看代码仓库二维码\033[0m\n");
         printf("\033[1;97m请输入您的选择：\033[0m");
 
         if(scanf("%d", &user_choice) != 1) {
