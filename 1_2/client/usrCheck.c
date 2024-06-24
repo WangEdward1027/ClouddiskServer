@@ -50,12 +50,12 @@ static int userLogin1(int sockfd, train_t *pt)
         t.type = TASK_LOGIN_SECTION1;
         strncpy(t.buff, user, t.len);
         ret = sendn(sockfd, &t, 8 + t.len);
-        printf("login1 send %d bytes.\n", ret);
+        /* printf("login1 send %d bytes.\n", ret); */
 
         //接收信息
         memset(&t, 0, sizeof(t));
         ret = recvn(sockfd, &t.len, 4);
-        printf("length: %d\n", t.len);
+        /* printf("length: %d\n", t.len); */
         ret = recvn(sockfd, &t.type, 4);
         if(t.type == TASK_LOGIN_SECTION1_RESP_ERROR) {
             //无效用户名, 重新输入
@@ -85,7 +85,7 @@ static int userLogin2(int sockfd, train_t * pt)
         t.type = TASK_LOGIN_SECTION2;
         strncpy(t.buff, encrytped, t.len);
         ret = sendn(sockfd, &t, 8 + t.len);
-        printf("userLogin2 send %d bytes.\n", ret); 
+        /* printf("userLogin2 send %d bytes.\n", ret); */ 
 
         memset(&t, 0, sizeof(t));
         ret = recvn(sockfd, &t.len, 4);
