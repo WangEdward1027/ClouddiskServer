@@ -346,7 +346,7 @@ void printQRCode(int qr_size, int qr_code[qr_size][qr_size]) {
     for (int i = 0; i < qr_size; ++i) {
         for (int j = 0; j < qr_size; ++j) {
             if (qr_code[i][j] == 1) {
-                printf("██");  // 使用两个字符来表示黑色模块
+                printf("\033[1;107m  \033[0m");  // 使用两个字符来表示黑色模块
             } else {
                 printf("  ");  // 使用两个空格来表示白色模块
             }
