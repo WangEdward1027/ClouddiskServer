@@ -2,7 +2,7 @@
 
 int main()
 {
-    int clientfd = tcpConnect("127.0.0.1", 8080);
+    int clientfd = tcpConnect("49.232.167.176", 8080);
     printf("\n");
     printf("        \033[1;90;47m欢迎使用“Linux网络云盘”\033[0m\n");
     //注册登录模块
