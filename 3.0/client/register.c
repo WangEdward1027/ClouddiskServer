@@ -44,7 +44,7 @@ void register_client(int sockfd) {
     CmdType cmdType;
 
 
-    printf("请输入新的用户名: ");
+    printf("\033[1;97m主人，输入新的用户名: \033[0m");
     scanf("%s",username);
     username[strcspn(username, "\n")] = 0;
     clearInputBuffer();
@@ -79,7 +79,6 @@ void register_client(int sockfd) {
 
     int ret = send(sockfd,user,sizeof(User),0);
     /* printf("data ret:%d\n", ret); */
-    printf("--------------------------\n");  
     //4.发送消息内容
     //snprintf(request, sizeof(request), "CMD_TYPE_REGISTER_USRNAME:%s", username);
     //send(sockfd, request,strlen(request),0);
@@ -91,7 +90,7 @@ void register_client(int sockfd) {
     if (strstr(response, "SALT")) {
         sscanf(response, "SALT:%s", salt);
         // 提示用户输入密码
-        printf("请输入密码：\n");
+        printf("\033[1;97m输入密码，主人：\033[0m\n");
         scanf("%s",password);
         password[strcspn(password, "\n")] = 0; // 去除换行符     
         clearInputBuffer();

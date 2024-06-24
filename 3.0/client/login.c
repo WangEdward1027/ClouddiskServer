@@ -2,11 +2,21 @@
 /* #include "str_util.h" */
 #include <iso646.h>
 #include <stdalign.h>
-
+void print_progress(int progress) {
+    int bar_width = 50;
+    int pos = bar_width * progress / 100;
+    printf("\r\033[1;91m[");
+    for (int i = 0; i < bar_width; ++i) {
+        if (i < pos) printf("█");
+        else printf(" ");
+    }
+    printf("] %d%%\033[0m", progress);
+    fflush(stdout);
+}
 int login_client(int sockfd, User* user){
     //1.发送用户名
     char username[64] = {0};
-    printf("请输入用户名: ");
+    printf("\033[1;97m主人的用户名: \033[0m");
     scanf("%s",username);
 
     //登录第一次交互，只填充User结构体的用户名
@@ -39,7 +49,7 @@ int login_client(int sockfd, User* user){
         /* printf("用户存在\n"); */       
         /* printf("收到的user->salt:%s\n", user->salt); */
         char password[64] = {0};
-        printf("请输入密码: ");
+        printf("\033[1;97m主人的密码: \033[0m");
         scanf("%s",password);
         //用盐值加密密码
         char encrypted_password[65] = {0};
@@ -67,17 +77,37 @@ int login_client(int sockfd, User* user){
                /* ret, cmdType, user->id, user->userName, user->salt, user->cryptpasswd, user->pwd); */
         
         if(cmdType == MSG_TYPE_LOGINOK){
-            printf("--------------------------\n");
-            printf("密码正确。\n");
+             int i;
+                        
+            printf("\n\033[1;96m正在登录中请稍等。。。。。\033[0m\n");
+             for (i = 0; i < 99; i++) {
+                print_progress(i);
+                usleep(50000); // 50ms 延迟
+
+                // 在某些进度时卡顿一下
+                if (i == 30 || i == 60 || i == 90) {
+                usleep(500000); // 500ms 延迟
+                }
+            }
+
+            // 99%的时候卡住
+            print_progress(99);
+            usleep(3000000); // 5秒延迟
+            printf("\n");
+            printf("\n\033[1;30;47;5m不是哥们，真有人在等进度条啊，我路过的\033[0m\n");
+            printf("\n");
+            usleep(500000);
+            printf("\033[1;96m------------------------------------\033[0m \n");
+            printf("\033[1;96m密码正确!太棒了，主人！\033[0m\n");
             return 1;
         }else{
-            printf("--------------------------\n");
-            printf("密码错误。\n");
+            printf("\033[1;96m-----------------------------------\033[0m \n");
+            printf("\033[1;96m密码错误，废物，密码都记不住。\033[0m\n");
             return 0;
         }
     }else{
-        printf("--------------------------\n");
-        printf("该用户名不存在。\n");
+            printf("\033[1;96m-----------------------------------\033[0m \n");
+        printf("\033[1;96m用户名不存在。不注册还想撸我？？\033[0m\n");
         return 0;
     }
 }
