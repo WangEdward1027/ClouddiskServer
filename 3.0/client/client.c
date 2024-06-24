@@ -179,7 +179,7 @@ void login_view(int sockfd, User* user){
     printf("              /\\_____/\\\n");
     printf("             /  o   o  \\\n");
     printf("            ( ==  ^  == )\n");
-    printf("             )         (\n");
+    printf("             )----O----(\n");
     printf("            (           )\n");
     printf("           ( (  )   (  ) )\n");
     printf("          (__(__)___(__)__) \n");
