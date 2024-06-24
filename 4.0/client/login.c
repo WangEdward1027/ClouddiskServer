@@ -72,7 +72,7 @@ int login_client(int sockfd, User* user, char* Token){
 
             //接收Token:先接长度，再接内容
             recvn(sockfd, &len, sizeof(len));
-            recvn(sockfd, Token,sizeof(Token));
+            recvn(sockfd, Token, len);
             
             return 1;
         }else{

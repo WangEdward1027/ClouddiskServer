@@ -64,10 +64,10 @@ void userLoginCheck2(task_t * task)
 
         //发送身份验证的Token:生成Token、发长度、发内容
         char Token[128] = {0}; 
-        generateToken(Token, strlen(Token)); //生成随机Token
+        generateToken(Token, sizeof(Token)); //生成随机Token
         int len = strlen(Token);
         send(task->peerfd, &len, sizeof(len), 0);
-        send(task->peerfd, Token, strlen(Token), 0);
+        send(task->peerfd, Token, len, 0);
         printf("发送身份验证的Token\n");
         
         //将生成的Token填入数据库 Token表
