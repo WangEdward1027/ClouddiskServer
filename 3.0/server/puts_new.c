@@ -130,7 +130,7 @@ void putsCommand(task_t * task) {
         sendn(task->peerfd, response, sizeof(response));
     }
         
-    sprintf(response, "写入文件上传文件成功!");
+    sprintf(response, "写入文件,上传文件成功!");
     sendn(task->peerfd, response, sizeof(response));
 
 }

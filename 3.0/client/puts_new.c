@@ -55,6 +55,10 @@ void putsCommand(int sockfd, train_t * pt) {
         // 3.2 发送文件内容
         char buff[1000];
         off_t curr = 0;
+        // 用于打印进度条
+        off_t splice = filelength / 100;
+        off_t lastSize = 0;
+
         int ret = 0;
         while (curr < filelength) {
             bzero(buff, sizeof(buff));
@@ -64,7 +68,16 @@ void putsCommand(int sockfd, train_t * pt) {
             }
             ret = sendn(sockfd, buff, ret);
             curr += ret;
+            if (curr - lastSize > splice) {
+                printf("\033[35m文件正在火速上传---%5.2lf%%\r\033[0m", (double)curr/filelength * 100);
+                fflush(stdout);
+                lastSize = curr;
+            }
         }
+        printf("\033[35m文件成功完成上传---100.00%%\n\033[0m");
+               
+        fflush(stdout);
+
         close(fd);
         
         // 3.3 接受服务器返回的信息
