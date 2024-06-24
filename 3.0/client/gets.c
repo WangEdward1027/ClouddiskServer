@@ -39,6 +39,10 @@ void getsCommand(int sockfd, train_t * pt) {
     char buff[1000] = {0};
     int ret = 0;
     int left = fileLength;
+    // 3.1 进度条
+    off_t splice = fileLength / 100;
+    off_t currSize = 0;
+    off_t lastSize = 0;
     while (left > 0) {
         if (left < 1000) {
             ret = recvn(sockfd, buff, left);
@@ -50,7 +54,15 @@ void getsCommand(int sockfd, train_t * pt) {
         }
         ret = write(fd, buff, ret);
         left -= ret;
+        // 进度条
+        currSize += ret;
+        if (currSize - lastSize > splice) {
+            printf("\033[35m文件正在火速下载---%5.2lf%%\r\033[0m", (double)currSize/fileLength * 100);
+            fflush(stdout);
+            lastSize = currSize;
+        }
     }
+    printf("\033[35m文件成功完成下载---100.00%%\n\033[0m");
     close(fd);
 
     printf("接收完毕！\n");
